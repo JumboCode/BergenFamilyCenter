@@ -8,7 +8,7 @@ JumboCode 2021-2022 project
 
 ### Setting up the repository on local machine: 
 If you don't have npm (node package manager) installed, follow this tutorial: https://www.npmjs.com/get-npm <br />
-If you don't have git installed, follow this tutorial: https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup
+If you don't have git installed, follow this tutorial: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
 
 1. `cd <PATH TO DIRECTORY YOU WANT YOUR CODE TO BE IN>`
 2. `git clone https://github.com/adamgpeters/BergenFamilyCenter.git` --> creates a 'Bergen Family Center' directory
