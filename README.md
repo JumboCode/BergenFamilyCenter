@@ -1,4 +1,4 @@
-# DiscusInstitute
+# Bergen Family Center
 JumboCode 2021-2022 project
 
 ### Team Members:
@@ -11,7 +11,7 @@ If you don't have npm (node package manager) installed, follow this tutorial: ht
 If you don't have git installed, follow this tutorial: https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup
 
 1. `cd <PATH TO DIRECTORY YOU WANT YOUR CODE TO BE IN>`
-2. `git clone https://github.com/adamgpeters/BergenFamilyCenter.git --> creates a 'Bergen Family Center' directory
+2. `git clone https://github.com/adamgpeters/BergenFamilyCenter.git` --> creates a 'Bergen Family Center' directory
 3. `cd BergenFamilyCenter`
 4. run `npm install` to install all packages
 
