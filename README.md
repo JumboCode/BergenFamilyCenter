@@ -20,7 +20,7 @@ If you don't have git installed, follow this tutorial: https://git-scm.com/book/
 2. run `npm run dev`
 3. Open a browswer and go to http://localhost:3000
 
-#### [Resources](https://drive.google.com/drive/folders/1JXpE7lTlA1i_NpZg53hTA1OYERNvFro4?usp=sharing)
+### [Resources](https://drive.google.com/drive/folders/1JXpE7lTlA1i_NpZg53hTA1OYERNvFro4?usp=sharing)
 
 ### Important Git commands
 * `git init` --> creates a git repository
