@@ -19,10 +19,11 @@ If you don't have npm (node package manager) installed, follow this tutorial: ht
 If you don't have git installed, follow this tutorial: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git <br />
 If you don't have VScode, download VsCode [here](https://code.visualstudio.com/download) and follow [this](https://linuxpip.org/vscode-format-on-save/) tutorial to set up auto-format
 
-1. `cd <PATH TO DIRECTORY YOU WANT YOUR CODE TO BE IN>`
+1. `cd <PATH TO DIRECTORY YOU WANT YOUR CODE TO BE IN>` in your terminal
 2. `git clone https://github.com/adamgpeters/BergenFamilyCenter.git` --> creates a 'Bergen Family Center' directory
 3. `cd BergenFamilyCenter`
-4. run `npm install` to install all packages
+4. (optional) type `code .` in terminal to open VScode
+5. run `npm install` to install all packages
 
 ### Running the frontend on local machine:
 1. `cd <PATH TO 'DiscusInstitute' DIRECTORY>`
