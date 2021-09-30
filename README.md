@@ -4,7 +4,15 @@ JumboCode 2021-2022 project
 ### Team Members:
 * Project Manager: Adam Peters
 * Tech Lead: Nilay Maity
-* Add other members
+* Designer: Cynthia Jelke
+* Developer: Archit Jain
+* Developer: Darya Clark
+* Developer: Eli Intriligator
+* Developer: Emma Paterson
+* Developer: Julia Zelevinsky
+* Developer: Kabir Pamnani
+* Developer: Mateo Hernandez Idrovo
+* Developer: Matt Ung
 
 ### Setting up the repository on local machine: 
 If you don't have npm (node package manager) installed, follow this tutorial: https://www.npmjs.com/get-npm <br />
