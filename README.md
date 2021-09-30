@@ -28,7 +28,7 @@ If you don't have VScode, download VsCode [here](https://code.visualstudio.com/d
 ### Running the frontend on local machine:
 1. `cd <PATH TO 'DiscusInstitute' DIRECTORY>`
 2. run `npm run dev`
-3. Open a browswer and go to http://localhost:3000
+3. Open a browser and go to http://localhost:3000
 
 ### [Resources](https://drive.google.com/drive/folders/1JXpE7lTlA1i_NpZg53hTA1OYERNvFro4?usp=sharing)
 
