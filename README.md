@@ -15,7 +15,7 @@ JumboCode 2021-2022 project
 * Developer: Matt Ung
 
 ### Setting up the repository on local machine: 
-If you don't have npm (node package manager) installed, follow this tutorial: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm <br />
+If you don't have npm (node package manager) installed, follow this tutorial: https://docs.npmjs.com/getting-started <br />
 If you don't have git installed, follow this tutorial: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git <br />
 If you don't have VScode, download VsCode [here](https://code.visualstudio.com/download) and follow [this](https://linuxpip.org/vscode-format-on-save/) tutorial to set up auto-format
 
