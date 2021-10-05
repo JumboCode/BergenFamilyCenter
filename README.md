@@ -15,9 +15,9 @@ JumboCode 2021-2022 project
 * Developer: Matt Ung
 
 ### Setting up the repository on local machine: 
-If you don't have npm (node package manager) installed, follow this tutorial: https://docs.npmjs.com/getting-started <br />
-If you don't have git installed, follow this tutorial: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git <br />
-If you don't have VScode, download VsCode [here](https://code.visualstudio.com/download) and follow [this](https://linuxpip.org/vscode-format-on-save/) tutorial to set up auto-format
+* If you don't have npm (node package manager) installed, follow this tutorial: https://docs.npmjs.com/getting-started
+* If you don't have git installed, follow this tutorial: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git. GitHub recently changed how you log in via command line, so if you get an error asking for a "Personal Access Token," follow [this](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) tutorial. Note that the token you create will be your new password when you log in via terminal, so do not lose it. 
+* If you don't have VScode, download VsCode [here](https://code.visualstudio.com/download) and follow [this](https://linuxpip.org/vscode-format-on-save/) tutorial to set up auto-format
 
 1. `cd <PATH TO DIRECTORY YOU WANT YOUR CODE TO BE IN>` in your terminal
 2. `git clone https://github.com/adamgpeters/BergenFamilyCenter.git` --> creates a 'Bergen Family Center' directory
