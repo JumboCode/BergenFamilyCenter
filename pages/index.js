@@ -1,5 +1,6 @@
-import Head from 'next/head'
-import { Typography } from '@mui/material';
+import Head from "next/head";
+import { Typography, Button } from "@mui/material";
+import userSignUp from "../src/firebaseSignUp";
 
 export default function Home() {
   return (
@@ -7,9 +8,7 @@ export default function Home() {
       <Head>
         <title>Bergen Family Center</title>
       </Head>
-      <Typography>
-        bergenfamilycenter
-      </Typography>
+      <Typography>bergenfamilycenter</Typography>
     </div>
-  )
+  );
 }
