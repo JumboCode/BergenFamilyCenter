@@ -2,7 +2,6 @@ import Head from "next/head";
 import { Typography, Button } from "@mui/material";
 import userSignUp from "../src/firebaseSignUp";
 
-
 export default function Home() {
   return (
     <div>
