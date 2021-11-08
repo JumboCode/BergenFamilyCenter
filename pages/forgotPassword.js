@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+
 const theme = createTheme();
 
 export default function ForgotPassword() {
@@ -35,7 +36,10 @@ export default function ForgotPassword() {
                     <Typography component="h1" variant="h5">
                         Forgot Password
                     </Typography>
-                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+                    <Box
+                        component="form"
+                        noValidate onSubmit={handleSubmit}
+                        sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <TextField
