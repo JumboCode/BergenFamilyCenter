@@ -6,7 +6,6 @@ const firebaseNewEvent = async (data) => {
     const newEventRef = doc(collection(db, "events"));
 
     await setDoc(newEventRef, data);
-    console.log("newEventRef: ", newEventRef);
 };
 
 const firebaseUpdateEvent = async (data, id) => {
@@ -23,8 +22,6 @@ const firebaseUpdateEvent = async (data, id) => {
         startTime: data.startTime,
         endTime: data.endTime
     });
-
-    console.log("newEventRef: ", eventRef);
 };
 
 const firebaseAppendUser = async (user, id) => {
