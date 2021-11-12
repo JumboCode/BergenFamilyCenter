@@ -17,10 +17,13 @@
     "@mui/styles": "^5.0.1",
     "babel-plugin-styled-components": "^1.13.3",
     "firebase": "^9.0.2",
+    "formik": "^2.2.9",
     "next": "11.1.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "styled-components": "^5.3.3"
+    "react-google-button": "^0.7.2",
+    "styled-components": "^5.3.3",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "eslint": "7.32.0",
