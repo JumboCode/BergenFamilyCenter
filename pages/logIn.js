@@ -8,14 +8,13 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import userSignIn from '../src/firebaseSignIn'; // Import function
-import signInWithGoogle from '../src/googleSignIn'; // Import function
+import userSignIn from '../src/firebaseSignIn'; 
+import signInWithGoogle from '../src/googleSignIn'; 
 import GoogleButton from 'react-google-button';
 import { getAuth } from "firebase/auth";
 import { useRouter } from 'next/router';
-import userSignOut from '../src/firebaseSignOut';
-// import FormControlLabel from '@mui/material/FormControlLabel';
-// import Checkbox from '@mui/material/Checkbox';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
 
 function Copyright(props) {
   return (
@@ -32,16 +31,31 @@ function Copyright(props) {
 
 const theme = createTheme();
 
+const validationSchema = yup.object({
+  email: yup
+    .string('Enter your email')
+    .email('Enter a valid email')
+    .required('Email is required'),
+  password: yup
+    .string('Enter your password')
+    .min(8, 'Password should be of minimum 8 characters length')
+    .required('Password is required'),
+});
+
 export default function SignIn() {
   const auth = getAuth();
   const router = useRouter();
-  userSignOut();
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    userSignIn(data.get('email'), data.get('password'));
+  const formik = useFormik({
+      initialValues: {
+        email: '',
+        password: '',
+      },
+      validationSchema: validationSchema,
+      onSubmit: (values) => {
+        userSignIn(values.email, values.password)
+      },
+    });
 
-  };
   auth.onAuthStateChanged((user) => {
     if (user) {
         router.push('/calendar');
@@ -49,7 +63,6 @@ export default function SignIn() {
   });
 
   return (
-
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -64,31 +77,35 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            <form onSubmit={formik.handleSubmit}>
             <TextField
               margin="normal"
-              required
               fullWidth
               id="email"
               label="Email Address"
               name="email"
               autoComplete="email"
               autoFocus
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              error={formik.touched.email && Boolean(formik.errors.email)}
+              helperText={formik.touched.email && formik.errors.email}
             />
+
             <TextField
               margin="normal"
-              required
               fullWidth
               name="password"
               label="Password"
               type="password"
               id="password"
               autoComplete="current-password"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              error={formik.touched.password && Boolean(formik.errors.password)}
+              helperText={formik.touched.password && formik.errors.password}
             />
-            {/* <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            /> */}
+
             <Button
               type="submit"
               fullWidth
@@ -97,23 +114,27 @@ export default function SignIn() {
             >
               Sign In
             </Button>
+
             <Grid container>
               <Grid item xs>
                 <Link href="forgotPassword" variant="body2">
                   Forgot password?
                 </Link>
               </Grid>
+
               <Grid item>             
                 <Link href="signUp" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
             </Grid>
+
             <GoogleButton 
                 onClick= {() => {signInWithGoogle()}}
                 />
-          </Box>
+          </form>
         </Box>
+
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
