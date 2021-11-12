@@ -1,8 +1,10 @@
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
+
 const passwordReset = (email) => {
   const auth = getAuth();
   console.log("Success!")
   sendPasswordResetEmail(auth, email)
+
     .then(() => {
       // Password reset email sent!
       // ..
@@ -13,4 +15,5 @@ const passwordReset = (email) => {
       // ..
     });
 };
+
 export default passwordReset;
