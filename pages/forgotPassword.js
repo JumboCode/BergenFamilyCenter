@@ -20,15 +20,11 @@ const validationSchema = yup.object({
 export default function ForgotPassword() {
     const formik = useFormik({
         initialValues: {
-            email: 'name@example.com',
+            email: '',
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            console.log({
-                email: values.email,
-            });
             passwordReset(values.email)
-            alert(JSON.stringify(values, null, 2));
         },
     });
 
