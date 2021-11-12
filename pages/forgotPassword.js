@@ -19,7 +19,7 @@ export default function ForgotPassword() {
         console.log({
             email: data.get('email'),
         });
-        event.passwordReset(data.get('email'))
+        passwordReset(data.get('email'))
     };
 
     return (
