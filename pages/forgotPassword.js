@@ -9,12 +9,18 @@ import Container from '@mui/material/Container';
 import passwordReset from "../src/firebasePasswordReset";
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 const validationSchema = yup.object({
     email: yup
         .string('Enter your email')
         .email('Enter a valid email')
         .required('Email is required'),
+});
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 export default function ForgotPassword() {
@@ -25,9 +31,18 @@ export default function ForgotPassword() {
         validationSchema: validationSchema,
         onSubmit: (values) => {
             passwordReset(values.email)
+            setOpen(true);
         },
     });
 
+    const [open, setOpen] = React.useState(false);
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+    };
 
     return (
         <Container component="main" maxWidth="xs">
@@ -67,10 +82,15 @@ export default function ForgotPassword() {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
+                            sx={{ mt: 3, mb: 3 }}
                         >
-                            Send reset password
+                            Reset password
                         </Button>
+                        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                            <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                                A password reset email has been sent!
+                            </Alert>
+                        </Snackbar>
                     </form >
                 </Box>
             </Box>
