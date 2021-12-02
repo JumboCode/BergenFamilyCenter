@@ -1,35 +1,23 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import CssBaseline from '@mui/material/CssBaseline';
+import Divider from '@mui/material/Divider';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import userSignIn from '../src/firebaseSignIn'; 
-import signInWithGoogle from '../src/googleSignIn'; 
-import GoogleButton from 'react-google-button';
 import { getAuth } from "firebase/auth";
-import { useRouter } from 'next/router';
 import { useFormik } from 'formik';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
+import * as React from 'react';
+import GoogleButton from 'react-google-button';
 import * as yup from 'yup';
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        BergenFamilyCenter
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
-const theme = createTheme();
+import userSignIn from '../src/firebaseSignIn';
+import signInWithGoogle from '../src/googleSignIn';
 
 const validationSchema = yup.object({
   email: yup
@@ -38,7 +26,7 @@ const validationSchema = yup.object({
     .required('Email is required'),
   password: yup
     .string('Enter your password')
-    .min(8, 'Password should be of minimum 8 characters length')
+    .min(8, 'Password should be at least 8 characters')
     .required('Password is required'),
 });
 
@@ -46,43 +34,55 @@ export default function SignIn() {
   const auth = getAuth();
   const router = useRouter();
   const formik = useFormik({
-      initialValues: {
-        email: '',
-        password: '',
-      },
-      validationSchema: validationSchema,
-      onSubmit: (values) => {
-        userSignIn(values.email, values.password)
-      },
-    });
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      userSignIn(values.email, values.password)
+    },
+  });
 
   auth.onAuthStateChanged((user) => {
     if (user) {
-        router.push('/calendar');
+      router.push('/calendar');
     }
   });
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
+    <Grid container component="main" sx={{ height: '100vh' }}>
+      <CssBaseline />
+      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <Box
+          style={{ textAlign: "left" }}
           sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'left',
+            my: 4,
+            mx: 4,
+            alignItems: 'center',
           }}
         >
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-            <form onSubmit={formik.handleSubmit}>
+          <form onSubmit={formik.handleSubmit}>
+            <Box style={{ textAlign: "left", width: "100%" }}>
+              <Image src="/Tree.png" alt="me" width="132" height="102" />
+              <Typography component="h1" variant="h3">
+                Log in
+              </Typography>
+              <Grid style={{ display: "flex", alignItems: "flex-end" }}>
+                <Typography style={{ float: "left" }}>
+                  Don't have an account?&nbsp;
+                </Typography>
+                <Link href="#" underline="hover">
+                  Sign up
+                </Link>
+              </Grid>
+
+            </Box>
             <TextField
               margin="normal"
               fullWidth
               id="email"
-              label="Email Address"
+              label="Email"
               name="email"
               autoComplete="email"
               autoFocus
@@ -91,7 +91,6 @@ export default function SignIn() {
               error={formik.touched.email && Boolean(formik.errors.email)}
               helperText={formik.touched.email && formik.errors.email}
             />
-
             <TextField
               margin="normal"
               fullWidth
@@ -105,38 +104,50 @@ export default function SignIn() {
               error={formik.touched.password && Boolean(formik.errors.password)}
               helperText={formik.touched.password && formik.errors.password}
             />
-
+            <Box style={{ display: "flex", alignItems: "center" }}>
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label="Remember me"
+              />
+              <Link
+                href="#"
+                underline="hover"
+                style={{ marginLeft: "auto", order: 1 }}
+                variant="body2"
+              >
+                Forgot password?
+              </Link>
+            </Box>
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Log In
             </Button>
-
-            <Grid container>
-              <Grid item xs>
-                <Link href="forgotPassword" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-
-              <Grid item>             
-                <Link href="signUp" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
-
-            <GoogleButton 
-                onClick= {() => {signInWithGoogle()}}
-                />
+            <Divider>or</Divider>
+            <GoogleButton
+              style={{ width: "100% !important", marginTop: 24 }}
+              onClick={() => { signInWithGoogle() }}
+            />
           </form>
         </Box>
-
-        <Copyright sx={{ mt: 8, mb: 4 }} />
-      </Container>
-    </ThemeProvider>
+      </Grid>
+      <Grid
+        item
+        xs={false}
+        sm={4}
+        md={7}
+        sx={{
+          backgroundImage: 'url(https://source.unsplash.com/random)',
+          backgroundRepeat: 'no-repeat',
+          backgroundColor: (t) =>
+            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      />
+    </Grid>
   );
 }
