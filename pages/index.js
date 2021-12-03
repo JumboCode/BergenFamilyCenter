@@ -1,8 +1,8 @@
 import Head from "next/head";
 import { Typography, Button } from "@mui/material";
-import { firebaseNewEvent, firebaseFilterEvents } from '../src/firebaseEvents.js';
+//import { firebaseNewEvent, firebaseFilterEvents } from '../src/firebaseEvents.js';
 import userSignIn from '../src/firebaseSignIn';
-import { Timestamp } from "@firebase/firestore";
+//import { Timestamp } from "@firebase/firestore";
 
 export default function Home() {
   const data = {
@@ -11,8 +11,8 @@ export default function Home() {
     manager: "Mr. Pizza Man",
     name: "Pizza party!",
     division: "Child",
-    startTime: Timestamp.fromDate(new Date("July 19, 2021")),
-    endTime: Timestamp.fromDate(new Date("July 20, 2021")),
+    //startTime: Timestamp.fromDate(new Date("July 19, 2021")),
+    //endTime: Timestamp.fromDate(new Date("July 20, 2021")),
   };
 
   const divisions = new Array("Child", "Teen", "Nonchild");
