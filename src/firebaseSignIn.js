@@ -1,9 +1,10 @@
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "../firebase/firebase";
 
 const userSignIn = (email, password) => {
     const auth = getAuth();
     signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
+            console.log(email);
             /* Include optional actions */
             // e.g. console.log(userCredential.user)
         })
