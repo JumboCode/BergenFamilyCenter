@@ -46,9 +46,6 @@ const firebaseRemoveUser = async (user, id) => {
 
 const firebaseFilterEvents = async (month, divisions, showEnrolled) => {
     const events = collection(db, "events");
-    //Date.getMonth(Timestamp.toDate(startTime))
-    //const q = query(events, where("division", "in", divisions), where("month", "==", month)); //need to do it for each division (in second parameter)
-    //const q = query(events, where("division", "in", divisions), where("startTime", "==", month));    
     if (showEnrolled) {
         // var user_id = getAuth().currentUser.uid;
         // console.log(user_id);
@@ -56,9 +53,9 @@ const firebaseFilterEvents = async (month, divisions, showEnrolled) => {
     } else {
         const q = query(events, where("division", "in", divisions));
     }
-    //create date object and extract the month?
+
     const querySnapshot = await getDocs(q);
-    //if we want to do something with each doc, which maybe we don't? ...
+
     querySnapshot.forEach((doc) => {
         var timestamp = doc.data().startTime;
         console.log("Timestamp found =", timestamp);
@@ -66,7 +63,6 @@ const firebaseFilterEvents = async (month, divisions, showEnrolled) => {
             console.log("yay we found a match!!!!");
             console.log(doc.id, " => ", doc.data());
         }
-        // console.log("we found a match!!!!");
     });
 
 }
