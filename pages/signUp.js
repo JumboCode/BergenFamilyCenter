@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import { makeStyles } from '@mui/styles';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import GoogleButton from 'react-google-button'
@@ -16,6 +17,9 @@ import signInWithGoogle from '../src/googleSignIn';
 import userSignUp from '../src/firebaseSignUp'; 
 import { getAuth } from "firebase/auth";
 import { useRouter } from 'next/router';
+import Image from 'next/image';
+import Divider from '@mui/material/Divider';
+
 
 const useStyles = makeStyles({
   heading: {
@@ -25,8 +29,8 @@ const useStyles = makeStyles({
     fontFamily: "Californian FB Display",
   },
   Googlebutton: {
-    margin: '10px 17px !important',
-    width: '435px !important',
+    margin: '10px 42px !important',
+    width: '510px !important',
     textAlign: 'center',
   },
   hasAccount: {
@@ -75,27 +79,36 @@ export default function SignUp() {
 
   auth.onAuthStateChanged((user) => {
     if (user) {
-        //router.push('/calendar');
+        router.push('/calendar');
     }
   });
 
 
   return (
-    <Box
-      noValidate
-      autoComplete="off"
-    >
-
-      <Typography variant="h3" component="div" gutterBottom
-        className={classes.heading}
-        sx={{ m: 2}}>
-        Sign Up
-      </Typography>
-
-      
+  <Grid container component="main" sx={{ height: '100vh' }}>
+      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+      <Box
+          style={{ textAlign: "left" }}
+          sx={{
+            my: 2,
+            mx: 5,
+            alignItems: 'center',
+          }}
+      >
+        <Image src="/Tree.png" 
+              alt="me" 
+              width="132" 
+              height="102" 
+              sx={{ m: 2}} />
+      </Box>
       <form onSubmit={formik.handleSubmit}>
 
-      <Box sx={{ m: 2}}>
+      <Box sx={{ my: 2, mx: 5}}>
+
+        <Typography variant="h3" component="div" gutterBottom
+          className={classes.heading}>
+          Sign Up
+        </Typography>
 
         <Typography className={classes.hasAccount}>
           Already have an account? 
@@ -117,7 +130,7 @@ export default function SignUp() {
           helperText={formik.touched.Firstname && formik.errors.Firstname}
           variant="outlined"
           size="small"
-          sx={{ m: 2, width: '25ch' }}
+          sx={{ my: 2, mx: 5, width: '30ch' }}
           className={classes.font}
         />
         <TextField
@@ -128,7 +141,7 @@ export default function SignUp() {
           helperText={formik.touched.Lastname && formik.errors.Lastname}
           variant="outlined"
           size="small"
-          sx={{ m: 2, width: '25ch' }}
+          sx={{ my: 2, mx: -1, width: '30ch' }}
           className={classes.font}
         />
       </div>
@@ -142,7 +155,7 @@ export default function SignUp() {
           helperText={formik.touched.email && formik.errors.email}
           variant="outlined"
           size="small"
-          sx={{ m: 2, width: '54ch' }}
+          sx={{ my: 2, mx: 5, width: '64ch' }}
           className={classes.font}
         />
       </div>
@@ -157,7 +170,7 @@ export default function SignUp() {
           helperText={formik.touched.password && formik.errors.password}
           variant="outlined"
           size="small"
-          sx={{ m: 2, width: '54ch' }}
+          sx={{ my: 2, mx: 5, width: '64ch' }}
           className={classes.font}
         />
       </div>
@@ -169,26 +182,40 @@ export default function SignUp() {
           variant="contained"
           type="submit"
           loading={loading}
-          sx={{ m: 2, width: '25ch' }}
+          sx={{ my: 2, mx: 5, width: '66ch' }}
         >
             Sign Up
         </LoadingButton>
       </div>
     </form>
 
-      {/* <div className = {classes.Googlebutton}> */}
-        <GoogleButton 
-          className = {classes.Googlebutton}
-          type="light"
-          onClick={() => { 
-            signInWithGoogle()
-          }}
-        />
-      {/* </div> */}
-    </Box>
+    <Divider>or</Divider>
+
+      <GoogleButton 
+        className = {classes.Googlebutton}
+        type="light"
+        onClick={() => { 
+          signInWithGoogle()
+        }}
+      />
+    </Grid>
+    <Grid   
+        item
+        xs={false}
+        sm={4}
+        md={7}
+        sx={{
+          backgroundImage: 'url(https://source.unsplash.com/random)',
+          backgroundRepeat: 'no-repeat',
+          backgroundColor: (t) =>
+            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}>
+    </Grid>    
+  </Grid>
   )
 }
-
 
   
 	
