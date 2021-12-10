@@ -11,7 +11,6 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import NavBar from "../components/navBar.js";
 
 const validationSchema = yup.object({
     email: yup
