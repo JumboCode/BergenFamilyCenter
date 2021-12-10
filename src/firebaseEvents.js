@@ -1,7 +1,7 @@
 import { collection, doc, setDoc, updateDoc, getDocs, arrayUnion, arrayRemove, query, where } from "firebase/firestore";
 import { db, firebase } from "../firebase/firebase.js";
 import { Timestamp } from "@firebase/firestore";
-// import { getAuth } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 
 const firebaseNewEvent = async (data) => {
     // Add a new document with a generated id
@@ -44,27 +44,26 @@ const firebaseRemoveUser = async (user, id) => {
     });
 }
 
-const firebaseFilterEvents = async (month, divisions, showEnrolled) => {
+const firebaseFilterEvents = async (theMonth, divisions, showEnrolled) => {
     const events = collection(db, "events");
+    let filtered_events = [];
+
+    let q = query(events, where("division", "in", divisions));
+
     if (showEnrolled) {
-        // var user_id = getAuth().currentUser.uid;
-        // console.log(user_id);
-        // const q = query(events, where("division", "in", divisions), where("enrolled", "array-contains", user_id));
-    } else {
-        const q = query(events, where("division", "in", divisions));
+        let user_id = getAuth().currentUser.uid;
+        q = query(events, where("division", "in", divisions), where("attendees", "array-contains", user_id));
     }
 
     const querySnapshot = await getDocs(q);
 
     querySnapshot.forEach((doc) => {
         var timestamp = doc.data().startTime;
-        console.log("Timestamp found =", timestamp);
-        if (timestamp.toDate().getMonth()) {
-            console.log("yay we found a match!!!!");
-            console.log(doc.id, " => ", doc.data());
+        if (timestamp.toDate().getMonth() == theMonth) {
+            console.log("added!")
+            filtered_events.push(doc);
         }
     });
-
 }
 
 export { firebaseNewEvent, firebaseUpdateEvent, firebaseAppendUser, firebaseRemoveUser, firebaseFilterEvents };
