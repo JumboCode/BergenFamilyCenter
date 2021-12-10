@@ -5,7 +5,7 @@ import NavBar from "../components/navBar.js";
 export default function Profile() {
     return (
         <div>
-            <NavBar></NavBar>
+            <NavBar page={"profile"}></NavBar>
             <Typography>
                 Profile
             </Typography>

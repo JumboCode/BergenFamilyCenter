@@ -5,7 +5,7 @@ import NavBar from "../components/navBar.js";
 export default function Events() {
     return (
         <div>
-            <NavBar> </NavBar>
+            <NavBar page={"events"}></NavBar>
             <Typography>
                 Events
             </Typography>

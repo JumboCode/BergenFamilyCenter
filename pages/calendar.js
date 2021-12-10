@@ -5,7 +5,7 @@ import NavBar from "../components/navBar.js";
 export default function Calendar() {
     return (
         <div>
-            <NavBar></NavBar>
+            <NavBar page={"calendar"}></NavBar>
             <Typography>
                 Calendar
             </Typography>
