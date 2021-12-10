@@ -4,16 +4,16 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 const userSignUp = (email, password) => {
   const auth = getAuth();
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      /* Include optional actions */
-      // e.g. console.log(userCredential.user)
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.error("Error code " + errorCode + ": " + errorMessage);
-    });
+  return new Promise((resolve, reject) => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        /* Include optional actions */
+        resolve(`New user signed up!`);
+      })
+      .catch((error) => {
+        reject(`Error ${error.code} signing user up: ${error.message}`);
+      });
+  });
 };
 
 export default userSignUp;
