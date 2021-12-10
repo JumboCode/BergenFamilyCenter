@@ -8,6 +8,6 @@ export default function Home() {
         <title>Bergen Family Center</title>
       </Head>
       <Typography>bergenfamilycenter</Typography>
-    </div >
+    </div>
   );
 }
