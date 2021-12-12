@@ -95,6 +95,5 @@ export default function ForgotPassword() {
                 </Box>
             </Box>
         </Container >
-
     );
 }

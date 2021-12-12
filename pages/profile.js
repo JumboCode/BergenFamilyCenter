@@ -2,12 +2,12 @@ import Head from 'next/head'
 import { Typography } from '@mui/material';
 import NavBar from "../components/navBar.js";
 
-export default function Calendar() {
+export default function Profile() {
     return (
         <div>
-            <NavBar page={"calendar"}></NavBar>
+            <NavBar page={"profile"}></NavBar>
             <Typography>
-                Calendar
+                Profile
             </Typography>
         </div>
     )
