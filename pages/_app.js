@@ -1,6 +1,6 @@
-import { getAuth, setPersistence, inMemoryPersistence } from "firebase/auth";
 import '../styles/globals.css';
 import '../firebase/firebase';
+import { getAuth, setPersistence, inMemoryPersistence } from "firebase/auth";
 
 function MyApp({ Component, pageProps }) {
   const auth = getAuth();
