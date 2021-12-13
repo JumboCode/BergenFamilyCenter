@@ -79,129 +79,127 @@ export default function SignUp() {
 
   auth.onAuthStateChanged((user) => {
     if (user) {
-      router.push('/calendar');
+        router.push('/calendar');
     }
   });
 
 
   return (
-    <Grid container component="main" sx={{ height: '100vh' }}>
+  <Grid container component="main" sx={{ height: '100vh' }}>
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <Box
+      <Box
           style={{ textAlign: "left" }}
           sx={{
             my: 2,
             mx: 5,
             alignItems: 'center',
           }}
-        >
-          <Image src="/Tree.png"
-            alt="me"
-            width="132"
-            height="102"
-            sx={{ m: 2 }} />
-        </Box>
-        <form onSubmit={formik.handleSubmit}>
+      >
+        <Image src="/Tree.png" 
+              alt="me" 
+              width="132" 
+              height="102" 
+              sx={{ m: 2}} />
+      </Box>
+      <form onSubmit={formik.handleSubmit}>
 
-          <Box sx={{ my: 2, mx: 5 }}>
+      <Box sx={{ my: 2, mx: 5}}>
 
-            <Typography variant="h3" component="div" gutterBottom
-              className={classes.heading}>
-              Sign Up
-            </Typography>
+        <Typography variant="h3" component="div" gutterBottom
+          className={classes.heading}>
+          Sign Up
+        </Typography>
 
-            <Typography className={classes.hasAccount}>
-              Already have an account?
-            </Typography>
-            <Link href="logIn"
+        <Typography className={classes.hasAccount}>
+          Already have an account? 
+        </Typography>
+        <Link href="logIn" 
               variant="body2"
-              sx={{ m: 0.5 }}
-            >
-              {"Sign In"}
-            </Link>
-          </Box>
+              sx={{ m: 0.5}}
+              >
+          {"Sign In"}
+        </Link>
+      </Box>
 
-          <div className="container">
-            <TextField
-              label="First Name"
-              id="Firstname"
-              onChange={formik.handleChange}
-              error={formik.touched.Firstname && Boolean(formik.errors.Firstname)}
-              helperText={formik.touched.Firstname && formik.errors.Firstname}
-              variant="outlined"
-              size="small"
-              sx={{ my: 2, mx: 5, width: '30ch' }}
-              className={classes.font}
-            />
-            <TextField
-              label="Last Name"
-              id="Lastname"
-              onChange={formik.handleChange}
-              error={formik.touched.Lastname && Boolean(formik.errors.Lastname)}
-              helperText={formik.touched.Lastname && formik.errors.Lastname}
-              variant="outlined"
-              size="small"
-              sx={{ my: 2, mx: -1, width: '30ch' }}
-              className={classes.font}
-            />
-          </div>
-
-          <div>
-            <TextField
-              label="Email"
-              id="email"
-              onChange={formik.handleChange}
-              error={formik.touched.email && Boolean(formik.errors.email)}
-              helperText={formik.touched.email && formik.errors.email}
-              variant="outlined"
-              size="small"
-              sx={{ my: 2, mx: 5, width: '64ch' }}
-              className={classes.font}
-            />
-          </div>
-
-          <div>
-            <TextField
-              label="Password"
-              type="password"
-              id="password"
-              onChange={formik.handleChange}
-              error={formik.touched.password && Boolean(formik.errors.password)}
-              helperText={formik.touched.password && formik.errors.password}
-              variant="outlined"
-              size="small"
-              sx={{ my: 2, mx: 5, width: '64ch' }}
-              className={classes.font}
-            />
-          </div>
-
-          <div>
-            <LoadingButton
-              style={{
-                minWidth: '435px',
-                minHeight: '40px'
-              }}
-              variant="contained"
-              type="submit"
-              loading={loading}
-              sx={{ my: 2, mx: 5, width: '66ch' }}
-            >
-              Sign Up
-            </LoadingButton>
-          </div>
-        </form>
-
-        <Divider>or</Divider>
-
-        <GoogleButton
-          className={classes.Googlebutton}
-          type="light"
-          onClick={() => {
-            signInWithGoogle()
-          }}
+      <div className="container">
+        <TextField
+          label="First Name"
+          id="Firstname"
+          onChange={formik.handleChange}
+          error={formik.touched.Firstname && Boolean(formik.errors.Firstname)}
+          helperText={formik.touched.Firstname && formik.errors.Firstname}
+          variant="outlined"
+          size="small"
+          sx={{ my: 2, mx: 5, width: '30ch' }}
+          className={classes.font}
         />
-      </Grid>
-      <Grid
+        <TextField
+          label="Last Name"
+          id="Lastname"
+          onChange={formik.handleChange}
+          error={formik.touched.Lastname && Boolean(formik.errors.Lastname)}
+          helperText={formik.touched.Lastname && formik.errors.Lastname}
+          variant="outlined"
+          size="small"
+          sx={{ my: 2, mx: -1, width: '30ch' }}
+          className={classes.font}
+        />
+      </div>
+
+      <div>
+        <TextField
+          label="Email"
+          id="email"
+          onChange={formik.handleChange}
+          error={formik.touched.email && Boolean(formik.errors.email)}
+          helperText={formik.touched.email && formik.errors.email}
+          variant="outlined"
+          size="small"
+          sx={{ my: 2, mx: 5, width: '64ch' }}
+          className={classes.font}
+        />
+      </div>
+
+      <div>
+        <TextField
+          label="Password"
+          type="password"
+          id="password"
+          onChange={formik.handleChange}
+          error={formik.touched.password && Boolean(formik.errors.password)}
+          helperText={formik.touched.password && formik.errors.password}
+          variant="outlined"
+          size="small"
+          sx={{ my: 2, mx: 5, width: '64ch' }}
+          className={classes.font}
+        />
+      </div>
+
+      <div>
+        <LoadingButton
+          style={{minWidth: '435px', 
+                  minHeight: '40px'}}
+          variant="contained"
+          type="submit"
+          loading={loading}
+          sx={{ my: 2, mx: 5, width: '66ch' }}
+        >
+            Sign Up
+        </LoadingButton>
+      </div>
+    </form>
+
+    <Divider>or</Divider>
+
+      <GoogleButton 
+        className = {classes.Googlebutton}
+        type="light"
+        onClick={() => { 
+          signInWithGoogle()
+        }}
+      />
+    </Grid>
+    <Grid   
         item
         xs={false}
         sm={4}
@@ -214,9 +212,7 @@ export default function SignUp() {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}>
-      </Grid>
-    </Grid>
+    </Grid>    
+  </Grid>
   )
 }
-
-
