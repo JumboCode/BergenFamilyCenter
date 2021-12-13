@@ -2,12 +2,9 @@ import Head from 'next/head'
 import { Grid, Typography } from '@mui/material';
 import Event from "../components/event";
 import { makeStyles } from '@mui/styles';
+import NavBar from "../components/navBar.js";
 
-const useStyles = makeStyles({
-    card: {}
-});
-
-export default function MyGroups() {
+export default function Events() {
     return (
         <div style={{ margin: 10 }}>
             <Grid container spacing={4}>
