@@ -216,3 +216,6 @@ export default function SignUp() {
   </Grid>
   )
 }
+
+  
+	
