@@ -14,7 +14,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import LoadingButton from '@mui/lab/LoadingButton';
 import signInWithGoogle from '../src/googleSignIn';
-import userSignUp from '../src/firebaseSignUp';
+import userSignUp from '../src/firebaseSignUp'; 
 import { getAuth } from "firebase/auth";
 import { useRouter } from 'next/router';
 import Image from 'next/image';
