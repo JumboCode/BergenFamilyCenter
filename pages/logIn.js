@@ -72,7 +72,7 @@ export default function SignIn() {
                                 <Typography style={{ float: "left" }}>
                                     Don't have an account?&nbsp;
                                 </Typography>
-                                <Link href="#" underline="hover">
+                                <Link href="/signUp" underline="hover">
                                     Sign up
                                 </Link>
                             </Grid>
@@ -110,7 +110,7 @@ export default function SignIn() {
                                 label="Remember me"
                             />
                             <Link
-                                href="#"
+                                href="/forgotPassword"
                                 underline="hover"
                                 style={{ marginLeft: "auto", order: 1 }}
                                 variant="body2"

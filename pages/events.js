@@ -6,26 +6,28 @@ import NavBar from "../components/navBar.js";
 
 export default function Events() {
     return (
-        <div style={{ margin: 10 }}>
-            <Grid container spacing={4}>
-                <Grid item xs={3}>
-                    <Event image="/TransparentTree.png" title="Event Name" description="Event info.">
-                    </Event>
+        <div>
+            <NavBar />
+            <div style={{ margin: 10 }}>
+                <Grid container spacing={4}>
+                    <Grid item xs={3}>
+                        <Event image="/TransparentTree.png" title="Event Name" description="Event info.">
+                        </Event>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <Event image="/TransparentTree.png" title="Event Name" description="Event info.">
+                        </Event>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <Event image="/TransparentTree.png" title="Event Name" description="Event info.">
+                        </Event>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <Event image="/TransparentTree.png" title="Event Name" description="Event info.">
+                        </Event>
+                    </Grid>
                 </Grid>
-                <Grid item xs={3}>
-                    <Event image="/TransparentTree.png" title="Event Name" description="Event info.">
-                    </Event>
-                </Grid>
-                <Grid item xs={3}>
-                    <Event image="/TransparentTree.png" title="Event Name" description="Event info.">
-                    </Event>
-                </Grid>
-                <Grid item xs={3}>
-                    <Event image="/TransparentTree.png" title="Event Name" description="Event info.">
-                    </Event>
-                </Grid>
-            </Grid>
-
+            </div>
         </div>
     )
 }
