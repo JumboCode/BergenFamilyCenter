@@ -1,7 +1,5 @@
-import Head from 'next/head'
-import { Grid, Typography } from '@mui/material';
+import { Grid } from '@mui/material';
 import Event from "../components/event";
-import { makeStyles } from '@mui/styles';
 import NavBar from "../components/navBar.js";
 
 export default function Events() {
