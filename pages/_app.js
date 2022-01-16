@@ -4,7 +4,7 @@ import { getAuth, setPersistence, inMemoryPersistence } from "firebase/auth";
 
 function MyApp({ Component, pageProps }) {
   const auth = getAuth();
-  console.log(auth);
+
   setPersistence(auth, inMemoryPersistence)
     .then(() => {
       //

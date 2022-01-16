@@ -72,7 +72,7 @@ export default function SignUp() {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      userSignUp(values.email, values.password)
+      userSignUp(values.email, values.password, 0, values.Firstname.trim() + " " + values.Lastname.trim());
       setLoading(true);
     },
   });
