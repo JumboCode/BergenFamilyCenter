@@ -6,7 +6,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-export default function MediaCard({ description, title, image, className }) {
+export default function MediaCard({ description, title, image, className, startTime, endTime }) {
     return (
         <Card sx={{ width: 300, height: 275 }} className={className}>
             <CardMedia

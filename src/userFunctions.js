@@ -3,21 +3,22 @@ import { db } from "../firebase/firebase";
 import {
   collection,
   addDoc,
+  setDoc,
   updateDoc,
   arrayUnion,
   doc,
 } from "firebase/firestore";
 
-const userCollection = collection(db, "users");
 
-export const addUser = async (email, phoneNumber) => {
-  console.log("Here");
-  const newUser = await addDoc(userCollection, {
+export const addUser = async (id, email, phoneNumber, name) => {
+  const userDoc = doc(db, "users", id);
+  const newUser = await setDoc(userDoc, {
     email: email,
     phoneNumber: phoneNumber,
     events: [],
+    isManager: false,
+    name: name,
   });
-  console.log(`User was added! Path: ${newUser.path}`);
 };
 
 export const updateUser = async (uid, fieldToUpdate) => {

@@ -1,4 +1,5 @@
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { addUser } from "./userFunctions";
 
 const signInWithGoogle = () => {
     const provider = new GoogleAuthProvider();
@@ -11,8 +12,9 @@ const signInWithGoogle = () => {
             const token = credential.accessToken;
             // The signed-in user info.
             const user = result.user;
-            // ...
-            console.log(user);
+            if (result._tokenResponse.isNewUser) {
+                addUser(user.uid, user.email, user.phoneNumber, user.displayName);
+            } // TODO some of these things may not exist
         }).catch((error) => {
             // Handle Errors here.
             const errorCode = error.code;
