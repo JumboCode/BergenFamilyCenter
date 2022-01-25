@@ -44,6 +44,7 @@ const firebaseRemoveUser = async (user, id) => {
     });
 }
 
+//EX: firebaseFilterEvents(6, ["Nonchild"]).then(values => console.log(values))
 const firebaseFilterEvents = async (theMonth, divisions, showEnrolled) => {
     const events = collection(db, "events");
     let filtered_events = [];
@@ -60,10 +61,10 @@ const firebaseFilterEvents = async (theMonth, divisions, showEnrolled) => {
     querySnapshot.forEach((doc) => {
         var timestamp = doc.data().startTime;
         if (timestamp.toDate().getMonth() == theMonth) {
-            console.log("added!")
-            filtered_events.push(doc);
+            filtered_events.push(doc.data());
         }
     });
+    return filtered_events;
 }
 
 export { firebaseNewEvent, firebaseUpdateEvent, firebaseAppendUser, firebaseRemoveUser, firebaseFilterEvents };
