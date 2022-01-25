@@ -12,7 +12,6 @@ const signInWithGoogle = () => {
             const token = credential.accessToken;
             // The signed-in user info.
             const user = result.user;
-            console.log(result._tokenResponse);
             if (result._tokenResponse.isNewUser) {
                 addUser(user.uid, user.email, user.phoneNumber, user.displayName);
             } // TODO some of these things may not exist
