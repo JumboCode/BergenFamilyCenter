@@ -1,8 +1,17 @@
 import '../styles/globals.css';
 import '../firebase/firebase';
+import { useState, useMemo } from 'react';
 import { getAuth, setPersistence, inMemoryPersistence } from "firebase/auth";
+import { LanguageContext } from "../src/languageContext";
 
 function MyApp({ Component, pageProps }) {
+  const [language, setLanguage] = useState('English')
+
+  const value = useMemo(
+    () => ({ language, setLanguage }),
+    [language]
+  );
+
   const auth = getAuth();
 
   setPersistence(auth, inMemoryPersistence)
@@ -16,7 +25,11 @@ function MyApp({ Component, pageProps }) {
       console.log(errorMessage);
     });
 
-  return <Component {...pageProps} />
+  return (
+    <LanguageContext.Provider value={value}>
+      <Component {...pageProps} />
+    </LanguageContext.Provider>
+  );
 }
 
 export default MyApp
