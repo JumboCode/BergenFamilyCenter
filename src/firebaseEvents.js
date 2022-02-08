@@ -1,4 +1,4 @@
-import { collection, doc, setDoc, updateDoc, getDocs, arrayUnion, arrayRemove, query, where } from "firebase/firestore";
+import { collection, doc, setDoc, updateDoc, getDocs, getDoc, arrayUnion, arrayRemove, query, where } from "firebase/firestore";
 import { db, firebase } from "../firebase/firebase.js";
 import { Timestamp } from "@firebase/firestore";
 import { getAuth } from "firebase/auth";
@@ -8,6 +8,13 @@ const firebaseNewEvent = async (data) => {
     const newEventRef = doc(collection(db, "events"));
 
     await setDoc(newEventRef, data);
+};
+
+const firebaseGetEvent = async (id) => {
+    // Add a new document with a generated id
+    const eventRef = doc(db, "events", id);
+    const docSnap = await getDoc(eventRef);
+    return docSnap.data();
 };
 
 const firebaseUpdateEvent = async (data, id) => {
@@ -67,4 +74,4 @@ const firebaseFilterEvents = async (theMonth, divisions, showEnrolled) => {
     return filtered_events;
 }
 
-export { firebaseNewEvent, firebaseUpdateEvent, firebaseAppendUser, firebaseRemoveUser, firebaseFilterEvents };
+export { firebaseNewEvent, firebaseGetEvent, firebaseUpdateEvent, firebaseAppendUser, firebaseRemoveUser, firebaseFilterEvents };
