@@ -1,4 +1,4 @@
-import { collection, doc, setDoc, updateDoc, getDocs, getDoc, arrayUnion, arrayRemove, query, where } from "firebase/firestore";
+import { collection, doc, setDoc, updateDoc, getDocs, arrayUnion, arrayRemove, query, where, orderBy, startAt } from "firebase/firestore";
 import { db, firebase } from "../firebase/firebase.js";
 import { Timestamp } from "@firebase/firestore";
 import { getAuth } from "firebase/auth";
@@ -51,7 +51,7 @@ const firebaseRemoveUser = async (user, id) => {
     });
 }
 
-//EX: firebaseFilterEvents(6, ["Nonchild"]).then(values => console.log(values))
+// Example usage: firebaseFilterEvents(6, ["Nonchild"]).then(values => console.log(values))
 const firebaseFilterEvents = async (theMonth, divisions, showEnrolled) => {
     const events = collection(db, "events");
     let filtered_events = [];
@@ -74,4 +74,26 @@ const firebaseFilterEvents = async (theMonth, divisions, showEnrolled) => {
     return filtered_events;
 }
 
-export { firebaseNewEvent, firebaseGetEvent, firebaseUpdateEvent, firebaseAppendUser, firebaseRemoveUser, firebaseFilterEvents };
+const firebaseFilterEventsPaginate = async (divisions, pageSize, pageOffset) => {
+    let toReturn = [];
+
+    const events = collection(db, "events");
+    const startAtNum = pageSize * pageOffset;
+    const current_time = Timestamp.now();
+
+    let now = new Date();
+    now = new Date(now.setHours(0, 0, 0, 0));
+    const last_midnight_timestamp = Timestamp.fromDate(now);
+
+    let q = query(events, where("division", "in", divisions), orderBy("startTime"), where("startTime", ">=", last_midnight_timestamp));
+    const querySnapshot = await getDocs(q);
+
+    for (var i = 0; i < pageSize; i++) {
+        if (i < querySnapshot.size - startAtNum) {
+            toReturn[i] = querySnapshot.docs[i + startAtNum];
+        }
+    }
+    return toReturn;
+}
+
+export { firebaseNewEvent, firebaseGetEvent, firebaseUpdateEvent, firebaseAppendUser, firebaseRemoveUser, firebaseFilterEvents, firebaseFilterEventsPaginate };
