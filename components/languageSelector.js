@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import LanguageIcon from '@mui/icons-material/Language';
 import Button from '@mu\i/material/Button';
 import { makeStyles } from '@mui/styles';
@@ -12,9 +12,22 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export default function LanguageSelector() {
+export default function LanguageSelector() { // TODO: Fix number of rerenders?
     const classes = useStyles();
-    const { language, setLanguage } = useContext(LanguageContext);
+    const [languageState, setLanguageState] = useState('');
+    const { _, setLanguage } = useContext(LanguageContext);
+
+    useEffect(() => {
+        setLanguageState(localStorage.getItem('language') ?? 'English');
+    }, [])
+    useEffect(() => {
+        if (!localStorage.getItem('language')) {
+            localStorage.setItem('language', 'English');
+            setLanguage('English');
+        } else {
+            localStorage.setItem('language', languageState);
+        }
+    }, [languageState])
     const [anchorEl, setAnchorEl] = useState(null);
 
     const handleClose = () => {
@@ -32,7 +45,7 @@ export default function LanguageSelector() {
     return (
         <Button id="test" onClick={handleOpen} size='small' classes={{ label: classes.iconButtonLabel }}>
             <LanguageIcon />
-            {language}
+            {languageState}
             <Menu
                 id="basic-menu"
                 anchorEl={anchorEl}
@@ -43,29 +56,20 @@ export default function LanguageSelector() {
                 }}
             >
                 <MenuItem onClick={() => {
+                    setLanguageState("English");
                     setLanguage("English");
                     handleClose();
                 }}>
                     English
                 </MenuItem>
                 <MenuItem onClick={() => {
+                    setLanguageState("Español");
                     setLanguage("Español");
                     handleClose();
                 }}>
                     Español
                 </MenuItem>
             </Menu>
-
-            {/* <Menu value={language} onChange={menuClicked}>
-                <MenuItem value="English">
-                    English
-                </MenuItem>
-                <MenuItem value="Spanish">
-                    Spanish
-                </MenuItem>
-            </Menu> */}
-
-            {/* </Popover> */}
         </Button>
     );
 };
