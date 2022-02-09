@@ -1,4 +1,4 @@
-import { collection, doc, setDoc, updateDoc, getDocs, arrayUnion, arrayRemove, query, where, orderBy, startAt } from "firebase/firestore";
+import { collection, doc, setDoc, updateDoc, getDoc, getDocs, arrayUnion, arrayRemove, query, where, orderBy, startAt } from "firebase/firestore";
 import { db, firebase } from "../firebase/firebase.js";
 import { Timestamp } from "@firebase/firestore";
 import { getAuth } from "firebase/auth";
@@ -96,4 +96,13 @@ const firebaseFilterEventsPaginate = async (divisions, pageSize, pageOffset) => 
     return toReturn;
 }
 
-export { firebaseNewEvent, firebaseGetEvent, firebaseUpdateEvent, firebaseAppendUser, firebaseRemoveUser, firebaseFilterEvents, firebaseFilterEventsPaginate };
+const firebaseRetrieveAttendees = async (id) => {
+    // Find event with user-provided event ID
+    const eventRef = doc(db, "events", id);
+    const docSnap = await getDoc(eventRef);
+    const attendees = docSnap.data().attendees;
+
+    return attendees;
+}
+
+export { firebaseNewEvent, firebaseGetEvent, firebaseUpdateEvent, firebaseAppendUser, firebaseRemoveUser, firebaseFilterEvents, firebaseFilterEventsPaginate, firebaseRetrieveAttendees };
