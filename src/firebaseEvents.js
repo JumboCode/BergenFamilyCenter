@@ -37,23 +37,22 @@ const firebaseAppendUser = async (user, id) => {
 }
 
 const firebaseAppendPerson = async (userID, eventID, names, ages, photoConsent) => {
-    //grab both documents
     const eventRef = doc(db, "events", eventID);
     const userRef = doc(db, "users", userID);
 
     var nameAndAge = {};
     names.forEach((name, i) => nameAndAge[name] = ages[i]);
-    //creates the object
+
     var userToAdd = {
         parent: userRef,
-        attendees: nameAndAge, //hopefully stores a dict of names and ages
-        consent: photoConsent //bool
+        attendees: nameAndAge,
+        consent: photoConsent
     }
-    //updates the event document
+
     await updateDoc(eventRef, {
         attendees: arrayUnion(userToAdd)
     });
-    //update user events
+
     addUserEvent(userID, eventID);
 }
 
@@ -91,7 +90,6 @@ const firebaseFilterEvents = async (theMonth, divisions, showEnrolled) => {
 
 const firebaseFilterEventsChronilogical = async (theMonth, divisions, showEnrolled) => {
     const events = collection(db, "events");
-    console.log(events);
     let filtered_events = [];
 
     let now = new Date();
