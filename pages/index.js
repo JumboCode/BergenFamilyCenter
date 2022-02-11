@@ -1,5 +1,4 @@
 import Head from "next/head";
-import { Typography } from "@mui/material";
 
 
 export default function Home() {
@@ -8,7 +7,6 @@ export default function Home() {
       <Head>
         <title>Bergen Family Center</title>
       </Head>
-      <Typography>bergenfamilycenter</Typography>
     </div>
   );
 }

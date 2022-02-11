@@ -27,6 +27,29 @@ const firebaseUpdateEvent = async (data, id) => {
     });
 };
 
+//EX: firebaseFilterEvents(6, ["Nonchild"]).then(values => console.log(values))
+const firebaseFilterEvents = async (theMonth, divisions, showEnrolled) => {
+    const events = collection(db, "events");
+    let filtered_events = [];
+
+    let q = query(events, where("division", "in", divisions));
+
+    if (showEnrolled) {
+        let user_id = getAuth().currentUser.uid;
+        q = query(events, where("division", "in", divisions), where("attendees", "array-contains", user_id));
+    }
+
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach((doc) => {
+        var timestamp = doc.data().startTime;
+        if (timestamp.toDate().getMonth() == theMonth) {
+            filtered_events.push(doc.data());
+        }
+    });
+    return filtered_events;
+}
+
 const firebaseAppendUser = async (user, id) => {
     const eventRef = doc(db, "events", id);
     const userRef = doc(db, "users", id);
@@ -63,29 +86,6 @@ const firebaseRemoveUser = async (user, id) => {
     await updateDoc(eventRef, {
         attendees: arrayRemove(userRef)
     });
-}
-
-//EX: firebaseFilterEvents(6, ["Nonchild"]).then(values => console.log(values))
-const firebaseFilterEvents = async (theMonth, divisions, showEnrolled) => {
-    const events = collection(db, "events");
-    let filtered_events = [];
-
-    let q = query(events, where("division", "in", divisions));
-
-    if (showEnrolled) {
-        let user_id = getAuth().currentUser.uid;
-        q = query(events, where("division", "in", divisions), where("attendees", "array-contains", user_id));
-    }
-
-    const querySnapshot = await getDocs(q);
-
-    querySnapshot.forEach((doc) => {
-        var timestamp = doc.data().startTime;
-        if (timestamp.toDate().getMonth() == theMonth) {
-            filtered_events.push(doc.data());
-        }
-    });
-    return filtered_events;
 }
 
 const firebaseFilterEventsChronilogical = async (theMonth, divisions, showEnrolled) => {

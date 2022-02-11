@@ -18,6 +18,8 @@ import GoogleButton from 'react-google-button';
 import * as yup from 'yup';
 import userSignIn from '../src/firebaseSignIn';
 import signInWithGoogle from '../src/googleSignIn';
+import LanguageSelector from "../components/languageSelector";
+
 
 const validationSchema = yup.object({
     email: yup
@@ -54,6 +56,16 @@ export default function SignIn() {
         <Grid container component="main" sx={{ height: '100vh' }}>
             <CssBaseline />
             <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+                <Box
+                    style={{ textAlign: "right" }}
+                    sx={{
+                        mt: 2,
+                        mx: 2,
+                        alignItems: 'center',
+                    }}
+                >
+                    <LanguageSelector />
+                </Box>
                 <Box
                     style={{ textAlign: "left" }}
                     sx={{
