@@ -1,20 +1,14 @@
-import { collection, doc, setDoc, updateDoc, getDoc, getDocs, arrayUnion, arrayRemove, query, where, orderBy, startAt } from "firebase/firestore";
+import { collection, doc, setDoc, updateDoc, getDocs, arrayUnion, arrayRemove, query, where } from "firebase/firestore";
 import { db, firebase } from "../firebase/firebase.js";
 import { Timestamp } from "@firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { addUserEvent } from "./userFunctions"
 
 const firebaseNewEvent = async (data) => {
     // Add a new document with a generated id
     const newEventRef = doc(collection(db, "events"));
 
     await setDoc(newEventRef, data);
-};
-
-const firebaseGetEvent = async (id) => {
-    // Add a new document with a generated id
-    const eventRef = doc(db, "events", id);
-    const docSnap = await getDoc(eventRef);
-    return docSnap.data();
 };
 
 const firebaseUpdateEvent = async (data, id) => {
@@ -33,25 +27,7 @@ const firebaseUpdateEvent = async (data, id) => {
     });
 };
 
-const firebaseAppendUser = async (user, id) => {
-    const eventRef = doc(db, "events", id);
-    const userRef = doc(db, "users", id);
-
-    await updateDoc(eventRef, {
-        attendees: arrayUnion(userRef)
-    });
-}
-
-const firebaseRemoveUser = async (user, id) => {
-    const eventRef = doc(db, "events", id);
-    const userRef = doc(db, "users", id);
-
-    await updateDoc(eventRef, {
-        attendees: arrayRemove(userRef)
-    });
-}
-
-// Example usage: firebaseFilterEvents(6, ["Nonchild"]).then(values => console.log(values))
+//EX: firebaseFilterEvents(6, ["Nonchild"]).then(values => console.log(values))
 const firebaseFilterEvents = async (theMonth, divisions, showEnrolled) => {
     const events = collection(db, "events");
     let filtered_events = [];
@@ -74,35 +50,68 @@ const firebaseFilterEvents = async (theMonth, divisions, showEnrolled) => {
     return filtered_events;
 }
 
-const firebaseFilterEventsPaginate = async (divisions, pageSize, pageOffset) => {
-    let toReturn = [];
+const firebaseAppendUser = async (user, id) => {
+    const eventRef = doc(db, "events", id);
+    const userRef = doc(db, "users", id);
 
+    await updateDoc(eventRef, {
+        attendees: arrayUnion(userRef)
+    });
+}
+
+const firebaseAppendPerson = async (userID, eventID, names, ages, photoConsent) => {
+    const eventRef = doc(db, "events", eventID);
+    const userRef = doc(db, "users", userID);
+
+    var nameAndAge = {};
+    names.forEach((name, i) => nameAndAge[name] = ages[i]);
+
+    var userToAdd = {
+        parent: userRef,
+        attendees: nameAndAge,
+        consent: photoConsent
+    }
+
+    await updateDoc(eventRef, {
+        attendees: arrayUnion(userToAdd)
+    });
+
+    addUserEvent(userID, eventID);
+}
+
+const firebaseRemoveUser = async (user, id) => {
+    const eventRef = doc(db, "events", id);
+    const userRef = doc(db, "users", id);
+
+    await updateDoc(eventRef, {
+        attendees: arrayRemove(userRef)
+    });
+}
+
+const firebaseFilterEventsChronilogical = async (theMonth, divisions, showEnrolled) => {
     const events = collection(db, "events");
-    const startAtNum = pageSize * pageOffset;
-    const current_time = Timestamp.now();
+    let filtered_events = [];
 
     let now = new Date();
     now = new Date(now.setHours(0, 0, 0, 0));
     const last_midnight_timestamp = Timestamp.fromDate(now);
 
     let q = query(events, where("division", "in", divisions), orderBy("startTime"), where("startTime", ">=", last_midnight_timestamp));
+
+    if (showEnrolled) {
+        let user_id = getAuth().currentUser.uid;
+        q = query(events, where("division", "in", divisions), where("attendees", "array-contains", user_id));
+    }
+
     const querySnapshot = await getDocs(q);
 
-    for (var i = 0; i < pageSize; i++) {
-        if (i < querySnapshot.size - startAtNum) {
-            toReturn[i] = querySnapshot.docs[i + startAtNum];
+    querySnapshot.forEach((doc) => {
+        var timestamp = doc.data().startTime;
+        if (timestamp.toDate().getMonth() == theMonth) {
+            filtered_events.push(doc.data());
         }
-    }
-    return toReturn;
+    });
+    return filtered_events;
 }
 
-const firebaseRetrieveAttendees = async (id) => {
-    // Find event with user-provided event ID
-    const eventRef = doc(db, "events", id);
-    const docSnap = await getDoc(eventRef);
-    const attendees = docSnap.data().attendees;
-
-    return attendees;
-}
-
-export { firebaseNewEvent, firebaseGetEvent, firebaseUpdateEvent, firebaseAppendUser, firebaseRemoveUser, firebaseFilterEvents, firebaseFilterEventsPaginate, firebaseRetrieveAttendees };
+export { firebaseNewEvent, firebaseUpdateEvent, firebaseAppendUser, firebaseRemoveUser, firebaseFilterEvents, firebaseAppendPerson, firebaseFilterEventsChronilogical };
