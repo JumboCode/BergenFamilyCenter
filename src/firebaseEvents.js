@@ -33,6 +33,7 @@ const firebaseUpdateEvent = async (data, id) => {
     });
 };
 
+// TODO:
 const firebaseAppendUser = async (user, id) => {
     const eventRef = doc(db, "events", id);
     const userRef = doc(db, "users", id);
@@ -42,6 +43,7 @@ const firebaseAppendUser = async (user, id) => {
     });
 }
 
+// TODO: 
 const firebaseRemoveUser = async (user, id) => {
     const eventRef = doc(db, "events", id);
     const userRef = doc(db, "users", id);
@@ -88,6 +90,7 @@ const firebaseFilterEventsPaginate = async (divisions, pageSize, pageOffset) => 
     let q = query(events, where("division", "in", divisions), orderBy("startTime"), where("startTime", ">=", last_midnight_timestamp));
     const querySnapshot = await getDocs(q);
 
+    // USE HASH to see if event attendees has been used
     for (var i = 0; i < pageSize; i++) {
         if (i < querySnapshot.size - startAtNum) {
             toReturn[i] = querySnapshot.docs[i + startAtNum];
