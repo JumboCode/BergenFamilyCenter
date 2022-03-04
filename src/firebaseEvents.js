@@ -14,6 +14,7 @@ import {
 import { db, firebase } from "../firebase/firebase.js";
 import { Timestamp } from "@firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { addUserEvent } from "./userFunctions";
 
 const firebaseNewEvent = async (data) => {
   // Add a new document with a generated id
@@ -122,6 +123,71 @@ const firebaseFilterEventsPaginate = async (
   return toReturn;
 };
 
+const firebaseAppendPerson = async (
+  userID,
+  eventID,
+  names,
+  ages,
+  photoConsent
+) => {
+  const eventRef = doc(db, "events", eventID);
+  const userRef = doc(db, "users", userID);
+
+  var nameAndAge = {};
+  names.forEach((name, i) => (nameAndAge[name] = ages[i]));
+
+  var userToAdd = {
+    parent: userRef,
+    attendees: nameAndAge,
+    consent: photoConsent,
+  };
+
+  await updateDoc(eventRef, {
+    attendees: arrayUnion(userToAdd),
+  });
+
+  addUserEvent(userID, eventID);
+};
+
+const firebaseFilterEventsChronilogical = async (
+  theMonth,
+  divisions,
+  showEnrolled
+) => {
+  const events = collection(db, "events");
+  let filtered_events = [];
+
+  let now = new Date();
+  now = new Date(now.setHours(0, 0, 0, 0));
+  const last_midnight_timestamp = Timestamp.fromDate(now);
+
+  let q = query(
+    events,
+    where("division", "in", divisions),
+    orderBy("startTime"),
+    where("startTime", ">=", last_midnight_timestamp)
+  );
+
+  if (showEnrolled) {
+    let user_id = getAuth().currentUser.uid;
+    q = query(
+      events,
+      where("division", "in", divisions),
+      where("attendees", "array-contains", user_id)
+    );
+  }
+
+  const querySnapshot = await getDocs(q);
+
+  querySnapshot.forEach((doc) => {
+    var timestamp = doc.data().startTime;
+    if (timestamp.toDate().getMonth() == theMonth) {
+      filtered_events.push(doc.data());
+    }
+  });
+  return filtered_events;
+};
+
 export {
   firebaseNewEvent,
   firebaseGetEvent,
@@ -129,5 +195,7 @@ export {
   firebaseAppendUser,
   firebaseRemoveUser,
   firebaseFilterEvents,
+  firebaseAppendPerson,
+  firebaseFilterEventsChronilogical,
   firebaseFilterEventsPaginate,
 };

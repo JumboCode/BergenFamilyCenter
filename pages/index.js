@@ -1,8 +1,7 @@
 import Head from "next/head";
 
-export default function Home() {
-  const divisions = ["Child"];
 
+export default function Home() {
   return (
     <div>
       <Head>
