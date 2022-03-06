@@ -8,20 +8,20 @@ export default function Events() {
             <NavBar />
             <div style={{ margin: 10 }}>
                 <Grid container spacing={4}>
-                    <Grid item xs={3}>
+                    <Grid item xs={2}>
                         <Event image="/TransparentTree.png" title="Event Name" description="Event info.">
                         </Event>
                     </Grid>
-                    <Grid item xs={3}>
-                        <Event image="/TransparentTree.png" title="Event Name" description="Event info.">
+                    <Grid item xs={2}>
+                        <Event image="/dog.jpg" title="Event Name" description="Event info.">
                         </Event>
                     </Grid>
-                    <Grid item xs={3}>
-                        <Event image="/TransparentTree.png" title="Event Name" description="Event info.">
+                    <Grid item xs={2}>
+                        <Event image="/dog.jpg" title="Event Name" description="Event info.">
                         </Event>
                     </Grid>
-                    <Grid item xs={3}>
-                        <Event image="/TransparentTree.png" title="Event Name" description="Event info.">
+                    <Grid item xs={2}>
+                        <Event image="/dog.jpg" title="Event Name" description="Event info.">
                         </Event>
                     </Grid>
                 </Grid>
