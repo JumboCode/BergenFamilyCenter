@@ -5,7 +5,7 @@ export default function CalendarIcon({ month, day }) {
     const ref = useRef(null);
     console.log(ref);
     return (
-        <div style={{ width: '20vmin', height: '20vmin' }}>
+        <div style={{ width: '40vmin', height: '40vmin' }}>
             <CardMedia
                 component="img"
                 style={{ position: 'relative' }}

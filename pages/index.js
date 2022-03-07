@@ -9,8 +9,8 @@ export default function Home() {
       <Head>
         <title>Bergen Family Center</title>
       </Head>
-      <UpcomingEvent></UpcomingEvent>
-      {/* <CalendarIcon month="December" day="31" style={{ width: '10%', height: '10%' }}></CalendarIcon> */}
+      {/* <UpcomingEvent></UpcomingEvent> */}
+      <CalendarIcon month="December" day="31" style={{ width: '10%', height: '10%' }}></CalendarIcon>
     </div >
   );
 }
