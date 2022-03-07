@@ -1,7 +1,9 @@
 import { ClassNames } from '@emotion/react';
 import { Grid } from '@mui/material';
 import Event from "../components/event";
+import { Typography } from "@mui/material";
 import NavBar from "../components/navBar.js";
+import ScrollingCard from "../components/scrollingCards.js";
 
 
 
@@ -9,7 +11,27 @@ import NavBar from "../components/navBar.js";
 export default function Events() {
     return (
         <div>
-            <NavBar page={"events"}></NavBar>
+      <NavBar page={"Events"}></NavBar>
+      <div>
+          <Typography>Adolescent Events</Typography>
+      <ScrollingCard division={["Child"]}></ScrollingCard>
+      </div>
+      <div>
+      <Typography>Teen Events</Typography>
+      <ScrollingCard division={["Child"]}></ScrollingCard>
+      </div>
+      <Typography>Senior Events</Typography>
+      <ScrollingCard division={["Child"]}></ScrollingCard>
+      
+    </div>
+
+    
+        
+    )
+}
+
+
+{/* <NavBar page={"events"}></NavBar>
             <div style={{ margin: 10 }}>
             <Grid container spacing={2} columns={16}>
                     <Grid item xs="auto">
@@ -49,9 +71,4 @@ export default function Events() {
                         <Event image="/TransparentTree.png" title="Event Name" description="Event info.">
                         </Event>
                     </Grid>
-                </Grid>
-        </div>
-        </div>
-        
-    )
-}
+                </Grid> */}
