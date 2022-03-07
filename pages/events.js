@@ -9,7 +9,7 @@ import NavBar from "../components/navBar.js";
 export default function Events() {
     return (
         <div>
-            <NavBar />
+            <NavBar page={"events"}></NavBar>
             <div style={{ margin: 10 }}>
             <Grid container spacing={2} columns={16}>
                     <Grid item xs="auto">
