@@ -1,31 +1,24 @@
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import Event from "../components/event";
 import NavBar from "../components/navBar.js";
+import ScrollingCard from "../components/scrollingCards";
 
 export default function Events() {
     return (
-        <div>
-            <NavBar page={"events"}></NavBar>
-            <div style={{ margin: 10 }}>
-                <Grid container spacing={4}>
-                    <Grid item xs={3}>
-                        <Event image="/TransparentTree.png" title="Event Name" description="Event info.">
-                        </Event>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <Event image="/TransparentTree.png" title="Event Name" description="Event info.">
-                        </Event>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <Event image="/TransparentTree.png" title="Event Name" description="Event info.">
-                        </Event>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <Event image="/TransparentTree.png" title="Event Name" description="Event info.">
-                        </Event>
-                    </Grid>
-                </Grid>
+        (
+            <div>
+                <NavBar page={"events"}></NavBar>
+                <div>
+                    <Typography>Adolescent Events</Typography>
+                    <ScrollingCard division={["Child"]}></ScrollingCard>
+                </div>
+                <div>
+                    <Typography>Teen Events</Typography>
+                    <ScrollingCard division={["Child"]}></ScrollingCard>
+                </div>
+                <Typography>Senior Events</Typography>
+                <ScrollingCard division={["Child"]}></ScrollingCard>
             </div>
-        </div>
+        )
     )
 }

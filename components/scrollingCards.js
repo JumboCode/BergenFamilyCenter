@@ -17,7 +17,7 @@ export default function ScrollingCard({ division }) {
               key={card.id}
               description={card.data().description}
               title={card.data().title}
-              image={"/TransparentTree.png"} /* STILL TO-DO:: images */
+              image={"/sunset.jpg"} /* STILL TO-DO:: images */
               startTime={card.data().startTime}
               endTime={card.data().endTime}
             />
@@ -34,8 +34,8 @@ export default function ScrollingCard({ division }) {
   const responsive = {
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
-      items: 5,
-      slidesToSlide: 5,
+      items: 6,
+      slidesToSlide: 6,
     },
     mobile: {
       breakpoint: { max: 464, min: 0 },
