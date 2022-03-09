@@ -1,4 +1,3 @@
-import * as React from "react";
 import MediaCard from "./event";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
