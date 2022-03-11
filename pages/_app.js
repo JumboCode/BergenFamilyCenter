@@ -28,9 +28,9 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <LanguageContext.Provider value={value}>
-      <RouteGuard>
-        <Component {...pageProps} />
-      </RouteGuard>
+      {/* <RouteGuard> */}
+      <Component {...pageProps} />
+      {/* </RouteGuard> */}
     </LanguageContext.Provider>
   );
 }
