@@ -7,7 +7,7 @@ export default function Profile() {
     <div>
       <NavBar page={"profile"}></NavBar>
       <ScrollingCard division={["Child"]}></ScrollingCard>
-      {/* <PhotoPopUp></PhotoPopUp> */}
+      <PhotoPopUp></PhotoPopUp>
     </div>
   );
 }
