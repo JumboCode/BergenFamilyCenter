@@ -3,6 +3,7 @@ import '../firebase/firebase';
 import { useState, useMemo } from 'react';
 import { getAuth, setPersistence, inMemoryPersistence } from "firebase/auth";
 import { LanguageContext } from "../src/languageContext";
+import { RouteGuard } from '../components/routeGuard';
 
 function MyApp({ Component, pageProps }) {
   const [language, setLanguage] = useState('English')
@@ -27,7 +28,9 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <LanguageContext.Provider value={value}>
+      {/* <RouteGuard> */}
       <Component {...pageProps} />
+      {/* </RouteGuard> */}
     </LanguageContext.Provider>
   );
 }
