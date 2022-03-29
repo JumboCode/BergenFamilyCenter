@@ -5,6 +5,7 @@ import { getAuth, setPersistence, inMemoryPersistence } from "firebase/auth";
 import { LanguageContext } from "../src/languageContext";
 import { RouteGuard } from '../components/routeGuard';
 
+
 function MyApp({ Component, pageProps }) {
   const [language, setLanguage] = useState('English')
 
