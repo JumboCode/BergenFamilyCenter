@@ -19,6 +19,7 @@
     "@mui/material": "^5.0.2",
     "@mui/styles": "^5.0.1",
     "babel-plugin-styled-components": "^1.13.3",
+    "common-js": "^0.3.8",
     "firebase": "^9.0.2",
     "formik": "^2.2.9",
     "fs": "^0.0.1-security",

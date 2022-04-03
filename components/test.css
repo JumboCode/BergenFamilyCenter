@@ -83,10 +83,21 @@
         top: 0;
         font-size:1em;
         z-index: 1000;
-        background-color: rgba(255, 255, 255, 0.53);
+        background-color: rgba(255, 255, 255, 0.8);
       }
     }
   }
+
+  .schedule-container::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .schedule-container {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
   
   /* Small-screen & fallback styles */
   .session {

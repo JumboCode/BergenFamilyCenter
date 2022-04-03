@@ -1,6 +1,6 @@
 import Paper from '@mui/material/Paper';
 import { useState, useEffect } from 'react';
-import { firebaseFilterEventsChronilogical } from '../src/firebaseEvents';
+import { firebaseFilterEventsChronological } from '../src/firebaseEvents';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -41,7 +41,7 @@ export default function WeeklyCalendar() {
     };
 
     useEffect(() => {
-        firebaseFilterEventsChronilogical(3, divisions).then(v => {
+        firebaseFilterEventsChronological(3, divisions).then(v => {
             v = v.filter(e => {
                 return e.startTime.toDate() > startOfWeek && e.startTime.toDate() < endOfWeek;
             });
@@ -86,8 +86,8 @@ export default function WeeklyCalendar() {
         d = moment(d).add(30, 'm').toDate();
     }
     return (
-        <div >
-            <div styles={{ marginLeft: 100 }} >
+        <div className="schedule-container" style={{ overflow: "auto", height: "80vh" }}>
+            <div style={{ position: "sticky", display: "block", marginLeft: 20 }} >
                 <Grid container direction="row" alignItems="center">
                     <Grid item>
                         <IconButton onClick={() => {
@@ -122,16 +122,6 @@ export default function WeeklyCalendar() {
 
             </div>
 
-            {/* <div className="text">
-                <h1>Conference Schedule with CSS Grid</h1>
-
-                <p>Demo for article <a href="https://css-tricks.com/building-a-conference-schedule-with-css-grid/">"Building a Conference Schedule with CSS Grid"</a> on CSS Tricks.</p>
-
-                <p><i><small>By <a href="https://MRWweb.com">Mark Root-Wiley</a>.</small></i></p>
-
-            </div> */}
-
-            {/* <h2 id="schedule-heading">MONTH</h2> */}
             <div className="schedule" aria-labelledby="schedule-heading">
 
                 {/* Time */}
