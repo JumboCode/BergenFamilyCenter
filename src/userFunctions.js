@@ -18,6 +18,7 @@ export const addUser = async (id, email, phoneNumber, name) => {
     events: [],
     isManager: false,
     name: name,
+    consent: {},
   });
 };
 

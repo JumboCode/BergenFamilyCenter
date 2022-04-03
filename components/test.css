@@ -1,0 +1,233 @@
+/*************************
+ * GRID SCHEDULE LAYOUT
+ *************************/
+ @media screen and (min-width:0px) {
+    .schedule {
+      display: grid;
+      /* grid-gap: 0.2em; */
+      grid-template-rows:
+        [tracks] auto
+        [time-int] 0fr
+        [time-0600] 0.5fr
+        [time-0630] 0.5fr
+        [time-0700] 0.5fr
+        [time-0730] 0.5fr
+        [time-0800] 0.5fr
+        [time-0830] 0.5fr
+        [time-0900] 0.5fr
+        [time-0930] 0.5fr
+        [time-1000] 0.5fr
+        [time-1030] 0.5fr
+        [time-1100] 0.5fr
+        [time-1130] 0.5fr
+        [time-1200] 0.5fr
+        [time-1230] 0.5fr
+        [time-1300] 0.5fr
+        [time-1330] 0.5fr
+        [time-1400] 0.5fr
+        [time-1430] 0.5fr
+        [time-1500] 0.5fr
+        [time-1530] 0.5fr
+        [time-1600] 0.5fr
+        [time-1630] 0.5fr
+        [time-1700] 0.5fr
+        [time-1730] 0.5fr
+        [time-1800] 0.5fr
+        [time-1830] 0.5fr
+        [time-1900] 0.5fr
+        [time-1930] 0.5fr;
+        /* Note 1:
+        Use 24hr time for gridline names for simplicity
+  
+        Note 2: Use "auto" instead of "1fr" for a more compact schedule where height of a slot is not proportional to the session length. Implementing a "compact" shortcode attribute might make sense for this!
+        Try 0.5fr for more compact equal rows. I don't quite understand how that works :)
+        */
+      
+      grid-template-columns:
+        [times] 3em
+        [track-0-int] 0
+        [track-1-start] 1fr
+        [track-1-int] 0
+        [track-1-end track-2-start] 1fr
+        [track-2-int] 0
+        [track-2-end track-3-start] 1fr
+        [track-3-int] 0
+        [track-3-end track-4-start] 1fr
+        [track-4-int] 0
+        [track-4-end track-5-start] 1fr
+        [track-5-int] 0
+        [track-5-end track-6-start] 1fr
+        [track-6-int] 0
+        [track-6-end track-7-start] 1fr
+        [track-7-int] 0
+        [track-7-end track-8-start] 0.5fr
+        [track-8] 1fr;
+    }
+  }
+  
+  .time-slot {
+    grid-column: times;
+  }
+  
+  .track-slot {
+    display: none; /* hidden on small screens and browsers without grid support */
+  }
+  
+  @supports( display:grid ) {
+    @media screen and (min-width:0px) {
+      .track-slot {
+        display: block;
+        text-align: center;
+        padding: 10px 5px 5px;
+        position: sticky;
+        top: 0;
+        font-size:1em;
+        z-index: 1000;
+        background-color: rgba(255, 255, 255, 0.53);
+      }
+    }
+  }
+  
+  /* Small-screen & fallback styles */
+  .session {
+    margin-bottom:  1em;
+    /* margin-left: 10px; */
+    height: 5em;
+  }
+  
+  @supports( display:grid ) {
+    @media screen and (min-width: 0px) {
+      .session {
+        margin: 0;
+      } 
+    }
+  }
+  
+  /*************************
+   * VISUAL STYLES
+   * Design-y stuff ot particularly important to the demo
+   *************************/
+ 
+  .session {
+    margin: .2em;
+    padding: .2em;
+    border-radius: 2px;
+    font-size: 14px;
+    border-radius: 10px;
+    overflow: hidden;
+    /* box-shadow:
+      rgba(255,255,255,.6) 1px 1px 0,
+      rgba(0,0,0,.3) 4px 4px 0; */
+  }
+  
+  .session-title,
+  .session-time,
+  .session-track,
+  .session-presenter {
+    display: block;
+  }
+  
+  .session-title {
+    margin: 0;
+    font-size: 1em;
+  }
+  
+  .session-title a {
+    color: rgb(0, 0, 0);
+    text-decoration-style: dotted;
+    
+    /* &:hover {
+      font-style: italic;
+    }
+    
+    &:focus {
+      outline: 2px dotted rgba(255,255,255,.8);
+    } */
+  }
+  
+  /* .track-slot, */
+  .time-slot {
+    /* font-weight: bold; */
+    font-size:1.15em;
+    text-align: right;
+    padding-right: 0.7em;
+    /* text-align: center; */
+  }
+  
+  .track-1 {
+    background-color: #f7eff6;
+    border: 2px solid #dec1dc;
+    color: rgb(0, 0, 0);
+    margin-right: 2px;
+  }
+  .track-int {
+    border-right: 1px solid black;
+    padding-right: 0px;
+  }
+
+  .time-int {
+    border-bottom: 1px solid black;
+  }
+  
+  .track-2 {
+    background-color: #f4fdfe;
+    border: 2px solid #ccf7fa;
+    color: rgb(0, 0, 0);
+    margin-right: 2px;
+  }
+  
+  .track-3 {
+    background-color: #544D69;
+    color: #fff;
+    margin-right: 2px;
+  }
+  
+  .track-4 {
+    background-color: #c35500;
+    color: #fff;
+    margin-right: 2px;
+  }
+  .track-5 {
+    background-color: #c35500;
+    color: #fff;
+    margin-right: 2px;
+  }
+  .track-6 {
+    background-color: #c35500;
+    color: #fff;
+    margin-right: 2px;
+  }
+  .track-7 {
+    background-color: #c35500;
+    color: #fff;
+    margin-right: 2px;
+  }
+  
+  .track-all {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ccc;
+    color: #000;
+    box-shadow: none;
+  }
+  
+  .text {
+    max-width: 750px;
+    font-size: 18px;
+    margin: 0 auto 50px;
+  }
+  
+  .meta {
+    color: #555;
+    font-style: italic;
+  }
+  
+  .meta a {
+    color: #555;
+  }
+  
+  hr {
+    margin: 40px 0;
+  }
+  

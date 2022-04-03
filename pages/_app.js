@@ -1,5 +1,6 @@
 import '../styles/globals.css';
 import '../firebase/firebase';
+import "../components/test.css";
 import { useState, useMemo } from 'react';
 import { getAuth, setPersistence, inMemoryPersistence } from "firebase/auth";
 import { LanguageContext } from "../src/languageContext";
