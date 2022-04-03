@@ -1,19 +1,32 @@
 import * as React from "react";
 import NavBar from "../components/navBar.js";
-import ScrollingCard from "../components/scrollingCards.js";
-import PhotoPopUp from "../components/photoPopUp.js";
-import Button from "@mui/material/Button";
+import { getAuth } from "firebase/auth";
+import { useEffect, useState } from 'react';
+import { db } from "../firebase/firebase";
+import {
+    doc,
+    getDoc,
+} from "firebase/firestore";
 
 export default function Profile() {
-  const [open, setOpen] = React.useState(false);
-  return (
-    <div>
-      <NavBar page={"profile"}></NavBar>
-      <ScrollingCard division={["Child"]}></ScrollingCard>
-      <Button onClick={() => setOpen(true)} variant="outlined">
-        Photo Pop Up Test
-      </Button>
-      <PhotoPopUp open={open} setOpen={setOpen}></PhotoPopUp>;
-    </div>
-  );
+    const auth = getAuth();
+    const uid = auth.currentUser?.uid;
+    const [name, setName] = useState(auth.currentUser?.displayName ?? "you must be logged in");
+    useEffect(() => {
+        if (uid) {
+            const userRef = doc(db, "users", uid);
+            const userInfo = getDoc(userRef).then(value => {
+                setName(value.data().name);
+            });
+        }
+    }, []);
+
+    return (
+        <div>
+            <NavBar page={"profile"}></NavBar>
+            <Typography variant="h4">
+                Hello, {name}
+            </Typography>
+        </div>
+    )
 }

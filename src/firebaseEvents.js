@@ -3,6 +3,7 @@ import {
   doc,
   setDoc,
   updateDoc,
+  getDoc,
   getDocs,
   arrayUnion,
   arrayRemove,
@@ -117,10 +118,18 @@ const firebaseFilterEventsPaginate = async (
   for (var i = 0; i < pageSize; i++) {
     if (i < querySnapshot.size - startAtNum) {
       toReturn[i] = querySnapshot.docs[i + startAtNum];
-      //console.log("To Return", toReturn[i].data());
     }
   }
-  return toReturn;
+
+  // Removes double events
+  const dict = new Object();
+  return toReturn.filter(doc => {
+    if (dict[doc.attendeesRef]) {
+      return false;
+    }
+    dict[doc.attendeesRef] = true;
+    return true;
+  });
 };
 
 const firebaseAppendPerson = async (
@@ -149,7 +158,7 @@ const firebaseAppendPerson = async (
   addUserEvent(userID, eventID);
 };
 
-const firebaseFilterEventsChronilogical = async (
+const firebaseFilterEventsChronological = async (
   theMonth,
   divisions,
   showEnrolled
@@ -169,12 +178,18 @@ const firebaseFilterEventsChronilogical = async (
   );
 
   if (showEnrolled) {
-    let user_id = getAuth().currentUser.uid;
-    q = query(
-      events,
-      where("division", "in", divisions),
-      where("attendees", "array-contains", user_id)
-    );
+    try {
+      let user_id = getAuth().currentUser.uid;
+      q = query(
+        events,
+        where("division", "in", divisions),
+        where("attendees", "array-contains", user_id),
+        orderBy("startTime"),
+        where("startTime", ">=", last_midnight_timestamp)
+      );
+    } catch (error) {
+      console.log(`Error: You probably weren't signed in. Full error: ${error}`);
+    }
   }
 
   const querySnapshot = await getDocs(q);
@@ -185,6 +200,8 @@ const firebaseFilterEventsChronilogical = async (
       filtered_events.push(doc.data());
     }
   });
+
+  console.log(filtered_events);
   return filtered_events;
 };
 
@@ -196,6 +213,6 @@ export {
   firebaseRemoveUser,
   firebaseFilterEvents,
   firebaseAppendPerson,
-  firebaseFilterEventsChronilogical,
+  firebaseFilterEventsChronological,
   firebaseFilterEventsPaginate,
 };
