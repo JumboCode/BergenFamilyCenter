@@ -150,7 +150,7 @@ const firebaseAppendPerson = async (
   addUserEvent(userID, eventID);
 };
 
-const firebaseFilterEventsChronilogical = async (
+const firebaseFilterEventsChronological = async (
   theMonth,
   divisions,
   showEnrolled
@@ -170,12 +170,18 @@ const firebaseFilterEventsChronilogical = async (
   );
 
   if (showEnrolled) {
-    let user_id = getAuth().currentUser.uid;
-    q = query(
-      events,
-      where("division", "in", divisions),
-      where("attendees", "array-contains", user_id)
-    );
+    try {
+      let user_id = getAuth().currentUser.uid;
+      q = query(
+        events,
+        where("division", "in", divisions),
+        where("attendees", "array-contains", user_id),
+        orderBy("startTime"),
+        where("startTime", ">=", last_midnight_timestamp)
+      );
+    } catch (error) {
+      console.log(`Error: You probably weren't signed in. Full error: ${error}`);
+    }
   }
 
   const querySnapshot = await getDocs(q);
@@ -186,6 +192,8 @@ const firebaseFilterEventsChronilogical = async (
       filtered_events.push(doc.data());
     }
   });
+
+  console.log(filtered_events);
   return filtered_events;
 };
 
@@ -197,6 +205,6 @@ export {
   firebaseRemoveUser,
   firebaseFilterEvents,
   firebaseAppendPerson,
-  firebaseFilterEventsChronilogical,
+  firebaseFilterEventsChronological,
   firebaseFilterEventsPaginate,
 };

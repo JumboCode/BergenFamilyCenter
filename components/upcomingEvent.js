@@ -13,6 +13,14 @@ import CalendarIcon from "../components/calendarIcon";
 import Grid from "@mui/material/Grid"
 import { useEffect, useState } from 'react';
 import { Timestamp } from "firebase/firestore";
+import { styled } from "@mui/material/styles";
+
+const CardContentNoPadding = styled(CardContent)(`
+  padding: 0;
+  &:last-child {
+    padding-bottom: 0;
+  }
+`);
 
 export default function UpcomingEvent({ eventID }) {
   const monthNames = ["January", "February", "March", "April", "May", "June",
@@ -49,18 +57,20 @@ export default function UpcomingEvent({ eventID }) {
               <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                 <CardMedia
                   component="img"
-                  sx={{ maxHeight: 100 }}
+                  sx={{ maxHeight: 60 }}
                   image="https://source.unsplash.com/random"
                   alt="Live from space album cover"
                 />
-                <CardContent sx={{ flex: '1 0 auto', padding: 1, whiteSpace: 'nowrap' }}>
-                  <Typography component="div" variant="h5" style={{ overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '200px' }}>
-                    {eventName}
-                  </Typography>
-                  <Typography variant="subtitle1" color="text.secondary" component="div" style={{ maxWidth: '200px', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical', textOverflow: 'ellipsis', WebkitBoxPack: 'end' }}>
-                    {eventDescription}
-                  </Typography>
-                </CardContent>
+                <CardContentNoPadding sx={{ flex: '1 0 auto', padding: 0.5, whiteSpace: 'nowrap' }}>
+                  <div sx={{ paddingBottom: 4 }}>
+                    <Typography component="div" variant="h6" style={{ overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '200px', lineHeight: 1 }}>
+                      {eventName}
+                    </Typography>
+                    <Typography variant="subtitle2" color="text.secondary" component="div" style={{ maxWidth: '200px', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical', textOverflow: 'ellipsis', WebkitBoxPack: 'end', lineHeight: 1 }}>
+                      {eventDescription}
+                    </Typography>
+                  </div>
+                </CardContentNoPadding>
               </Box>
             </Grid>
           </Grid>
