@@ -50,37 +50,26 @@ export const addUserEvent = async (uid, event) => {
 
 export const getUpcomingUserEvents = async (uid) => {
   const userRef = doc(db, "users", uid);
-
   const userSnap = await getDoc(userRef);
+  const userEventRefs = userSnap.data().events;
 
-  // TODO: continue debugging this! the events are all REFS!!
-  const userEvents = userSnap.data().events;
-  const data = doc(db, userEvents[0])
-  console.log(data.data());
+  let userEvents = userEventRefs.map(async element => {
+    const data = await getDoc(element);
+    return data.data();
+  });
 
-  // const events = collection(db, "events");
+  const values = await Promise.all(userEvents);
 
-  // let upcoming_events = [];
+  let now = new Date();
+  now = new Date(now.setHours(0, 0, 0, 0));
+  const last_midnight_timestamp = Timestamp.fromDate(now);
 
-  // let now = new Date();
-  // now = new Date(now.setHours(0, 0, 0, 0));
-  // const last_midnight_timestamp = Timestamp.fromDate(now);
-
-  let q = query(
-    userEvents,
-    //   where("attendees", "array-contains", uid),
-    //   orderBy("startTime"),
-    // where("startTime", ">=", last_midnight_timestamp)
+  const upcomingEvents = values.filter(value => {
+    return value.startTime >= last_midnight_timestamp;
+  }
   );
 
-  // const querySnapshot = await getDocs(q);
-
-  // querySnapshot.forEach((doc) => {
-  //   upcoming_events.push(doc.data());
-  // });
-
-  // console.log(upcoming_events);
-  // return upcoming_events;
+  return upcomingEvents;
 };
 
 // OLD AND BAD!
