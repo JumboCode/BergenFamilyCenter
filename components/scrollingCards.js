@@ -46,7 +46,12 @@ export default function ScrollingCard({ division }) {
 
   return (
     <div>
-      <Carousel responsive={responsive} autoPlay={false} animation={"fade"}>
+      <Carousel
+        responsive={responsive}
+        shouldResetAutoplay={false}
+        autoPlay={false}
+        animation={"fade"}
+      >
         {listCards}
       </Carousel>
     </div>

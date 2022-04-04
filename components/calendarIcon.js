@@ -6,6 +6,8 @@ export default function CalendarIcon({ month, day }) {
         <div style={{ position: 'relative', width: "100%", height: "100%" }}>
             <CardMedia
                 component="img"
+                // height="100"
+                // width="500%"
                 style={{ position: 'relative' }}
                 image="./CalendarBlank.png"
             />

@@ -1,9 +1,7 @@
-import Paper from "@mui/material/paper"
-import Card from "@mui/material/Card";
 // import { makeStyles } from '@mui/styles';
 // import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { firebaseGetEvent } from '../src/firebaseEvents';
-
 import { useTheme, createTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
@@ -11,9 +9,10 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import CalendarIcon from "../components/calendarIcon";
 import Grid from "@mui/material/Grid"
-import { useEffect, useState } from 'react';
 import { Timestamp } from "firebase/firestore";
 import { styled } from "@mui/material/styles";
+import Paper from "@mui/material/Paper"
+import Card from "@mui/material/Card";
 
 const CardContentNoPadding = styled(CardContent)(`
   padding: 0;
@@ -45,8 +44,7 @@ export default function UpcomingEvent({ eventID }) {
   return (
     <Paper style={{ display: 'table', margin: 20, borderRadius: 25 }} elevation={8}>
       {timestamp == null ? null :
-
-        <Card style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', borderRadius: 25 }}>
+        <Card style={{ width: "100%", display: 'flex', alignItems: 'center', flexDirection: 'row', borderRadius: 25 }}>
           <Grid container>
             <Grid item xs={5}>
               <div style={{ margin: 5, display: 'flex', flexDirection: 'row', alignItems: 'center', height: '100%' }}>
@@ -57,7 +55,7 @@ export default function UpcomingEvent({ eventID }) {
               <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                 <CardMedia
                   component="img"
-                  sx={{ maxHeight: 60 }}
+                  sx={{ maxHeight: 50 }}
                   image="https://source.unsplash.com/random"
                   alt="Live from space album cover"
                 />

@@ -118,10 +118,18 @@ const firebaseFilterEventsPaginate = async (
   for (var i = 0; i < pageSize; i++) {
     if (i < querySnapshot.size - startAtNum) {
       toReturn[i] = querySnapshot.docs[i + startAtNum];
-      //console.log("To Return", toReturn[i].data());
     }
   }
-  return toReturn;
+
+  // Removes double events
+  const dict = new Object();
+  return toReturn.filter(doc => {
+    if (dict[doc.attendeesRef]) {
+      return false;
+    }
+    dict[doc.attendeesRef] = true;
+    return true;
+  });
 };
 
 const firebaseAppendPerson = async (

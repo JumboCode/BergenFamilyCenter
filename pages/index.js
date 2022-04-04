@@ -4,11 +4,11 @@ import UpcomingEvent from "../components/upcomingEvent";
 import CalendarIcon from "../components/calendarIcon";
 import Grid from "@mui/material/Grid"
 import Paper from "@mui/material/Paper"
-import { getUpcomingUserEvents } from "../src/userFunctions";
+// import { getUpcomingUserEvents } from "../src/userFunctions";
 import { firebaseFilterEventsChronological } from "../src/firebaseEvents";
 
 export default function Home() {
-  getUpcomingUserEvents("Ap9SYtZOGdIFYKCJSs7e");
+  // getUpcomingUserEvents("Ap9SYtZOGdIFYKCJSs7e");
 
   return (
     <div>

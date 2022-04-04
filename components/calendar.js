@@ -7,6 +7,7 @@ import { makeStyles, withStyles } from '@mui/styles';
 const styles = {
   root: {
     border: 0,
+    width: "100%",
     margin: 5,
   }
 };
@@ -19,7 +20,7 @@ export const MonthCalendar = () => {
   const [value, onChange] = useState(new Date());
   // console.log(.)
   return (
-    <Paper style={{ display: "table", margin: 20 }} elevation={8}>
+    <Paper style={{ margin: 20 }} elevation={8}>
       <CalendarWithStyles />
     </Paper>
   );

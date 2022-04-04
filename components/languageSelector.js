@@ -15,17 +15,20 @@ const useStyles = makeStyles(() => ({
 export default function LanguageSelector() { // TODO: Fix number of rerenders?
     const classes = useStyles();
     const [languageState, setLanguageState] = useState('');
-    const { _, setLanguage } = useContext(LanguageContext);
-
+    const { language, setLanguage } = useContext(LanguageContext);
     useEffect(() => {
         setLanguageState(localStorage.getItem('language') ?? 'English');
+        setLanguage(localStorage.getItem('language') ?? 'English');
     }, [])
     useEffect(() => {
         if (!localStorage.getItem('language')) {
             localStorage.setItem('language', 'English');
             setLanguage('English');
+            // setLanguageState('English');
         } else {
             localStorage.setItem('language', languageState);
+            setLanguage(languageState);
+            // setLanguageState(languageState);
         }
     }, [languageState])
     const [anchorEl, setAnchorEl] = useState(null);
