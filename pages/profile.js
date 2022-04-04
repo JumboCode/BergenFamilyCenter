@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material';
+import * as React from "react";
 import NavBar from "../components/navBar.js";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from 'react';
