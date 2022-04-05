@@ -47,7 +47,7 @@ export default function NavBar({ page }) {
         <Box>
             <CssBaseline />
             <MuiAppBar
-                style={{ background: 'transparent', boxShadow: 'none' }}
+                style={{ background: "#e9f7fe", boxShadow: 'none' }}
                 position="sticky"
                 open={open}
             >

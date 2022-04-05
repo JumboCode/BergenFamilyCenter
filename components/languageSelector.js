@@ -46,7 +46,7 @@ export default function LanguageSelector() { // TODO: Fix number of rerenders?
     const open = Boolean(anchorEl);
 
     return (
-        <Button id="test" onClick={handleOpen} size='small' classes={{ label: classes.iconButtonLabel }}>
+        <Button id="test" onClick={handleOpen} size='small' sx={{ color: "#0f4d81" }} classes={{ label: classes.iconButtonLabel }}>
             <LanguageIcon />
             {languageState}
             <Menu

@@ -42,7 +42,7 @@ export const addUserEvent = async (uid, event) => {
   const userRef = doc(db, "users", uid);
   try {
     await updateDoc(userRef, {
-      events: arrayUnion(doc(db, "events", event)),
+      events: arrayUnion(event),
     });
   } catch (error) {
     console.log(`Error: ${error}`);

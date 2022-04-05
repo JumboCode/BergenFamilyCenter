@@ -9,16 +9,20 @@ export default function ScrollingCard({ division }) {
 
   const makeCards = () => {
     firebaseFilterEventsPaginate(division, 200, 0).then((value) => {
+      console.log(value)
       setListCards(
         value.map((card) => {
           return (
             <MediaCard
               key={card.id}
               description={card.data().description}
-              title={card.data().title}
+              title={card.data().name}
               image={"/sunset.jpg"} /* STILL TO-DO:: images */
-              startTime={card.data().startTime}
-              endTime={card.data().endTime}
+              startTime={card.data().startTime?.toDate()}
+              endTime={card.data().endTime?.toDate()}
+              manager={card.data().manager}
+              attendees={card.data().attendeesRef}
+              event={card.id}
             />
           );
         })

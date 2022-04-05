@@ -10,7 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Grid';
 import moment from 'moment';
 
-export default function WeeklyCalendar() {
+export default function WeeklyCalendar({ selectedDay }) {
     const [events, setEvents] = useState([]);
     const start = new Date();
     const options = { month: 'long', day: 'numeric' };
@@ -21,8 +21,21 @@ export default function WeeklyCalendar() {
     end.setDate(end.getDate() + 7);
     const [startOfWeek, setStartOfWeek] = useState(start);
     const [endOfWeek, setEndOfWeek] = useState(end);
+    const currentWeek = startOfWeek.getTime() === start.getTime();
 
-    const divisions = ['Early Learning Center/Home', "Family Success Center"];
+    useEffect(() => {
+        if (selectedDay < startOfWeek || selectedDay > endOfWeek) {
+            const start = selectedDay;
+            start.setDate(start.getDate() - start.getDay());
+            start.setHours(0, 0, 0, 0);
+            const end = new Date(start);
+            end.setDate(end.getDate() + 7);
+            setStartOfWeek(start);
+            setEndOfWeek(end);
+        }
+    }, [selectedDay])
+
+    const divisions = ['Early Learning Center/Home', "Family Success Center", "HIV/Outreach Services", "Visiting Program", "Senior Services", "Adolescent Services", "Clinical Services"];
     const roundToNearest30 = date => {
         const minutes = 30;
         const ms = 1000 * 60 * minutes;
@@ -45,10 +58,9 @@ export default function WeeklyCalendar() {
             v = v.filter(e => {
                 return e.startTime.toDate() > startOfWeek && e.startTime.toDate() < endOfWeek;
             });
-            console.log(v)
 
             const eventComponents = v.map((event, i) => {
-                const className = `session session-${i} track-${divisions.indexOf(event.division) + 1}`;
+                const className = `session track-all session-${i} track-${divisions.indexOf(event.division) + 1}`;
                 const start = roundToNearest30(event.startTime.toDate());
                 const hourStart = start.getHours();
                 const minuteStart = start.getMinutes();
@@ -63,7 +75,7 @@ export default function WeeklyCalendar() {
                 const endString = mapTime(hourEnd, minuteEnd);
                 const gridRow = `time-${startString} / time-${endString}`;
                 return (
-                    <div key={i} className={className} style={{ gridColumn: `track-${day + 1}`, gridRow: gridRow }
+                    <div key={i} className={className} style={{ zIndex: hourStart * 60 + minuteStart, gridColumn: `track-${day + 1}`, gridRow: gridRow }
                     }>
                         <Typography variant="body2">{event.name}</Typography>
                         {/* <span className="session-time">{event.description}</span> */}
@@ -77,7 +89,7 @@ export default function WeeklyCalendar() {
     }, [startOfWeek, endOfWeek]);
 
     const times = [];
-    let d = new Date(2022, 1, 1, 6);
+    let d = new Date(2022, 1, 1, 7);
     const endDate = new Date(2022, 1, 1, 19, 30);
     let i = 0;
     while (d < endDate) {
@@ -124,7 +136,10 @@ export default function WeeklyCalendar() {
 
             <div className="schedule" aria-labelledby="schedule-heading">
 
+                {currentWeek ? <span className="current-day" aria-hidden="true" style={{ gridColumn: `track-${(new Date()).getDay() + 1}`, gridRow: "tracks / time-1930" }} ></span> : null}
+
                 {/* Time */}
+                <span className="track-slot" aria-hidden="true" style={{ gridColumn: "times", gridRow: "tracks" }} ></span>
                 <span className="track-slot" aria-hidden="true" style={{ gridColumn: "track-1", gridRow: "tracks" }} >Sun</span>
                 <span className="track-slot" aria-hidden="true" style={{ gridColumn: "track-2", gridRow: "tracks" }} >Mon</span>
                 <span className="track-slot" aria-hidden="true" style={{ gridColumn: "track-3", gridRow: "tracks" }} >Tue</span>
@@ -132,6 +147,7 @@ export default function WeeklyCalendar() {
                 <span className="track-slot" aria-hidden="true" style={{ gridColumn: "track-5", gridRow: "tracks" }} >Thu</span>
                 <span className="track-slot" aria-hidden="true" style={{ gridColumn: "track-6", gridRow: "tracks" }} >Fri</span>
                 <span className="track-slot" aria-hidden="true" style={{ gridColumn: "track-7", gridRow: "tracks" }} >Sat</span>
+                {/* <span className="track-slot" aria-hidden="true" style={{ gridColumn: "track-8", gridRow: "tracks" }} ></span> */}
 
                 {/* Day Breaks */}
                 <span className="track-int" style={{ gridColumn: "track-0-int", gridRow: "tracks / time-7000" }} ></span>
@@ -144,6 +160,20 @@ export default function WeeklyCalendar() {
                 <span className="track-int" style={{ gridColumn: "track-7-int", gridRow: "tracks / time-7000" }} ></span>
 
                 <span className="time-int" style={{ gridColumn: "times / track-8", gridRow: "time-int" }} ></span>
+                {/* <span className="time-int" style={{ gridColumn: "times / track-8", gridRow: "time-1-int" }}></span> */}
+                <span className="time-int" style={{ gridColumn: "times / track-8", gridRow: "time-2-int" }}></span>
+                <span className="time-int" style={{ gridColumn: "times / track-8", gridRow: "time-3-int" }}></span>
+                <span className="time-int" style={{ gridColumn: "times / track-8", gridRow: "time-4-int" }}></span>
+                <span className="time-int" style={{ gridColumn: "times / track-8", gridRow: "time-5-int" }}></span>
+                <span className="time-int" style={{ gridColumn: "times / track-8", gridRow: "time-6-int" }}></span>
+                <span className="time-int" style={{ gridColumn: "times / track-8", gridRow: "time-7-int" }}></span>
+                <span className="time-int" style={{ gridColumn: "times / track-8", gridRow: "time-8-int" }}></span>
+                <span className="time-int" style={{ gridColumn: "times / track-8", gridRow: "time-9-int" }}></span>
+                <span className="time-int" style={{ gridColumn: "times / track-8", gridRow: "time-10-int" }}></span>
+                <span className="time-int" style={{ gridColumn: "times / track-8", gridRow: "time-11-int" }}></span>
+                <span className="time-int" style={{ gridColumn: "times / track-8", gridRow: "time-12-int" }}></span>
+                <span className="time-int" style={{ gridColumn: "times / track-8", gridRow: "time-13-int" }}></span>
+                <span className="time-int" style={{ gridColumn: "times / track-8", gridRow: "time-14-int" }}></span>
                 {/* ${t[0] > 12 ? "pm" : "am"} */}
                 {/* :${t[1] == 0 ? "00" : t[1]} */}
                 {events.map(e => e)}
