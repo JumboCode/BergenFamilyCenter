@@ -9,47 +9,47 @@
         [tracks] auto
         [time-int] 0em
         [time-1-int] 0em
-        [time-0600] 1.5em
-        [time-0630] 1.5em
+        [time-0600] 1.8em
+        [time-0630] 1.8em
         [time-2-int] 0em
-        [time-0700] 1.5em
-        [time-0730] 1.5em
+        [time-0700] 1.8em
+        [time-0730] 1.8em
         [time-3-int] 0em
-        [time-0800] 1.5em
-        [time-0830] 1.5em
+        [time-0800] 1.8em
+        [time-0830] 1.8em
         [time-4-int] 0em
-        [time-0900] 1.5em
-        [time-0930] 1.5em
+        [time-0900] 1.8em
+        [time-0930] 1.8em
         [time-5-int] 0em
-        [time-1000] 1.5em
-        [time-1030] 1.5em
+        [time-1000] 1.8em
+        [time-1030] 1.8em
         [time-6-int] 0em
-        [time-1100] 1.5em
-        [time-1130] 1.5em
+        [time-1100] 1.8em
+        [time-1130] 1.8em
         [time-7-int] 0em
-        [time-1200] 1.5em
-        [time-1230] 1.5em
+        [time-1200] 1.8em
+        [time-1230] 1.8em
         [time-8-int] 0em
-        [time-1300] 1.5em
-        [time-1330] 1.5em
+        [time-1300] 1.8em
+        [time-1330] 1.8em
         [time-9-int] 0em
-        [time-1400] 1.5em
-        [time-1430] 1.5em
+        [time-1400] 1.8em
+        [time-1430] 1.8em
         [time-10-int] 0em
-        [time-1500] 1.5em
-        [time-1530] 1.5em
+        [time-1500] 1.8em
+        [time-1530] 1.8em
         [time-11-int] 0em
-        [time-1600] 1.5em
-        [time-1630] 1.5em
+        [time-1600] 1.8em
+        [time-1630] 1.8em
         [time-12-int] 0em
-        [time-1700] 1.5em
-        [time-1730] 1.5em
+        [time-1700] 1.8em
+        [time-1730] 1.8em
         [time-13-int] 0em
-        [time-1800] 1.5em
-        [time-1830] 1.5em
+        [time-1800] 1.8em
+        [time-1830] 1.8em
         [time-14-int] 0em
-        [time-1900] 1.5em
-        [time-1930] 1.5em;
+        [time-1900] 1.8em
+        [time-1930] 1.8em;
         /* Note 1:
         [time-15-int] 0fr
         Use 24hr time for gridline names for simplicity
@@ -196,15 +196,15 @@
   }
   
   .track-1 {
-    background-color: #F58EAC;
-    /* border: 2px solid #787878; */
+    background-color: #f58eabdd;
+    border: 1px solid #000000;
     color: rgb(0, 0, 0);
     margin-right: .3em;
   }
 
-  /* .track-1:hover {
-    background-color: #dec1dc;
-  } */
+  .track-1:hover {
+    background-color: #f58eab;
+  }
 
   .track-int {
     border-right: 1px solid rgb(216, 216, 216);
@@ -217,48 +217,73 @@
   }
   
   .track-2 {
-    background-color: #FFA985;
-    /* border: 2px solid #787878; */
+    background-color: #ffaa85ea;
+    border: 1px solid #000000;
     color: rgb(0, 0, 0);
     margin-right: .3em;
   }
-  /* .track-2:hover {
-    background-color: #ccf7fa;
-  } */
+  .track-2:hover {
+    background-color: #ffaa85;
+  }
 
   
   .track-3 {
-    background-color: #FFD885;
+    background-color: #ffd885cd;
     color: rgb(0, 0, 0);
+    border: 1px solid #000000;
     margin-right: .3em;
   }
-  
-  .track-4 {
-    background-color: #BFEFBD;
-    color: rgb(0, 0, 0);
-    margin-right: .3em;
-  }
-  .track-5 {
-    background-color: #C7F6FA;
-    color: rgb(0, 0, 0);
-    margin-right: .3em;
-  }
-  .track-6 {
-    background-color: #D5AED1;
-    color: rgb(0, 0, 0);
-    margin-right: .3em;
-  }
-  .track-7 {
-    background-color: #FFF799;
-    color: rgb(0, 0, 0);
-    margin-right: .3em;
-  }
-  
-  .track-all {
-    display: flex;
-    /* align-items: flex-end; */
-    /* justify-content: flex-end; */
 
+  .track-3:hover {
+    background-color: #ffd885;
+  }
+
+  .track-4 {
+    background-color: #bfefbdd2;
+    color: rgb(0, 0, 0);
+    border: 1px solid #000000;
+    margin-right: .3em;
+  }
+
+  .track-4:hover {
+    background-color: #bfefbd;
+  }
+
+  .track-5 {
+    background-color: #c7f6fad5;
+    color: rgb(0, 0, 0);
+    border: 1px solid #000000;
+    margin-right: .3em;
+  }
+
+  .track-5:hover {
+    background-color: #c7f6fa;
+  }
+
+  .track-6 {
+    background-color: #d5aed1cb;
+    color: rgb(0, 0, 0);
+    border: 1px solid #000000;
+    margin-right: .3em;
+  }
+
+  .track-6:hover {
+    background-color: #d5aed1;
+  }
+
+  .track-7 {
+    background-color: #fff799ce;
+    border: 1px solid #000000;
+    color: rgb(0, 0, 0);
+    margin-right: .3em;
+  }
+
+  .track-7:hover {
+    background-color: #fff799;
+  }
+  
+  .track-all:hover {
+    cursor: pointer;
   }
   
   .text {

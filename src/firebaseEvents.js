@@ -198,7 +198,7 @@ const firebaseFilterEventsChronological = async (
   querySnapshot.forEach((doc) => {
     var timestamp = doc.data().startTime;
     if (timestamp.toDate().getMonth() == theMonth) {
-      filtered_events.push(doc.data());
+      filtered_events.push({ ...doc.data(), id: doc.id });
     }
   });
 

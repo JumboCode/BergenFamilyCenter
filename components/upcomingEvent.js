@@ -42,7 +42,7 @@ export default function UpcomingEvent({ eventID }) {
   const date = timestamp?.toDate();
 
   return (
-    <Paper style={{ display: 'table', margin: 20, borderRadius: 25 }} elevation={8}>
+    <Paper style={{ display: 'table', margin: 20, borderRadius: 25 }} elevation={2}>
       {timestamp == null ? null :
         <Card style={{ width: "100%", display: 'flex', alignItems: 'center', flexDirection: 'row', borderRadius: 25 }}>
           <Grid container>

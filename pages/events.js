@@ -10,8 +10,8 @@ export default function Events() {
             <div>
                 <NavBar page={"events"}></NavBar>
                 <Box sx={{ px: 2 }}>
-                    {divisions.map(d =>
-                        <Box sx={{ pb: 2 }}>
+                    {divisions.map((d, i) =>
+                        <Box key={i} sx={{ pb: 2 }}>
                             <Typography variant="h5">{d}</Typography>
                             <ScrollingCard division={[d]}></ScrollingCard>
                         </Box>

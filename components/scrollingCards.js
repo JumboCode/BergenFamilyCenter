@@ -13,17 +13,18 @@ export default function ScrollingCard({ division }) {
       setListCards(
         value.map((card) => {
           return (
-            <MediaCard
-              key={card.id}
-              description={card.data().description}
-              title={card.data().name}
-              image={"/sunset.jpg"} /* STILL TO-DO:: images */
-              startTime={card.data().startTime?.toDate()}
-              endTime={card.data().endTime?.toDate()}
-              manager={card.data().manager}
-              attendees={card.data().attendeesRef}
-              event={card.id}
-            />
+            <div key={card.id}>
+              <MediaCard
+                description={card.data().description}
+                title={card.data().name}
+                image={"/sunset.jpg"} /* STILL TO-DO:: images */
+                startTime={card.data().startTime?.toDate()}
+                endTime={card.data().endTime?.toDate()}
+                manager={card.data().manager}
+                attendees={card.data().attendeesRef}
+                event={card.id}
+              />
+            </div>
           );
         })
       );
