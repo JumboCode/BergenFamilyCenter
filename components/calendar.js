@@ -3,24 +3,52 @@ import Calendar from 'react-calendar';
 import Paper from '@mui/material/Paper';
 import 'react-calendar/dist/Calendar.css';
 import { makeStyles, withStyles } from '@mui/styles';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import StaticDatePicker from '@mui/lab/StaticDatePicker';
+
 
 const styles = {
   root: {
     border: 0,
+    width: "100%",
     margin: 5,
   }
 };
+
+// const [value, setValue] = React.useState(new Date());
+
+// return (
+//   <LocalizationProvider dateAdapter={AdapterDateFns}>
+//     <StaticDatePicker
+//       displayStaticWrapperAs="desktop"
+//       openTo="year"
+//       value={value}
+//       onChange={(newValue) => {
+//         setValue(newValue);
+//       }}
+//       renderInput={(params) => <TextField {...params} />}
+//     />
+//   </LocalizationProvider>
+// );
+
 
 const CalendarWithStyles = withStyles(styles)(({ classes }) => {
   return <Calendar calendarType="US" className={classes.root} />
 });
 
-export const MonthCalendar = () => {
-  const [value, onChange] = useState(new Date());
-  // console.log(.)
+export const MonthCalendar = ({ date, onChangeDate }) => {
   return (
-    <Paper style={{ display: "table", margin: 20 }} elevation={8}>
-      <CalendarWithStyles />
-    </Paper>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <StaticDatePicker
+        displayStaticWrapperAs="desktop"
+        openTo="day"
+        value={date}
+        onChange={(newValue) => {
+          onChangeDate(newValue);
+        }}
+        renderInput={(params) => <TextField {...params} />}
+      />
+    </LocalizationProvider>
   );
 }

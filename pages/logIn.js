@@ -13,13 +13,13 @@ import { getAuth } from "firebase/auth";
 import { useFormik } from 'formik';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import * as React from 'react';
+import { useContext, useEffect } from 'react';
 import GoogleButton from 'react-google-button';
 import * as yup from 'yup';
 import userSignIn from '../src/firebaseSignIn';
 import signInWithGoogle from '../src/googleSignIn';
 import LanguageSelector from "../components/languageSelector";
-
+import { LanguageContext } from '../src/languageContext';
 
 const validationSchema = yup.object({
     email: yup
@@ -45,6 +45,11 @@ export default function SignIn() {
             userSignIn(values.email, values.password)
         },
     });
+    const { language, _ } = useContext(LanguageContext);
+    useEffect(() => {
+        console.log(language)
+    }, [language]);
+    const inEnglish = language === "English";
 
     auth.onAuthStateChanged((user) => {
         if (user) {
@@ -78,14 +83,15 @@ export default function SignIn() {
                         <Box style={{ textAlign: "left", width: "100%" }}>
                             <Image src="/Tree.png" alt="me" width="132" height="102" />
                             <Typography component="h1" variant="h3">
-                                Log in
+                                {inEnglish ? "Log in" : "Iniciar Sesión"}
                             </Typography>
                             <Grid style={{ display: "flex", alignItems: "flex-end" }}>
                                 <Typography style={{ float: "left" }}>
-                                    Don't have an account?&nbsp;
+                                    {inEnglish ? "Don't have an account?" : "¿No tiene una cuenta?"}
+                                    &nbsp;
                                 </Typography>
                                 <Link href="/signUp" underline="hover">
-                                    Sign up
+                                    {inEnglish ? "Sign up" : "Registrarse"}
                                 </Link>
                             </Grid>
 
@@ -94,7 +100,7 @@ export default function SignIn() {
                             margin="normal"
                             fullWidth
                             id="email"
-                            label="Email"
+                            label={inEnglish ? "Email" : "Correo Electrónico"}
                             name="email"
                             autoComplete="email"
                             autoFocus
@@ -107,7 +113,7 @@ export default function SignIn() {
                             margin="normal"
                             fullWidth
                             name="password"
-                            label="Password"
+                            label={inEnglish ? "Password" : "Contraseña"}
                             type="password"
                             id="password"
                             autoComplete="current-password"
@@ -119,7 +125,7 @@ export default function SignIn() {
                         <Box style={{ display: "flex", alignItems: "center" }}>
                             <FormControlLabel
                                 control={<Checkbox value="remember" color="primary" />}
-                                label="Remember me"
+                                label={inEnglish ? "Remember me" : "Recuédame"}
                             />
                             <Link
                                 href="/forgotPassword"
@@ -127,7 +133,7 @@ export default function SignIn() {
                                 style={{ marginLeft: "auto", order: 1 }}
                                 variant="body2"
                             >
-                                Forgot password?
+                                {inEnglish ? "Forgot password?" : "¿Olvidaste la contraseña?"}
                             </Link>
                         </Box>
                         <Button
@@ -136,9 +142,9 @@ export default function SignIn() {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Log In
+                            {inEnglish ? "Log In" : "Iniciar Sesión"}
                         </Button>
-                        <Divider>or</Divider>
+                        <Divider>{inEnglish ? "or" : "o"}</Divider>
                         <GoogleButton
                             style={{ width: "100% !important", marginTop: 24 }}
                             onClick={() => { signInWithGoogle() }}

@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@mui/material';
+import { Grid, Typography, Box, Button } from '@mui/material';
 import Event from "../components/event";
 import NavBar from "../components/navBar.js";
 import ScrollingCard from "../components/scrollingCards";
