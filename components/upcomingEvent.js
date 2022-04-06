@@ -1,15 +1,11 @@
-// import { makeStyles } from '@mui/styles';
-// import { useState, useEffect } from 'react';
 import { useEffect, useState } from 'react';
 import { firebaseGetEvent } from '../src/firebaseEvents';
-import { useTheme, createTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import CalendarIcon from "../components/calendarIcon";
 import Grid from "@mui/material/Grid"
-import { Timestamp } from "firebase/firestore";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper"
 import Card from "@mui/material/Card";

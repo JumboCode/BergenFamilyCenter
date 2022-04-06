@@ -11,9 +11,6 @@ import {
   updateDoc,
   arrayUnion,
   doc,
-  query,
-  where,
-  orderBy,
 } from "firebase/firestore";
 
 
@@ -56,7 +53,7 @@ export const getUpcomingUserEvents = async (uid) => {
 
   let userEvents = userEventRefs.map(async element => {
     const data = await getDoc(element);
-    return data.data();
+    return { ...data.data(), id: data.id };
   });
 
   const values = await Promise.all(userEvents);
@@ -69,6 +66,8 @@ export const getUpcomingUserEvents = async (uid) => {
     return value.startTime >= last_midnight_timestamp;
   }
   );
+
+  upcomingEvents.sort((a, b) => a.startTime - b.startTime);
 
   return upcomingEvents;
 };
