@@ -124,10 +124,10 @@ const firebaseFilterEventsPaginate = async (
   // Removes double events
   const dict = new Object();
   return toReturn.filter(doc => {
-    if (dict[doc.attendeesRef]) {
+    if (dict[doc.data().attendeesRef?.id]) {
       return false;
     }
-    dict[doc.attendeesRef] = true;
+    dict[doc.data().attendeesRef?.id] = true;
     return true;
   });
 };
@@ -135,6 +135,7 @@ const firebaseFilterEventsPaginate = async (
 const firebaseAppendPerson = async (
   userID,
   eventID,
+  attendeesRef,
   names,
   ages,
   photoConsent
@@ -151,11 +152,11 @@ const firebaseAppendPerson = async (
     consent: photoConsent,
   };
 
-  await updateDoc(eventRef, {
+  await updateDoc(attendeesRef, {
     attendees: arrayUnion(userToAdd),
   });
 
-  addUserEvent(userID, eventID);
+  addUserEvent(userID, eventRef);
 };
 
 const firebaseFilterEventsChronological = async (
@@ -201,7 +202,6 @@ const firebaseFilterEventsChronological = async (
     }
   });
 
-  console.log(filtered_events);
   return filtered_events;
 };
 

@@ -1,28 +1,21 @@
-import { Grid, Typography, Box } from '@mui/material';
+import { Grid, Typography, Box, Button } from '@mui/material';
 import Event from "../components/event";
 import NavBar from "../components/navBar.js";
 import ScrollingCard from "../components/scrollingCards";
 
 export default function Events() {
+    const divisions = ['Early Learning Center/Home', "Family Success Center", "HIV/Outreach Services", "Visiting Program", "Senior Services", "Adolescent Services", "Clinical Services"];
     return (
         (
             <div>
                 <NavBar page={"events"}></NavBar>
                 <Box sx={{ px: 2 }}>
-                    <Box sx={{ pb: 2 }}>
-                        <Typography variant="h5">Adolescent Events</Typography>
-                        <ScrollingCard division={["Child"]}></ScrollingCard>
-                    </Box>
-                    <Box sx={{ pb: 2 }}>
-                        <Typography variant="h5">Early Learning Center/Home</Typography>
-                        <ScrollingCard division={["Early Learning Center/Home"]}></ScrollingCard>
-                    </Box>
-                    <Box sx={{ pb: 2 }}>
-                        <Typography variant="h5">Teen Events</Typography>
-                        <ScrollingCard division={["Child"]}></ScrollingCard>
-                    </Box>
-                    <Typography variant="h5">Senior Events</Typography>
-                    <ScrollingCard division={["Child"]}></ScrollingCard>
+                    {divisions.map(d =>
+                        <Box sx={{ pb: 2 }}>
+                            <Typography variant="h5">{d}</Typography>
+                            <ScrollingCard division={[d]}></ScrollingCard>
+                        </Box>
+                    )}
                 </Box>
             </div>
         )

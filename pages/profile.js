@@ -1,17 +1,17 @@
-import { Typography } from '@mui/material';
+import * as React from "react";
 import NavBar from "../components/navBar.js";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from 'react';
+import Typography from '@mui/material/Typography';
 import { db } from "../firebase/firebase";
-import {
-    doc,
-    getDoc,
-} from "firebase/firestore";
+import PhotoPopUp from "../components/photoPopUp";
+import { doc, getDoc } from "firebase/firestore";
 
 export default function Profile() {
     const auth = getAuth();
     const uid = auth.currentUser?.uid;
     const [name, setName] = useState(auth.currentUser?.displayName ?? "you must be logged in");
+    const [open, setOpen] = useState(true);
     useEffect(() => {
         if (uid) {
             const userRef = doc(db, "users", uid);
@@ -27,6 +27,7 @@ export default function Profile() {
             <Typography variant="h4">
                 Hello, {name}
             </Typography>
+            <PhotoPopUp open={open} setOpen={setOpen} />
         </div>
     )
 }
