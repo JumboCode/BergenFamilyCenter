@@ -4,7 +4,7 @@ import "react-multi-carousel/lib/styles.css";
 import { firebaseFilterEventsPaginate } from "../src/firebaseEvents";
 import { useState, useEffect } from "react";
 
-export default function ScrollingCard({ division }) {
+export default function ScrollingCard({ division, user }) {
   const [listCards, setListCards] = useState([]);
 
   const makeCards = () => {
@@ -23,6 +23,7 @@ export default function ScrollingCard({ division }) {
                 manager={card.data().manager}
                 attendees={card.data().attendeesRef}
                 event={card.id}
+                user={user}
               />
             </div>
           );

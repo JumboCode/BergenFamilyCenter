@@ -143,15 +143,19 @@ const firebaseAppendPerson = async (
   const eventRef = doc(db, "events", eventID);
   const userRef = doc(db, "users", userID);
 
-  var nameAndAge = {};
+  const nameAndAge = {};
   names.forEach((name, i) => (nameAndAge[name] = ages[i]));
 
-  var userToAdd = {
+  const userToAdd = {
     parent: userRef,
     attendees: nameAndAge,
     consent: photoConsent,
   };
 
+  // TODO
+  if (docSnap.data().events.includes(eventRef)) {
+    console.log("CONTAINS");
+  }
   await updateDoc(attendeesRef, {
     attendees: arrayUnion(userToAdd),
   });
@@ -167,7 +171,7 @@ const firebaseFilterEventsChronological = async (
   const events = collection(db, "events");
   let filtered_events = [];
 
-  let now = new Date();
+  let now = new Date(2022, 3, 4);
   now = new Date(now.setHours(0, 0, 0, 0));
   const last_midnight_timestamp = Timestamp.fromDate(now);
 

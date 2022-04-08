@@ -6,7 +6,7 @@ import { MonthCalendar } from "../components/calendar";
 import WeeklyCalendar from "../components/weeklyCalendar";
 import { getAuth } from "firebase/auth";
 import { db } from "../firebase/firebase";
-import UpcomingEvent from "../components/upcomingEvent";
+import MyUpcomingEvent from "../components/myUpcomingEvents";
 
 export default function Calendar() {
     const [selectedDay, setSelectedDay] = useState(new Date());
@@ -30,14 +30,16 @@ export default function Calendar() {
                     <Typography variant="h5">
                         My Upcoming Events
                     </Typography>
-                    <UpcomingEvent eventID={"fourth"}></UpcomingEvent>
+                    <Box sx={{ p: 2, height: "40vh", overflow: "auto" }}>
+                        <MyUpcomingEvent userID={uid}></MyUpcomingEvent>
+                    </Box>
                     <Box sx={{ flex: "1 0" }}></Box>
                     <MonthCalendar date={selectedDay} onChangeDate={setSelectedDay} />
                 </Grid>
-                <Grid item xs={7}>
+                <Grid item xs={8}>
                     <WeeklyCalendar user={user} selectedDay={selectedDay} />
                 </Grid>
             </Grid>
-        </div>
+        </div >
     )
 }

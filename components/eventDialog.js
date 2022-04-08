@@ -30,7 +30,6 @@ export default function EventDialog({ open, setOpen, description, title, image, 
         if (open) {
             if (user.events.map(e => e.id).includes(event)) {
                 getDoc(attendees).then(v => {
-                    // console.log(v.data())
                     const attendingMap = v.data().attendees.find(a => a.parent.id === user.id);
                     setNames(Object.keys(attendingMap.attendees));
                     setAges(Object.values(attendingMap.attendees));
@@ -72,6 +71,8 @@ export default function EventDialog({ open, setOpen, description, title, image, 
                 submitAges.push(values[`age${i + 1}`])
             }
             firebaseAppendPerson(user?.id, event, attendees, submitNames, submitAges, null).then(() => {
+                console.log(submitNames);
+                // #TODO
                 handleClose();
             })
         },
@@ -186,7 +187,7 @@ export default function EventDialog({ open, setOpen, description, title, image, 
                         <IconButton
                             color="primary"
                             onClick={() => {
-                                if (numFields > 1) {
+                                if (numFields > ages.length) {
                                     setNumFields(numFields - 1)
                                 }
                             }}>

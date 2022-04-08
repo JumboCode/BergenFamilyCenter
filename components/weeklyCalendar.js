@@ -74,6 +74,7 @@ export default function WeeklyCalendar({ selectedDay, user }) {
     }
 
     useEffect(() => {
+        // TODO Optimize
         firebaseFilterEventsChronological(3, divisions).then(v => {
             v = v.filter(e => {
                 return e.startTime.toDate() > startOfWeek && e.startTime.toDate() < endOfWeek;
@@ -149,20 +150,22 @@ export default function WeeklyCalendar({ selectedDay, user }) {
     }
     return (
         <div className="schedule-container" style={{ overflow: "auto", height: "80vh" }}>
-            <EventDialog
-                open={open}
-                setOpen={setOpen}
-                description={selectedEvent?.description}
-                title={selectedEvent?.name}
-                image={""}
-                className={""}
-                startTime={selectedEvent?.startTime.toDate()}
-                endTime={selectedEvent?.endTime.toDate()}
-                manager={selectedEvent?.manager}
-                event={selectedEvent?.id}
-                attendees={selectedEvent?.attendeesRef}
-                user={user}
-            />
+            {!open ? null :
+                <EventDialog
+                    open={open}
+                    setOpen={setOpen}
+                    description={selectedEvent?.description}
+                    title={selectedEvent?.name}
+                    image={""}
+                    className={""}
+                    startTime={selectedEvent?.startTime.toDate()}
+                    endTime={selectedEvent?.endTime.toDate()}
+                    manager={selectedEvent?.manager}
+                    event={selectedEvent?.id}
+                    attendees={selectedEvent?.attendeesRef}
+                    user={user}
+                />
+            }
             <div style={{ position: "sticky", display: "block", marginLeft: 20 }} >
                 <Grid container direction="row" alignItems="center">
                     <Grid item>

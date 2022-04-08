@@ -9,7 +9,7 @@ import Image from 'next/image';
 import EventDialog from "./eventDialog";
 
 export default function MediaCard(props) {
-    const { description, title, image, className, startTime, endTime, manager, event, attendees } = props;
+    const { description, title, image, className, startTime, endTime, manager, event, attendees, user } = props;
     const [loading, setLoading] = React.useState(true);
     const optionsStart = { weekday: 'short', month: 'long', day: 'numeric', hour: 'numeric', minute: "numeric" };
     const optionsEnd = { hour: 'numeric', minute: "numeric" };
