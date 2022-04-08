@@ -153,9 +153,9 @@ const firebaseAppendPerson = async (
   };
 
   // TODO
-  if (docSnap.data().events.includes(eventRef)) {
-    console.log("CONTAINS");
-  }
+  // if (docSnap.data().events.includes(eventRef)) {
+  //   console.log("CONTAINS");
+  // }
   await updateDoc(attendeesRef, {
     attendees: arrayUnion(userToAdd),
   });
