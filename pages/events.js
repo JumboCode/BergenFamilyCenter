@@ -9,16 +9,15 @@ import { PrecisionManufacturingTwoTone } from '@mui/icons-material';
 export default function Events() {
     const [divisions, setDivisions] = useState([]);
 
-
     const divisionLabels = () => {
         firebaseGetDivisions().then((divisions) => {
             setDivisions(
                 divisions.map((division) => {
                     return (
-                        <div key={division.name}>
-                            <Typography>{division.name}</Typography>
+                        <Box sx={{ pb: 2 }} key={division.name}>
+                            <Typography variant="h5">{division.name}</Typography>
                             <ScrollingCard division={[division.name]}></ScrollingCard>
-                        </div>
+                        </Box>
                     );
                 })
             );
@@ -30,11 +29,11 @@ export default function Events() {
     }, []);
 
     return (
-        (
-            <div>
-                <NavBar page={"events"}></NavBar>
+        <div>
+            <NavBar page={"events"}></NavBar>
+            <Box sx={{ px: 2 }}>
                 {divisions}
-            </div>
-        )
-    )
+            </Box>
+        </div>
+    );
 }
