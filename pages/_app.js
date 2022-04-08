@@ -8,6 +8,7 @@ import { RouteGuard } from '../components/routeGuard';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from '../public/theme';
 
+
 function MyApp({ Component, pageProps }) {
   const [language, setLanguage] = useState('English')
 
