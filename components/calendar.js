@@ -43,6 +43,8 @@ export const MonthCalendar = ({ date, onChangeDate }) => {
       <StaticDatePicker
         displayStaticWrapperAs="desktop"
         openTo="day"
+        showDaysOutsideCurrentMonth
+        views={["day"]}
         value={date}
         onChange={(newValue) => {
           onChangeDate(newValue);

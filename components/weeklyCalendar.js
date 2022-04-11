@@ -3,15 +3,19 @@ import { useState, useEffect } from 'react';
 import { firebaseFilterEventsChronological } from '../src/firebaseEvents';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Grid';
 import moment from 'moment';
+import EventDialog from "./eventDialog";
 
-export default function WeeklyCalendar({ selectedDay }) {
+export default function WeeklyCalendar({ selectedDay, user }) {
     const [events, setEvents] = useState([]);
+    const [open, setOpen] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState(null);
     const start = new Date();
     const options = { month: 'long', day: 'numeric' };
 
@@ -33,7 +37,7 @@ export default function WeeklyCalendar({ selectedDay }) {
             setStartOfWeek(start);
             setEndOfWeek(end);
         }
-    }, [selectedDay])
+    }, [selectedDay]);
 
     const divisions = ['Early Learning Center/Home', "Family Success Center", "HIV/Outreach Services", "Visiting Program", "Senior Services", "Adolescent Services", "Clinical Services"];
     const roundToNearest30 = date => {
@@ -53,10 +57,40 @@ export default function WeeklyCalendar({ selectedDay }) {
         return formattedTime;
     };
 
+    const eventsOverlap = (e1, e2) => {
+        if (e1.startTime > e2.endTime) {
+            return false;
+        }
+        if (e2.startTime > e1.endTime) {
+            return false;
+        }
+        if (e2.endTime < e1.startTime) {
+            return false;
+        }
+        if (e1.endTime < e2.startTime) {
+            return false;
+        }
+        return true;
+    }
+
     useEffect(() => {
+        // TODO Optimize
         firebaseFilterEventsChronological(3, divisions).then(v => {
             v = v.filter(e => {
                 return e.startTime.toDate() > startOfWeek && e.startTime.toDate() < endOfWeek;
+            });
+            v = v.sort((a, b) => a.startTime - b.startTime);
+
+            // Separate into days
+            const eventDays = [];
+            const overlaps = [];
+            for (let i = 0; i < 7; i++) {
+                eventDays.push([]);
+            }
+
+            v.forEach(e => {
+                eventDays[e.startTime.toDate().getDay()].push(e);
+                overlaps.push(0);
             });
 
             const eventComponents = v.map((event, i) => {
@@ -70,18 +104,35 @@ export default function WeeklyCalendar({ selectedDay }) {
                 const hourEnd = end.getHours();
                 const minuteEnd = end.getMinutes();
 
-
                 const startString = mapTime(hourStart, minuteStart);
                 const endString = mapTime(hourEnd, minuteEnd);
                 const gridRow = `time-${startString} / time-${endString}`;
+
+                let overlap = false;
+                let overlapAmount = 0;
+                eventDays[day].forEach((e, i) => {
+                    if (e !== event) {
+                        if (eventsOverlap(e, event)) {
+                            if (start > roundToNearest30(e.startTime.toDate())) {
+                                overlap = true;
+                                overlapAmount += (overlaps[i - 1] + 1);
+                            } else if (start === roundToNearest30(e.startTime.toDate())) {
+                                overlapAmount += (overlaps[i - 1] + 1);
+                            }
+                        }
+                    }
+                });
+                if (overlap) {
+                    overlaps[i] = overlapAmount;
+                }
                 return (
-                    <div key={i} className={className} style={{ zIndex: hourStart * 60 + minuteStart, gridColumn: `track-${day + 1}`, gridRow: gridRow }
+                    <Grid onClick={() => { setSelectedEvent(event); setOpen(true) }} item key={i} className={className} style={{ marginLeft: `${overlapAmount}em`, gridColumn: `track-${day + 1}`, gridRow: gridRow }
                     }>
                         <Typography variant="body2">{event.name}</Typography>
                         {/* <span className="session-time">{event.description}</span> */}
                         {/* <span className="session-track">Track: 1</span>
                         <span className="session-presenter">Presenter</span> */}
-                    </div >
+                    </Grid >
                 )
             });
             setEvents(eventComponents);
@@ -99,6 +150,22 @@ export default function WeeklyCalendar({ selectedDay }) {
     }
     return (
         <div className="schedule-container" style={{ overflow: "auto", height: "80vh" }}>
+            {!open ? null :
+                <EventDialog
+                    open={open}
+                    setOpen={setOpen}
+                    description={selectedEvent?.description}
+                    title={selectedEvent?.name}
+                    image={""}
+                    className={""}
+                    startTime={selectedEvent?.startTime.toDate()}
+                    endTime={selectedEvent?.endTime.toDate()}
+                    manager={selectedEvent?.manager}
+                    event={selectedEvent?.id}
+                    attendees={selectedEvent?.attendeesRef}
+                    user={user}
+                />
+            }
             <div style={{ position: "sticky", display: "block", marginLeft: 20 }} >
                 <Grid container direction="row" alignItems="center">
                     <Grid item>

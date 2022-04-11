@@ -11,7 +11,9 @@ import { db } from "../firebase/firebase";
 import * as yup from 'yup';
 import PhotoPopUp from "../components/photoPopUp";
 import { updateUser } from "../src/userFunctions";
-import { doc, getDoc } from "firebase/firestore";
+import { firebaseUserPreviousEvents } from "../src/firebaseEvents";
+import { doc, getDoc, Timestamp } from "firebase/firestore";
+import UpcomingEvent from "../components/upcomingEvent.js";
 
 
 const validationSchema = yup.object({
@@ -38,31 +40,22 @@ export default function Profile() {
     const [open, setOpen] = useState(true);
     const [editing, setEditing] = useState(false);
 
+    const [previousEvents, setPreviousEvents] = useState([]);
+
     useEffect(() => {
         if (uid) {
             const userRef = doc(db, "users", uid);
+            const currentTime = Timestamp.now()
+
             const userInfo = getDoc(userRef).then(value => {
                 setName(value.data().name);
                 setEmail(value.data().email);
                 setPhoneNumber(value.data().phoneNumber);
                 setAddress(value.data().address);
+                firebaseUserPreviousEvents(currentTime).then(value => setPreviousEvents(value));
             });
         }
     }, []);
-
-    //     const WhiteBorderTextField = styled(TextField)`
-    //     & label.Mui-focused {
-    //         color: white;
-    //     }
-    //     & .Mui-disabled {
-    //         border-color:white;
-    //     }
-    //     & .MuiOutlinedInput-root {
-    //         &.Mui-focused fieldset {
-    //          border-color: white;
-    //         }
-    //     }
-    // `   ;
 
     const formik = useFormik({
         enableReinitialize: true,
@@ -85,82 +78,101 @@ export default function Profile() {
         <div>
             <NavBar page={"profile"}></NavBar>
             <PhotoPopUp open={open} setOpen={setOpen} />
-            <div hidden={editing}>
-                <Button onClick={() => { setEditing(!editing) }}> Edit </Button>
-            </div>
-            <Box>
-                <form style={{ display: "flex", alignItems: "left", flexDirection: "column" }} onSubmit={formik.handleSubmit}>
-                    <TextField
-                        style={{ width: "30%" }}
-                        disabled={!editing}
-                        margin="normal"
-                        id="name"
-                        label="Name: "
-                        autoFocus
-                        value={formik.values.name}
-                        onChange={formik.handleChange}
-                        error={formik.touched.name && Boolean(formik.errors.name)}
-                    />
-                    <TextField
-                        style={{ width: "30%" }}
-                        disabled={!editing}
-                        margin="normal"
-                        id="email"
-                        label="Email: "
-                        autoFocus
-                        value={formik.values.email}
-                        onChange={formik.handleChange}
-                        error={formik.touched.email && Boolean(formik.errors.email)}
-                    />
-                    <TextField
-                        style={{ width: "30%" }}
-                        disabled={!editing}
-                        margin="normal"
-                        id="phoneNumber"
-                        label="Phone Number: "
-                        autoFocus
-                        value={formik.values.phoneNumber}
-                        onChange={formik.handleChange}
-                        error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
-                    />
-                    <TextField
-                        style={{ width: "30%" }}
-                        disabled={!editing}
-                        margin="normal"
-                        id="address"
-                        label="Address: "
-                        autoFocus
-                        value={formik.values.address}
-                        onChange={formik.handleChange}
-                        error={formik.touched.address && Boolean(formik.errors.address)}
-                    />
-                    <div hidden={!editing}>
-                        <Box style={{ display: "flex", alignItems: "left", flexDirection: "row" }}>
-                            <Button
-                                style={{ width: "10%", margin: "1%" }}
-                                type="submit"
-                                color="primary"
-                                fullWidth
-                                variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
-                                onClick={() => { setEditing(!editing) }}
-                            >
-                                Save
-                            </Button>
-                            <Button
-                                hidden
-                                style={{ width: "10%", margin: "1%" }}
-                                variant="outlined"
-                                sx={{ mt: 3, mb: 2 }}
-                                onClick={() => { setEditing(!editing) }}
-                            >
-                                Cancel
-                            </Button>
-                        </Box>
-                    </div>
-                </form>
+            <Box style={{ display: "flex", alignItems: "left", flexDirection: "row" }}>
+                <Box style={{ width: "30%", margin: "2%" }}>
+                    <Typography component="h1" variant="h6">
+                        {"Information:"}
+                    </Typography>
+                    <form style={{ display: "flex", alignItems: "left", flexDirection: "column" }} onSubmit={formik.handleSubmit}>
+                        <TextField
+                            style={{ width: "100%" }}
+                            disabled={!editing}
+                            margin="normal"
+                            id="name"
+                            label="Name: "
+                            autoFocus
+                            value={formik.values.name}
+                            onChange={formik.handleChange}
+                            error={formik.touched.name && Boolean(formik.errors.name)}
+                        />
+                        <TextField
+                            style={{ width: "100%" }}
+                            disabled={!editing}
+                            margin="normal"
+                            id="email"
+                            label="Email: "
+                            autoFocus
+                            value={formik.values.email}
+                            onChange={formik.handleChange}
+                            error={formik.touched.email && Boolean(formik.errors.email)}
+                        />
+                        <TextField
+                            style={{ width: "100%" }}
+                            disabled={!editing}
+                            margin="normal"
+                            id="phoneNumber"
+                            label="Phone Number: "
+                            autoFocus
+                            value={formik.values.phoneNumber}
+                            onChange={formik.handleChange}
+                            error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
+                        />
+                        <TextField
+                            style={{ width: "100%" }}
+                            disabled={!editing}
+                            margin="normal"
+                            id="address"
+                            label="Address: "
+                            autoFocus
+                            value={formik.values.address}
+                            onChange={formik.handleChange}
+                            error={formik.touched.address && Boolean(formik.errors.address)}
+                        />
+                        <div hidden={editing}>
+                            <Button onClick={() => { setEditing(!editing) }}> Edit </Button>
+                        </div>
+                        <div hidden={!editing}>
+                            <Box style={{ display: "flex", alignItems: "left", flexDirection: "row" }}>
+                                <Button
+                                    style={{ width: "100%", margin: "1%" }}
+                                    type="submit"
+                                    color="primary"
+                                    fullWidth
+                                    variant="contained"
+                                    sx={{ mt: 3, mb: 2 }}
+                                    onClick={() => { setEditing(!editing) }}
+                                >
+                                    Save
+                                </Button>
+                                <Button
+                                    hidden
+                                    style={{ width: "100%", margin: "1%" }}
+                                    variant="outlined"
+                                    sx={{ mt: 3, mb: 2 }}
+                                    onClick={() => { setEditing(!editing) }}
+                                >
+                                    Cancel
+                                </Button>
+                            </Box>
+                        </div>
+                    </form>
+                </Box >
+                <Box component="div" sx={{ overflow: 'auto', width: "20%", margin: "2%", height: "80vh" }}>
+                    < Typography component="h1" variant="h6" >
+                        {"Past Events:"}
+                    </Typography>
+                    {Object.keys(previousEvents).length >= 0 ?
+                        previousEvents.sort((a, b) => (b.startTime - a.startTime)).map((event) => {
+                            return (
+                                <Box key={event}>
+                                    <UpcomingEvent style={{ width: "100%", height: "100%" }} eventID={event.id} key={event}></UpcomingEvent>
+                                </Box>
+                            );
+                        }) :
+                        null
+                    }
+                </Box>
             </Box >
-
         </div >
     )
 }
