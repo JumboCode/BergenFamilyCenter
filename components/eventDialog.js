@@ -90,7 +90,7 @@ export default function EventDialog({ open, setOpen, description, title, image, 
                             sx={{ my: 1, mx: 1 }}
                             InputLabelProps={{ shrink: true }}
                             autoFocus
-                            disabled={names[z]}
+                            disabled={names[z] != undefined}
                             margin="dense"
                             name={`name${z + 1}`}
                             id={`name${z + 1}`}
@@ -108,7 +108,7 @@ export default function EventDialog({ open, setOpen, description, title, image, 
                             sx={{ my: 1, mx: 2 }}
                             InputLabelProps={{ shrink: true }}
                             autoFocus
-                            disabled={ages[z]}
+                            disabled={ages[z] != undefined}
                             type="number"
                             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                             margin="dense"
@@ -165,7 +165,7 @@ export default function EventDialog({ open, setOpen, description, title, image, 
                         </Typography>
                     }
                     <Typography variant="subtitle2">
-                        Time: {startTime?.toLocaleDateString("en-US", optionsStart)} - {endTime?.toLocaleTimeString("en-US", optionsEnd)}
+                        Time: {startTime?.toDate().toLocaleDateString("en-US", optionsStart)} - {endTime?.toDate().toLocaleTimeString("en-US", optionsEnd)}
                     </Typography>
                 </DialogContent>
                 <DialogContent>

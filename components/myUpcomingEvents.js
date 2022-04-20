@@ -1,18 +1,40 @@
 import { getUpcomingUserEvents } from "../src/userFunctions";
 import { useState, useEffect } from "react";
+import { Typography, Grid, Box } from '@mui/material';
 import UpcomingEvent from "./upcomingEvent";
 
 // Designed for use in a width-3 grid
-export default function MyUpcomingEvents({ userID }) {
+export default function MyUpcomingEvents({ user }) {
     const [upcomingEvents, setUpcomingEvents] = useState([]);
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
-        const upcomingUserEvents = getUpcomingUserEvents(userID);
-        upcomingUserEvents.then((upcomingEvents) => setUpcomingEvents(upcomingEvents));
+        const upcomingUserEvents = getUpcomingUserEvents(user.id);
+        upcomingUserEvents.then((upcomingEvents) => { setUpcomingEvents(upcomingEvents); setLoading(false) });
     }, []);
 
     let upcomingEventsComponent = upcomingEvents.map(event => {
-        return <UpcomingEvent eventID={event.id} key={event.id}></UpcomingEvent>;
+        return <Box sx={{ pb: 2 }}>
+            <UpcomingEvent key={event.id} user={user} {...event}></UpcomingEvent>
+        </Box>;
     });
 
-    return upcomingEventsComponent;
+    return (
+        <div>
+            {loading ? null : (
+                upcomingEvents.length == 0 ?
+                    <Typography variant="h5">
+                        You have no upcoming events
+                    </Typography> : (
+                        <div>
+                            <Typography sx={{ pb: 1 }} variant="h5">
+                                My Upcoming Events
+                            </Typography>
+                            <Box sx={{ p: 2, maxHeight: "30vh", overflow: "auto" }}>
+                                {upcomingEventsComponent}
+                            </Box>
+                        </div>
+                    ))}
+        </div>
+    );
+    ;
 };

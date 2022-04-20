@@ -2,7 +2,7 @@ import { createTheme } from '@mui/material/styles';
 
 export const theme = createTheme({
     typography: {
-        fontFamily: 'Marcellus',
+        // fontFamily: '',
         // h5: {
         //     fontFamily: 'Marcellus',
         // },
