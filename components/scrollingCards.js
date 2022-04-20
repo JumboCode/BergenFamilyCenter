@@ -1,26 +1,31 @@
-import * as React from "react";
 import MediaCard from "./event";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { firebaseFilterEventsPaginate } from "../src/firebaseEvents";
 import { useState, useEffect } from "react";
 
-export default function ScrollingCard({ division }) {
+export default function ScrollingCard({ division, user }) {
   const [listCards, setListCards] = useState([]);
 
   const makeCards = () => {
     firebaseFilterEventsPaginate(division, 200, 0).then((value) => {
+      console.log(value)
       setListCards(
         value.map((card) => {
           return (
-            <MediaCard
-              key={card.id}
-              description={card.data().description}
-              title={card.data().title}
-              image={"/sunset.jpg"} /* STILL TO-DO:: images */
-              startTime={card.data().startTime}
-              endTime={card.data().endTime}
-            />
+            <div key={card.id}>
+              <MediaCard
+                description={card.data().description}
+                title={card.data().name}
+                image={"/sunset.jpg"} /* STILL TO-DO:: images */
+                startTime={card.data().startTime?.toDate()}
+                endTime={card.data().endTime?.toDate()}
+                manager={card.data().manager}
+                attendees={card.data().attendeesRef}
+                event={card.id}
+                user={user}
+              />
+            </div>
           );
         })
       );

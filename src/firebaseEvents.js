@@ -124,10 +124,10 @@ const firebaseFilterEventsPaginate = async (
   // Removes double events
   const dict = new Object();
   return toReturn.filter(doc => {
-    if (dict[doc.attendeesRef]) {
+    if (dict[doc.data().attendeesRef?.id]) {
       return false;
     }
-    dict[doc.attendeesRef] = true;
+    dict[doc.data().attendeesRef?.id] = true;
     return true;
   });
 };
@@ -135,6 +135,7 @@ const firebaseFilterEventsPaginate = async (
 const firebaseAppendPerson = async (
   userID,
   eventID,
+  attendeesRef,
   names,
   ages,
   photoConsent
@@ -142,20 +143,24 @@ const firebaseAppendPerson = async (
   const eventRef = doc(db, "events", eventID);
   const userRef = doc(db, "users", userID);
 
-  var nameAndAge = {};
+  const nameAndAge = {};
   names.forEach((name, i) => (nameAndAge[name] = ages[i]));
 
-  var userToAdd = {
+  const userToAdd = {
     parent: userRef,
     attendees: nameAndAge,
     consent: photoConsent,
   };
 
-  await updateDoc(eventRef, {
+  // TODO
+  // if (docSnap.data().events.includes(eventRef)) {
+  //   console.log("CONTAINS");
+  // }
+  await updateDoc(attendeesRef, {
     attendees: arrayUnion(userToAdd),
   });
 
-  addUserEvent(userID, eventID);
+  addUserEvent(userID, eventRef);
 };
 
 const firebaseFilterEventsChronological = async (
@@ -166,7 +171,7 @@ const firebaseFilterEventsChronological = async (
   const events = collection(db, "events");
   let filtered_events = [];
 
-  let now = new Date();
+  let now = new Date(2022, 3, 4);
   now = new Date(now.setHours(0, 0, 0, 0));
   const last_midnight_timestamp = Timestamp.fromDate(now);
 
@@ -197,12 +202,30 @@ const firebaseFilterEventsChronological = async (
   querySnapshot.forEach((doc) => {
     var timestamp = doc.data().startTime;
     if (timestamp.toDate().getMonth() == theMonth) {
-      filtered_events.push(doc.data());
+      filtered_events.push({ ...doc.data(), id: doc.id });
     }
   });
 
-  console.log(filtered_events);
   return filtered_events;
+};
+
+const firebaseUserPreviousEvents = async (
+  theTimestamp
+) => {
+  let user_id = getAuth().currentUser.uid;
+  const userRef = doc(db, "users", user_id);
+  let event_ids = [];
+  getDoc(userRef).then(value => {
+    const user_events = value.data().events;
+    user_events.map((doc_id) => {
+      getDoc(doc_id).then(value => {
+        if (value.data().startTime <= theTimestamp) {
+          event_ids.push({ ...value.data(), id: value.id });
+        }
+      })
+    })
+  });
+  return event_ids;
 };
 
 export {
@@ -215,4 +238,5 @@ export {
   firebaseAppendPerson,
   firebaseFilterEventsChronological,
   firebaseFilterEventsPaginate,
+  firebaseUserPreviousEvents,
 };
