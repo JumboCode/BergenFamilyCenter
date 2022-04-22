@@ -7,12 +7,33 @@ import WeeklyCalendar from "../components/weeklyCalendar";
 import { getAuth } from "firebase/auth";
 import { db } from "../firebase/firebase";
 import MyUpcomingEvent from "../components/myUpcomingEvents";
+import { makeStyles } from '@mui/styles';
+import Divider from '@mui/material/Divider';
+
+const useStyles = makeStyles(() => ({
+    events: {
+        // overflow: "hidden",
+        // '&:hover': {
+        //     overflowY: "scroll",
+        // }
+    }
+}));
 
 export default function Calendar() {
     const [selectedDay, setSelectedDay] = useState(new Date());
     const auth = getAuth();
     const uid = auth.currentUser?.uid;
     const [user, setUser] = useState(null);
+    const classes = useStyles();
+
+    const myEvents =
+        <div>
+            {user ?
+                <MyUpcomingEvent user={user}></MyUpcomingEvent>
+                : null
+            }
+        </div>;
+
     useEffect(() => {
         if (uid) {
             const userRef = doc(db, "users", uid);
@@ -23,23 +44,25 @@ export default function Calendar() {
     }, []);
 
     return (
-        <div>
+        <Box >
             <NavBar page={"calendar"}></NavBar>
-            <Grid sx={{ p: 2 }} container spacing={2}>
-                <Grid item xs={3}>
-                    <Typography variant="h5">
-                        My Upcoming Events
-                    </Typography>
-                    <Box sx={{ p: 2, height: "40vh", overflow: "auto" }}>
-                        <MyUpcomingEvent userID={uid}></MyUpcomingEvent>
+            <Grid sx={{ p: 2, display: "flex" }} container spacing={2} alignItems="stretch">
+                <Grid sx={{ display: "flex", flexDirection: "column" }} item xs={0} sm={3} md={3}>
+                    <Box display={{ xs: 'none', sm: 'block' }} >
+                        {myEvents}
+                        <Divider />
+                        {/* LIKE THIS? */}
+                        <Box sx={{ flex: "1 0" }}></Box>
+                        <MonthCalendar date={selectedDay} onChangeDate={setSelectedDay} />
                     </Box>
-                    <Box sx={{ flex: "1 0" }}></Box>
-                    <MonthCalendar date={selectedDay} onChangeDate={setSelectedDay} />
                 </Grid>
-                <Grid item xs={8}>
-                    <WeeklyCalendar user={user} selectedDay={selectedDay} />
+                <Grid item sx={{ display: "flex", flexDirection: "column" }} xs={12} sm={9} md={9}>
+                    <WeeklyCalendar user={user} selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
+                </Grid>
+                <Grid item display={{ xs: 'block', sm: 'none' }} >
+                    {myEvents}
                 </Grid>
             </Grid>
-        </div >
+        </Box>
     )
 }

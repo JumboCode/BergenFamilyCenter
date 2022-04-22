@@ -9,47 +9,76 @@
         [tracks] auto
         [time-int] 0em
         [time-1-int] 0em
-        [time-0600] 1.8em
-        [time-0630] 1.8em
+        [time-0600] 1.2em
+        [time-0615] 1.2em
+        [time-0630] 1.2em
+        [time-0645] 1.2em
         [time-2-int] 0em
-        [time-0700] 1.8em
-        [time-0730] 1.8em
+        [time-0700] 1.2em
+        [time-0715] 1.2em
+        [time-0730] 1.2em
+        [time-0745] 1.2em
         [time-3-int] 0em
-        [time-0800] 1.8em
-        [time-0830] 1.8em
+        [time-0800] 1.2em
+        [time-0815] 1.2em
+        [time-0830] 1.2em
+        [time-0845] 1.2em
         [time-4-int] 0em
-        [time-0900] 1.8em
-        [time-0930] 1.8em
+        [time-0900] 1.2em
+        [time-0915] 1.2em
+        [time-0930] 1.2em
+        [time-0945] 1.2em
         [time-5-int] 0em
-        [time-1000] 1.8em
-        [time-1030] 1.8em
+        [time-1000] 1.2em
+        [time-1015] 1.2em
+        [time-1030] 1.2em
+        [time-1045] 1.2em
         [time-6-int] 0em
-        [time-1100] 1.8em
-        [time-1130] 1.8em
+        [time-1100] 1.2em
+        [time-1115] 1.2em
+        [time-1130] 1.2em
+        [time-1145] 1.2em
         [time-7-int] 0em
-        [time-1200] 1.8em
-        [time-1230] 1.8em
+        [time-1200] 1.2em
+        [time-1215] 1.2em
+        [time-1230] 1.2em
+        [time-1245] 1.2em
         [time-8-int] 0em
-        [time-1300] 1.8em
-        [time-1330] 1.8em
+        [time-1300] 1.2em
+        [time-1450] 1.2em
+        [time-1315] 1.2em
+        [time-1330] 1.2em
+        [time-1345] 1.2em
         [time-9-int] 0em
-        [time-1400] 1.8em
-        [time-1430] 1.8em
+        [time-1400] 1.2em
+        [time-1415] 1.2em
+        [time-1430] 1.2em
+        [time-1445] 1.2em
         [time-10-int] 0em
-        [time-1500] 1.8em
-        [time-1530] 1.8em
+        [time-1500] 1.2em
+        [time-1515] 1.2em
+        [time-1530] 1.2em
+        [time-1545] 1.2em
         [time-11-int] 0em
-        [time-1600] 1.8em
-        [time-1630] 1.8em
+        [time-1600] 1.2em
+        [time-1615] 1.2em
+        [time-1630] 1.2em
+        [time-1645] 1.2em
         [time-12-int] 0em
-        [time-1700] 1.8em
-        [time-1730] 1.8em
+        [time-1700] 1.2em
+        [time-1715] 1.2em
+        [time-1730] 1.2em
+        [time-1745] 1.2em
         [time-13-int] 0em
-        [time-1800] 1.8em
-        [time-1830] 1.8em
+        [time-1800] 1.2em
+        [time-1815] 1.2em
+        [time-1830] 1.2em
+        [time-1845] 1.2em
         [time-14-int] 0em
-        [time-1900] 1.8em
-        [time-1930] 1.8em;
+        [time-1900] 1.2em
+        [time-1915] 1.2em
+        [time-1930] 1.2em
+        [time-1945] 1.2em;
         /* Note 1:
         [time-15-int] 0fr
         Use 24hr time for gridline names for simplicity
@@ -60,7 +89,7 @@
         /* grid-template-columns: min-content auto; */
 
       grid-template-columns:
-        [times] 3em
+        [times] 2em
         [track-0-int] 0
         [track-1-start] 1fr
         [track-1-int] 0
@@ -77,7 +106,7 @@
         [track-6-end track-7-start] 1fr
         [track-7-int] 0
         [track-7-end track-8-start] 0.5fr
-        [track-8] 1fr;
+        [track-8] 0.1fr;
     }
   }
   
@@ -89,6 +118,11 @@
     display: none; /* hidden on small screens and browsers without grid support */
   }
   
+  .week {
+    display: block;
+    color: rgb(77, 77, 77);
+  }
+
   @supports( display:grid ) {
     @media screen and (min-width:0px) {
       .track-slot {
@@ -99,9 +133,11 @@
         top: 0;
         font-size:1em;
         z-index: 1000;
-        margin-left: 0em;
+        margin-left: 1px;
+        color: rgb(77, 77, 77);
         background-color: rgba(255, 255, 255, 1);
-        border-right: 1px solid rgb(216, 216, 216);
+        border-bottom: 1px solid rgb(216, 216, 216);
+        /* border-right: 1px solid rgb(216, 216, 216); */
         
       }
     }
@@ -145,9 +181,12 @@
     margin-left: 0;
     padding: .2em;
     font-size: 14px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+    border-radius: 7px;
     overflow: hidden;
+    /* transition: z-index 250ms cubic-bezier(1, 0, 1, 0); */
+
+    /* transition-delay: 1s; */
+    /* transition-property: z-index; */
     /* box-shadow:
       rgba(255,255,255,.6) 1px 1px 0,
       rgba(0,0,0,.3) 4px 4px 0; */
@@ -184,32 +223,42 @@
   
   /* .track-slot, */
   .time-slot {
-    /* font-weight: bold; */
+    /* font-weight: ; */
+    color: rgb(77, 77, 77);
     background-color: #fff;
-    font-size:.9em;
+    font-size:1em;
     position: relative;
-    bottom: .6em;
+    bottom: .7em;
     text-align: right;
-    margin-right: 0.6em;
-    padding-right: 0.1em;
+    margin-right: 0.8em;
+    padding-right: 0.5em;
     /* text-align: center; */
   }
   
   .track-1 {
-    background-color: #f58eabdd;
-    border: 1px solid #000000;
+    background-color: #9FE4EDdd;
+    border: 1px solid #45AFBC
+    /* #6FBE44
+    #E6413E
+    #9E7FBA
+    #45AFBC */
+    ;
     color: rgb(0, 0, 0);
     margin-right: .3em;
   }
 
   .track-1:hover {
-    background-color: #f58eab;
+    background-color: #87d9e4dd;
+    /* transition: 1s; */
+    /* transition: background-color 0.3s ease; */
+    /* opacity: 0; */
   }
 
   .track-int {
     border-right: 1px solid rgb(216, 216, 216);
     padding-right: 0px;
   }
+  /* bpygr */
 
   .time-int {
     border-bottom: 1px solid rgb(216, 216, 216);
@@ -217,74 +266,93 @@
   }
   
   .track-2 {
-    background-color: #ffaa85ea;
-    border: 1px solid #000000;
+    background-color: #FFEAC2dd    ;
+    border: 1px solid #FEC150;
     color: rgb(0, 0, 0);
     margin-right: .3em;
   }
   .track-2:hover {
-    background-color: #ffaa85;
+    background-color: #fde1aedd;
   }
 
   
   .track-3 {
-    background-color: #ffd885cd;
+    background-color: #C9F2B3ff;
     color: rgb(0, 0, 0);
-    border: 1px solid #000000;
+    border: 1px solid rgb(167, 220, 139);
     margin-right: .3em;
   }
 
   .track-3:hover {
-    background-color: #ffd885;
+    background-color: #afe295dd;
   }
 
   .track-4 {
-    background-color: #bfefbdd2;
+    background-color: #FFC5C3dd;
     color: rgb(0, 0, 0);
-    border: 1px solid #000000;
+    border: 1px solid #E6413E;
     margin-right: .3em;
   }
 
   .track-4:hover {
-    background-color: #bfefbd;
+    background-color: #f0a2a0dd;
   }
 
+  
   .track-5 {
-    background-color: #c7f6fad5;
+    background-color: rgb(170, 185, 255);
     color: rgb(0, 0, 0);
-    border: 1px solid #000000;
+    border: 1px solid rgb(129, 150, 243);
     margin-right: .3em;
   }
 
   .track-5:hover {
-    background-color: #c7f6fa;
+    background-color: #7d8ed6dd;
   }
-
   .track-6 {
-    background-color: #d5aed1cb;
+    background-color: #DBC5EEdd;
     color: rgb(0, 0, 0);
-    border: 1px solid #000000;
+    border: 1px solid #9E7FBA;
     margin-right: .3em;
   }
 
   .track-6:hover {
-    background-color: #d5aed1;
+    background-color: #ceb6e3dd;
+    /* transition-delay: 500ms; */
+    /* z-index: 10000; */
   }
 
   .track-7 {
-    background-color: #fff799ce;
-    border: 1px solid #000000;
+    background-color: #DDE1E8dd;
+    border: 1px solid #a6adb9;
     color: rgb(0, 0, 0);
     margin-right: .3em;
   }
 
   .track-7:hover {
-    background-color: #fff799;
+    background-color: #c4cbd5dd;
   }
-  
+
   .track-all:hover {
     cursor: pointer;
+    transition-delay: 400ms;
+    transition-property: margin-left, background-color, z-index;
+    z-index: 1;
+    margin-left: 0 !important;
   }
+  
+  .sessiontest {
+    transition: background-color 0.3s ease;
+  }
+
+  .track-all {
+    z-index: 0;
+    /* transition-delay: 500ms; */
+    transition: background-color 0.2s ease;
+    /* transition-delay: 0s; */
+    /* transition-property: background-color; */
+  }
+
   
   .text {
     max-width: 750px;

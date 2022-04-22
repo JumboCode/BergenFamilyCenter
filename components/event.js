@@ -52,7 +52,7 @@ export default function MediaCard(props) {
                                     {title}
                                 </Typography>
                                 <Typography variant="subtitle2" component="div">
-                                    {startTime?.toLocaleDateString("en-US", optionsStart)} - {endTime?.toLocaleTimeString("en-US", optionsEnd)}
+                                    {startTime?.toDate().toLocaleDateString("en-US", optionsStart)} - {endTime?.toDate().toLocaleTimeString("en-US", optionsEnd)}
                                 </Typography>
                             </div>)
                         }

@@ -47,23 +47,28 @@ export default function NavBar({ page }) {
         <Box>
             <CssBaseline />
             <MuiAppBar
-                style={{ background: "#e9f7fe", boxShadow: 'none' }}
+                style={{ background: "#e9f7fe", boxShadow: 'none', textAlign: 'left', borderBottom: "1px solid rgb(216, 216, 216)" }}
                 position="sticky"
+                sx={{ p: 1 }}
                 open={open}
             >
-                <Toolbar>
+                <Toolbar sx={{ textAlign: 'left' }}>
                     <IconButton
                         aria-label="open drawer"
                         onClick={handleDrawerOpen}
                         edge="start"
-                        sx={{ mr: 0, ...(open && { display: 'none' }) }}
+                        sx={{ mr: 1 }}
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Image sx={{ padding: 10 }} src="/Tree.png" alt="me" width="66" height="51" />
-                    <Typography variant="h5" color="black" sx={{ flexGrow: 1 }}>
+                    <Box sx={{ pl: 1, display: "block", position: "relative", height: 70, width: 250 }}>
+                        <Image src="/weblogo.svg" layout="fill" objectFit="contain"
+                        />
+                    </Box>
+                    <Box sx={{ flexGrow: 1 }} />
+                    {/* <Typography variant="h5" color="black" >
                         {page.charAt(0).toUpperCase() + page.slice(1)}
-                    </Typography>
+                    </Typography> */}
                     <LanguageSelector />
                 </Toolbar>
             </MuiAppBar>

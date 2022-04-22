@@ -46,6 +46,7 @@ export default function Profile() {
     const auth = getAuth();
     const uid = auth.currentUser?.uid;
 
+    const [user, setUser] = useState(null);
     const [isManager, setIsManager] = useState(false)
 
     const [name, setName] = useState(auth.currentUser?.displayName ?? "you must be logged in");
@@ -62,12 +63,14 @@ export default function Profile() {
     const [copiedSingularVisible, setCopiedSingularVisible] = useState(false);
     const [copiedAlertVisible, setCopiedAlertVisible] = useState(false);
 
+    // TODO CREATE USER TO PASS TO OTHER THING
     useEffect(() => {
         if (uid) {
             const userRef = doc(db, "users", uid);
             const currentTime = Timestamp.now()
 
             const userInfo = getDoc(userRef).then(value => {
+                setUser({ ...value.data(), id: uid });
                 setIsManager(value.data().isManager);
                 setName(value.data().name);
                 setEmail(value.data().email);
@@ -296,8 +299,8 @@ export default function Profile() {
                     {Object.keys(previousEvents).length >= 0 ?
                         previousEvents.sort((a, b) => (b.startTime - a.startTime)).map((event) => {
                             return (
-                                <Box key={event}>
-                                    <UpcomingEvent style={{ width: "100%", height: "100%" }} eventID={event.id} key={event}></UpcomingEvent>
+                                <Box key={event.id} sx={{ p: 2 }}>
+                                    <UpcomingEvent user={user} {...event}></UpcomingEvent>
                                 </Box>
                             );
                         }) :
