@@ -26,6 +26,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import Divider from '@mui/material/Divider';
 
 
 
@@ -59,6 +60,7 @@ export default function Profile() {
     const [previousEvents, setPreviousEvents] = useState([]);
     const [managerEvents, setManagerEvents] = useState([]);
 
+    const [copiedSingularVisible, setCopiedSingularVisible] = useState(false);
     const [copiedAlertVisible, setCopiedAlertVisible] = useState(false);
 
     useEffect(() => {
@@ -82,17 +84,17 @@ export default function Profile() {
                         const manager_events_run = value.data().eventsRun;
                         const all_events = []
                         manager_events_run.map((event) => {
-                            const all_attendees = []
-                            const all_emails = []
-                            getDoc(event.attendeesRef).then(attendeesDoc => {
-                                attendeesDoc.data().attendees.map(attendees => {
-                                    all_attendees.push(attendees.attendees);
-                                    getDoc(attendees.parent).then(parent => {
-                                        all_emails.push(parent.data().email)
+                            const parentChild = []
+                            getDoc(event.attendeesRef).then(attendeesDoc => { // gets attendees document
+                                attendeesDoc.data().attendees.map(attendees => { //maps through attendees corresponding to each parent
+                                    //all_attendees.push(attendees.attendees);
+                                    getDoc(attendees.parent).then(parent => { //grab that set of attendees' parent 
+                                        //all_emails.push(parent.data().email)
+                                        parentChild.push({ email: parent.data().email, children: attendees }) //grabs pair of email with children
                                     })
                                 })
                             });
-                            all_events.push({ name: event.name, eventAttendees: all_attendees, email: all_emails })
+                            all_events.push({ name: event.name, eventAttendees: parentChild })
                         });
                         setManagerEvents(all_events)
                     })
@@ -127,8 +129,12 @@ export default function Profile() {
             const listOpen = {}
             const allEmails = {}
             managerEvents.map((event) => {
+                const emailsForEvent = []
+                event.eventAttendees.map((attendees) => {
+                    emailsForEvent.push(attendees.email)
+                })
                 listOpen[event.name] = false
-                allEmails[event.name] = event.email
+                allEmails[event.name] = emailsForEvent
             })
             setOpen(listOpen)
             setEmails(allEmails)
@@ -146,6 +152,11 @@ export default function Profile() {
             setCopiedAlertVisible(true);
         };
 
+        const getEmail = (attendees) => {
+            navigator.clipboard.writeText(attendees.email);
+            setCopiedSingularVisible(true);
+        }
+
         return (
             <List
                 sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
@@ -157,7 +168,7 @@ export default function Profile() {
                     </ListSubheader>
                 }
             >
-                {managerEvents.map((event) => {
+                {managerEvents.map((event, index) => {
                     return <List key={event} >
                         <ListItem>
                             <ListItemButton onClick={async () => { await handleClickList(event) }}>
@@ -171,15 +182,22 @@ export default function Profile() {
                         <Collapse in={open[event.name]} timeout="auto" unmountOnExit>
                             <List component="div" disablePadding>
                                 {event.eventAttendees.map((attendees) => {
-                                    return Object.entries(attendees).map((person) => {
-                                        return <ListItemButton key={person} sx={{ pl: 4 }}>
-                                            <ListItemText primary={person[0] + ", " + person[1]} />
-                                        </ListItemButton>
+                                    let text = ""
+                                    Object.entries(attendees.children.attendees).map((person) => {
+                                        { text += person[0] + "," + "\xa0" + person[1] + ";\xa0\xa0\xa0" }
                                     })
+                                    return <ListItemButton key={attendees} sx={{ pl: 6 }}>
+                                        <ListItemText primary={text} />
+                                        <IconButton edge="end" aria-label="email" onClick={async () => { await getEmail(attendees) }}>
+                                            <EmailIcon />
+                                        </IconButton>
+                                    </ListItemButton>
                                 })
                                 }
                             </List>
                         </Collapse>
+                        {index < Object.keys(managerEvents).length - 1 &&
+                            <Divider />}
                     </List>
                 })
                 }
@@ -305,6 +323,20 @@ export default function Profile() {
                                     <CloseIcon fontSize="inherit" />
                                 </IconButton>
                             }>Copied Emails!</Alert>
+                            : null}
+                        {copiedSingularVisible ?
+                            <Alert severity="success" action={
+                                <IconButton
+                                    aria-label="close"
+                                    color="inherit"
+                                    size="small"
+                                    onClick={() => {
+                                        setCopiedSingularVisible(false);
+                                    }}
+                                >
+                                    <CloseIcon fontSize="inherit" />
+                                </IconButton>
+                            }>Copied Email!</Alert>
                             : null}
                     </Box>
                     : null}
