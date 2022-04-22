@@ -27,8 +27,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Divider from '@mui/material/Divider';
-
-
+import Snackbar from '@mui/material/Snackbar';
 
 
 const validationSchema = yup.object({
@@ -87,10 +86,8 @@ export default function Profile() {
                             const parentChild = []
                             getDoc(event.attendeesRef).then(attendeesDoc => { // gets attendees document
                                 attendeesDoc.data().attendees.map(attendees => { //maps through attendees corresponding to each parent
-                                    //all_attendees.push(attendees.attendees);
                                     getDoc(attendees.parent).then(parent => { //grab that set of attendees' parent 
-                                        //all_emails.push(parent.data().email)
-                                        parentChild.push({ email: parent.data().email, children: attendees }) //grabs pair of email with children
+                                        parentChild.push({ email: parent.data().email, children: attendees, consent: parent.data().consent }) //grabs pair of email with children
                                     })
                                 })
                             });
@@ -142,6 +139,7 @@ export default function Profile() {
         }, []);
 
         const handleClickList = (event) => {
+            console.log("in handle click")
             const tempListOpen = { ...open }
             tempListOpen[event.name] = !tempListOpen[event.name]
             setOpen(tempListOpen);
@@ -171,11 +169,11 @@ export default function Profile() {
                 {managerEvents.map((event, index) => {
                     return <List key={event} >
                         <ListItem>
-                            <ListItemButton onClick={async () => { await handleClickList(event) }}>
+                            <ListItemButton onClick={() => { handleClickList(event) }}>
                                 <ListItemText primary={event.name} />
                                 {open[event.name] ? <ExpandLess /> : <ExpandMore />}
                             </ListItemButton>
-                            <IconButton edge="end" aria-label="email" onClick={async () => { await getEmails(event) }}>
+                            <IconButton edge="end" aria-label="email" onClick={() => { getEmails(event) }}>
                                 <EmailIcon />
                             </IconButton>
                         </ListItem>
@@ -186,12 +184,15 @@ export default function Profile() {
                                     Object.entries(attendees.children.attendees).map((person) => {
                                         { text += person[0] + "," + "\xa0" + person[1] + ";\xa0\xa0\xa0" }
                                     })
-                                    return <ListItemButton key={attendees} sx={{ pl: 6 }}>
-                                        <ListItemText primary={text} />
-                                        <IconButton edge="end" aria-label="email" onClick={async () => { await getEmail(attendees) }}>
-                                            <EmailIcon />
-                                        </IconButton>
-                                    </ListItemButton>
+                                    return (
+                                        <ListItemButton key={attendees} sx={{ pl: 6 }}>
+                                            <ListItemText primary={text} secondary={"Photo Consent: " + attendees.consent} />
+                                            {/* above will break if user hasn't filled out form, provided an overall consent  attendees.consent.overallConsent */}
+                                            <IconButton edge="end" aria-label="email" onClick={e => { e.stopPropagation(); getEmail(attendees) }}>
+                                                <EmailIcon />
+                                            </IconButton>
+                                        </ListItemButton>
+                                    )
                                 })
                                 }
                             </List>
@@ -310,34 +311,14 @@ export default function Profile() {
                         </Typography>
 
                         <NestedList></NestedList>
-                        {copiedAlertVisible ?
-                            <Alert severity="success" action={
-                                <IconButton
-                                    aria-label="close"
-                                    color="inherit"
-                                    size="small"
-                                    onClick={() => {
-                                        setCopiedAlertVisible(false);
-                                    }}
-                                >
-                                    <CloseIcon fontSize="inherit" />
-                                </IconButton>
-                            }>Copied Emails!</Alert>
-                            : null}
-                        {copiedSingularVisible ?
-                            <Alert severity="success" action={
-                                <IconButton
-                                    aria-label="close"
-                                    color="inherit"
-                                    size="small"
-                                    onClick={() => {
-                                        setCopiedSingularVisible(false);
-                                    }}
-                                >
-                                    <CloseIcon fontSize="inherit" />
-                                </IconButton>
-                            }>Copied Email!</Alert>
-                            : null}
+                        <Snackbar open={copiedAlertVisible} autoHideDuration={3000} onClose={() => { setCopiedAlertVisible(false) }}>
+                            <Alert severity="success" >
+                                Copied Emails!</Alert>
+                        </Snackbar>
+                        <Snackbar open={copiedSingularVisible} autoHideDuration={3000} onClose={() => { setCopiedSingularVisible(false) }}>
+                            <Alert severity="success" >
+                                Copied Email!</Alert>
+                        </Snackbar>
                     </Box>
                     : null}
             </Box >
