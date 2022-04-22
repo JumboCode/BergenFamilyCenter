@@ -23,7 +23,7 @@ export default function UpcomingEvent(props) {
   const monthNames = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
   ];
-  const { description, title, image, className, startTime, endTime, manager, event, attendees, user } = props;
+  const { description, name, image, className, startTime, endTime, manager, event, attendees, user } = props;
   console.log(props)
   const [open, setOpen] = useState(false);
   // const [eventName, updateEventName] = useState("");
@@ -78,12 +78,12 @@ export default function UpcomingEvent(props) {
                   image="https://source.unsplash.com/random"
                   alt="Live from space album cover"
                 />
-                <CardContentNoPadding sx={{ flex: '1 0 auto', padding: 0.5, whiteSpace: 'nowrap' }}>
+                <CardContentNoPadding sx={{ flex: '1 0 auto', padding: 0.5, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical', textOverflow: 'ellipsis', WebkitBoxPack: 'end', lineHeight: 2 }}>
                   <div sx={{ paddingBottom: 4 }}>
                     <Typography component="div" variant="h6" style={{ overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '200px', lineHeight: 1 }}>
-                      {title}
+                      {name}
                     </Typography>
-                    <Typography variant="subtitle2" color="text.secondary" component="div" style={{ maxWidth: '200px', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical', textOverflow: 'ellipsis', WebkitBoxPack: 'end', lineHeight: 1 }}>
+                    <Typography variant="subtitle2" color="text.secondary" component="div" style={{ maxWidth: '200px' }}>
                       {description}
                     </Typography>
                   </div>

@@ -13,8 +13,8 @@ export default function MyUpcomingEvents({ user }) {
     }, []);
 
     let upcomingEventsComponent = upcomingEvents.map(event => {
-        return <Box sx={{ pb: 2 }}>
-            <UpcomingEvent key={event.id} user={user} {...event}></UpcomingEvent>
+        return <Box key={event.id} sx={{ pb: 2 }}>
+            <UpcomingEvent user={user} {...event}></UpcomingEvent>
         </Box>;
     });
 

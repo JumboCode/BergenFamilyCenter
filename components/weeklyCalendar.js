@@ -23,9 +23,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function WeeklyCalendar({ selectedDay, user }) {
+export default function WeeklyCalendar({ selectedDay, user, setSelectedDay }) {
     const [events, setEvents] = useState([]);
     const [open, setOpen] = useState(false);
+    console.log(selectedDay)
     const classes = useStyles()
     const [selectedEvent, setSelectedEvent] = useState(null);
     const start = new Date();
@@ -139,6 +140,7 @@ export default function WeeklyCalendar({ selectedDay, user }) {
                     <Grid onClick={() => { setSelectedEvent(event); setOpen(true) }} item key={i} className={className} style={{ marginLeft: `${overlapAmount * overlapBeta}em`, gridColumn: `track-${day + 1}`, gridRow: gridRow }
                     }>
                         <Typography variant="body2">{event.name}</Typography>
+                        {/* <Typography variant="subtitle2">{event.description}</Typography> */}
                         {/* <span className="session-time">{event.description}</span> */}
                         {/* <span className="session-track">Track: 1</span>
                         <span className="session-presenter">Presenter</span> */}
@@ -170,6 +172,9 @@ export default function WeeklyCalendar({ selectedDay, user }) {
                             d2.setDate(d2.getDate() - 7);
                             setStartOfWeek(d);
                             setEndOfWeek(d2);
+                            const temp = new Date(selectedDay);
+                            temp.setDate(temp.getDate() - 7);
+                            setSelectedDay(temp) // TODO FIX
                         }}>
                             < KeyboardArrowLeftIcon />
                         </IconButton>
@@ -182,6 +187,9 @@ export default function WeeklyCalendar({ selectedDay, user }) {
                             d2.setDate(d2.getDate() + 7);
                             setStartOfWeek(d);
                             setEndOfWeek(d2);
+                            const temp = new Date(selectedDay);
+                            temp.setDate(temp.getDate() + 7);
+                            setSelectedDay(temp) // TODO FIX
                         }}>
                             <KeyboardArrowRightIcon />
                         </IconButton>

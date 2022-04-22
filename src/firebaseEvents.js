@@ -251,6 +251,28 @@ const firebaseFilterEventsChronologicalWeek = async (
   });
 
   return filtered_events;
+}
+
+const firebaseUserPreviousEvents = async (
+  theTimestamp
+) => {
+  let user_id = getAuth().currentUser.uid;
+  const userRef = doc(db, "users", user_id);
+  let event_ids = [];
+  getDoc(userRef).then(value => {
+    const user_events = value.data().events;
+    user_events.map((doc_id) => {
+      console.log("ID", doc_id)
+      getDoc(doc_id).then(value => {
+        if (value.data()?.startTime != undefined) {
+          if (value.data()?.startTime <= theTimestamp) {
+            event_ids.push({ ...value.data(), id: value.id });
+          }
+        }
+      })
+    })
+  });
+  return event_ids;
 };
 
 export {
@@ -264,4 +286,5 @@ export {
   firebaseFilterEventsChronological,
   firebaseFilterEventsPaginate,
   firebaseFilterEventsChronologicalWeek,
+  firebaseUserPreviousEvents,
 };

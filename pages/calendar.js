@@ -8,6 +8,7 @@ import { getAuth } from "firebase/auth";
 import { db } from "../firebase/firebase";
 import MyUpcomingEvent from "../components/myUpcomingEvents";
 import { makeStyles } from '@mui/styles';
+import Divider from '@mui/material/Divider';
 
 const useStyles = makeStyles(() => ({
     events: {
@@ -49,13 +50,14 @@ export default function Calendar() {
                 <Grid sx={{ display: "flex", flexDirection: "column" }} item xs={0} sm={3} md={3}>
                     <Box display={{ xs: 'none', sm: 'block' }} >
                         {myEvents}
-                        {/* #6490b0 */}
+                        <Divider />
+                        {/* LIKE THIS? */}
                         <Box sx={{ flex: "1 0" }}></Box>
                         <MonthCalendar date={selectedDay} onChangeDate={setSelectedDay} />
                     </Box>
                 </Grid>
                 <Grid item sx={{ display: "flex", flexDirection: "column" }} xs={12} sm={9} md={9}>
-                    <WeeklyCalendar user={user} selectedDay={selectedDay} />
+                    <WeeklyCalendar user={user} selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
                 </Grid>
                 <Grid item display={{ xs: 'block', sm: 'none' }} >
                     {myEvents}
