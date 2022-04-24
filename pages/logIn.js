@@ -9,11 +9,14 @@ import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import { getAuth } from "firebase/auth";
+import LoadingButton from '@mui/lab/LoadingButton';
 import { useFormik } from 'formik';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useContext, useEffect } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import GoogleButton from 'react-google-button';
 import * as yup from 'yup';
 import userSignIn from '../src/firebaseSignIn';
@@ -35,6 +38,14 @@ const validationSchema = yup.object({
 export default function SignIn() {
     const auth = getAuth();
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
+    const [open, setOpen] = useState(false);
+
+    const closeError = (event, reason) => {
+        if (reason === 'clickaway') { return; }
+        setOpen(false);
+    };
+
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -42,7 +53,13 @@ export default function SignIn() {
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            userSignIn(values.email, values.password)
+            userSignIn(values.email, values.password).then(() => {
+                // 
+            }).catch(() => {
+                setOpen(true);
+                setLoading(false);
+            });
+            setLoading(true);
         },
     });
     const { language, _ } = useContext(LanguageContext);
@@ -136,14 +153,15 @@ export default function SignIn() {
                                 {inEnglish ? "Forgot password?" : "¿Olvidaste la contraseña?"}
                             </Link>
                         </Box>
-                        <Button
-                            type="submit"
+                        <LoadingButton
                             fullWidth
                             variant="contained"
+                            type="submit"
                             sx={{ mt: 3, mb: 2 }}
+                            loading={loading}
                         >
                             {inEnglish ? "Log In" : "Iniciar Sesión"}
-                        </Button>
+                        </LoadingButton>
                         <Divider>{inEnglish ? "or" : "o"}</Divider>
                         <GoogleButton
                             style={{ width: "100% !important", marginTop: 24 }}
@@ -163,8 +181,13 @@ export default function SignIn() {
                     <Image objectFit="cover"
                         src="/3-buddies-039.jpg" alt="me" layout="fill" />
                 </div>
-
             </Grid>
+            <Snackbar open={open} autoHideDuration={3000} onClose={closeError}>
+                <Alert onClose={closeError} severity="error" sx={{ width: '100%' }}>
+                    Incorrect Email or Password
+                </Alert>
+            </Snackbar>
+
         </Grid>
     );
 }

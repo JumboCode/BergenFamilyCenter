@@ -160,7 +160,7 @@ const firebaseAppendPerson = async (
     attendees: arrayUnion(userToAdd),
   });
 
-  addUserEvent(userID, eventRef);
+  addUserEvent(userID, eventRef, attendeesRef);
 };
 
 const firebaseFilterEventsChronological = async (

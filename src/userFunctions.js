@@ -11,6 +11,8 @@ import {
   updateDoc,
   arrayUnion,
   doc,
+  query,
+  where,
 } from "firebase/firestore";
 
 
@@ -35,11 +37,29 @@ export const updateUser = async (uid, fieldToUpdate) => {
   }
 };
 
-export const addUserEvent = async (uid, event) => {
+export const addUserEvent = async (uid, eventRef, attendeesRef) => {
   const userRef = doc(db, "users", uid);
+  const events = collection(db, "events");
+  let now = new Date();
+  now = new Date(now.setHours(0, 0, 0, 0));
+  const last_midnight_timestamp = Timestamp.fromDate(now);
+
+  const q = query(
+    events,
+    where("attendeesRef", "==", attendeesRef),
+    where("startTime", ">=", last_midnight_timestamp)
+  );
+
+  const querySnapshot = await getDocs(q);
+  const userSnap = await (getDoc(userRef));
+  const oldEvents = userSnap.data().events;
+  const es = querySnapshot.docs.map(d => doc(db, "events", d.id))
+  oldEvents.push(...es);
+  console.log(oldEvents);
+  console.log("Events", es);
   try {
     await updateDoc(userRef, {
-      events: arrayUnion(event),
+      events: oldEvents,
     });
   } catch (error) {
     console.log(`Error: ${error}`);

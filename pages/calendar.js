@@ -47,7 +47,7 @@ export default function Calendar() {
         <Box >
             <NavBar page={"calendar"}></NavBar>
             <Grid sx={{ p: 2, display: "flex" }} container spacing={2} alignItems="stretch">
-                <Grid sx={{ display: "flex", flexDirection: "column" }} item xs={0} sm={3} md={3}>
+                <Grid sx={{ display: "flex", flexDirection: "column" }} item xs={false} sm={3} md={3}>
                     <Box display={{ xs: 'none', sm: 'block' }} >
                         {myEvents}
                         <Divider />
