@@ -26,7 +26,6 @@ const useStyles = makeStyles((theme) => ({
 export default function WeeklyCalendar({ selectedDay, user, setSelectedDay }) {
     const [events, setEvents] = useState([]);
     const [open, setOpen] = useState(false);
-    console.log(selectedDay)
     const classes = useStyles()
     const [selectedEvent, setSelectedEvent] = useState(null);
     const start = new Date();
@@ -42,7 +41,7 @@ export default function WeeklyCalendar({ selectedDay, user, setSelectedDay }) {
 
     useEffect(() => {
         if (selectedDay < startOfWeek || selectedDay > endOfWeek) {
-            const start = selectedDay;
+            const start = new Date(selectedDay);
             start.setDate(start.getDate() - start.getDay());
             start.setHours(0, 0, 0, 0);
             const end = new Date(start);

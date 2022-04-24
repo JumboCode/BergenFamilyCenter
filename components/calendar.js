@@ -16,23 +16,6 @@ const styles = {
   }
 };
 
-// const [value, setValue] = React.useState(new Date());
-
-// return (
-//   <LocalizationProvider dateAdapter={AdapterDateFns}>
-//     <StaticDatePicker
-//       displayStaticWrapperAs="desktop"
-//       openTo="year"
-//       value={value}
-//       onChange={(newValue) => {
-//         setValue(newValue);
-//       }}
-//       renderInput={(params) => <TextField {...params} />}
-//     />
-//   </LocalizationProvider>
-// );
-
-
 const CalendarWithStyles = withStyles(styles)(({ classes }) => {
   return <Calendar calendarType="US" className={classes.root} />
 });
@@ -49,7 +32,7 @@ export const MonthCalendar = ({ date, onChangeDate }) => {
         onChange={(newValue) => {
           onChangeDate(newValue);
         }}
-        renderInput={(params) => <TextField {...params} />}
+        renderInput={(params) => <TextField {...params} fullWidth />}
       />
     </LocalizationProvider>
   );

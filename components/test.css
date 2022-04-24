@@ -9,76 +9,76 @@
         [tracks] auto
         [time-int] 0em
         [time-1-int] 0em
-        [time-0600] 1.2em
-        [time-0615] 1.2em
-        [time-0630] 1.2em
-        [time-0645] 1.2em
+        [time-0600] 1.0em
+        [time-0615] 1.0em
+        [time-0630] 1.0em
+        [time-0645] 1.0em
         [time-2-int] 0em
-        [time-0700] 1.2em
-        [time-0715] 1.2em
-        [time-0730] 1.2em
-        [time-0745] 1.2em
+        [time-0700] 1.0em
+        [time-0715] 1.0em
+        [time-0730] 1.0em
+        [time-0745] 1.0em
         [time-3-int] 0em
-        [time-0800] 1.2em
-        [time-0815] 1.2em
-        [time-0830] 1.2em
-        [time-0845] 1.2em
+        [time-0800] 1.0em
+        [time-0815] 1.0em
+        [time-0830] 1.0em
+        [time-0845] 1.0em
         [time-4-int] 0em
-        [time-0900] 1.2em
-        [time-0915] 1.2em
-        [time-0930] 1.2em
-        [time-0945] 1.2em
+        [time-0900] 1.0em
+        [time-0915] 1.0em
+        [time-0930] 1.0em
+        [time-0945] 1.0em
         [time-5-int] 0em
-        [time-1000] 1.2em
-        [time-1015] 1.2em
-        [time-1030] 1.2em
-        [time-1045] 1.2em
+        [time-1000] 1.0em
+        [time-1015] 1.0em
+        [time-1030] 1.0em
+        [time-1045] 1.0em
         [time-6-int] 0em
-        [time-1100] 1.2em
-        [time-1115] 1.2em
-        [time-1130] 1.2em
-        [time-1145] 1.2em
+        [time-1100] 1.0em
+        [time-1115] 1.0em
+        [time-1130] 1.0em
+        [time-1145] 1.0em
         [time-7-int] 0em
-        [time-1200] 1.2em
-        [time-1215] 1.2em
-        [time-1230] 1.2em
-        [time-1245] 1.2em
+        [time-1200] 1.0em
+        [time-1215] 1.0em
+        [time-1230] 1.0em
+        [time-1245] 1.0em
         [time-8-int] 0em
-        [time-1300] 1.2em
-        [time-1450] 1.2em
-        [time-1315] 1.2em
-        [time-1330] 1.2em
-        [time-1345] 1.2em
+        [time-1300] 1.0em
+        [time-1450] 1.0em
+        [time-1315] 1.0em
+        [time-1330] 1.0em
+        [time-1345] 1.0em
         [time-9-int] 0em
-        [time-1400] 1.2em
-        [time-1415] 1.2em
-        [time-1430] 1.2em
-        [time-1445] 1.2em
+        [time-1400] 1.0em
+        [time-1415] 1.0em
+        [time-1430] 1.0em
+        [time-1445] 1.0em
         [time-10-int] 0em
-        [time-1500] 1.2em
-        [time-1515] 1.2em
-        [time-1530] 1.2em
-        [time-1545] 1.2em
+        [time-1500] 1.0em
+        [time-1515] 1.0em
+        [time-1530] 1.0em
+        [time-1545] 1.0em
         [time-11-int] 0em
-        [time-1600] 1.2em
-        [time-1615] 1.2em
-        [time-1630] 1.2em
-        [time-1645] 1.2em
+        [time-1600] 1.0em
+        [time-1615] 1.0em
+        [time-1630] 1.0em
+        [time-1645] 1.0em
         [time-12-int] 0em
-        [time-1700] 1.2em
-        [time-1715] 1.2em
-        [time-1730] 1.2em
-        [time-1745] 1.2em
+        [time-1700] 1.0em
+        [time-1715] 1.0em
+        [time-1730] 1.0em
+        [time-1745] 1.0em
         [time-13-int] 0em
-        [time-1800] 1.2em
-        [time-1815] 1.2em
-        [time-1830] 1.2em
-        [time-1845] 1.2em
+        [time-1800] 1.0em
+        [time-1815] 1.0em
+        [time-1830] 1.0em
+        [time-1845] 1.0em
         [time-14-int] 0em
-        [time-1900] 1.2em
-        [time-1915] 1.2em
-        [time-1930] 1.2em
-        [time-1945] 1.2em;
+        [time-1900] 1.0em
+        [time-1915] 1.0em
+        [time-1930] 1.0em
+        [time-1945] 1.0em;
         /* Note 1:
         [time-15-int] 0fr
         Use 24hr time for gridline names for simplicity
@@ -105,7 +105,7 @@
         [track-6-int] 0
         [track-6-end track-7-start] 1fr
         [track-7-int] 0
-        [track-7-end track-8-start] 0.5fr
+        [track-7-end track-8-start] 0.2fr
         [track-8] 0.1fr;
     }
   }
