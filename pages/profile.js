@@ -19,6 +19,7 @@ import ListSubheader from '@mui/material/ListSubheader';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import EmailIcon from '@mui/icons-material/Email';
 import ListItemText from '@mui/material/ListItemText';
 import Collapse from '@mui/material/Collapse';
@@ -90,7 +91,13 @@ export default function Profile() {
                             getDoc(event.attendeesRef).then(attendeesDoc => { // gets attendees document
                                 attendeesDoc.data().attendees.map(attendees => { //maps through attendees corresponding to each parent
                                     getDoc(attendees.parent).then(parent => { //grab that set of attendees' parent 
-                                        parentChild.push({ email: parent.data().email, children: attendees, consent: parent.data().consent }) //grabs pair of email with children
+                                        if (parent.data().consent) {
+                                            parentChild.push({ email: parent.data().email, children: attendees, consent: parent.data().consent.overallConsent })
+                                        }
+                                        else {
+                                            parentChild.push({ email: parent.data().email, children: attendees, consent: "no consent form filled out" })
+
+                                        }
                                     })
                                 })
                             });
@@ -142,10 +149,10 @@ export default function Profile() {
         }, []);
 
         const handleClickList = (event) => {
-            console.log("in handle click")
             const tempListOpen = { ...open }
             tempListOpen[event.name] = !tempListOpen[event.name]
             setOpen(tempListOpen);
+            console.log("in handle click list")
         };
 
         const getEmails = (event) => {
@@ -153,9 +160,15 @@ export default function Profile() {
             setCopiedAlertVisible(true);
         };
 
-        const getEmail = (attendees) => {
+        const getEmail = (attendees, event) => {
             navigator.clipboard.writeText(attendees.email);
             setCopiedSingularVisible(true);
+            const tempListOpen = { ...open }
+            console.log("open before overriding it", open)
+            tempListOpen[event.name] = false
+            console.log("temp list open", tempListOpen)
+            setOpen(tempListOpen);
+            console.log("open after overriding it", open)
         }
 
         return (
@@ -190,10 +203,12 @@ export default function Profile() {
                                     return (
                                         <ListItemButton key={attendees} sx={{ pl: 6 }}>
                                             <ListItemText primary={text} secondary={"Photo Consent: " + attendees.consent} />
-                                            {/* above will break if user hasn't filled out form, provided an overall consent  attendees.consent.overallConsent */}
-                                            <IconButton edge="end" aria-label="email" onClick={e => { e.stopPropagation(); getEmail(attendees) }}>
-                                                <EmailIcon />
-                                            </IconButton>
+                                            <ListItemSecondaryAction>
+                                                <IconButton edge="end" aria-label="email" onClick={e => { getEmail(attendees, event); e.stopPropagation(); }}>
+                                                    {console.log("open", open)}
+                                                    <EmailIcon />
+                                                </IconButton>
+                                            </ListItemSecondaryAction>
                                         </ListItemButton>
                                     )
                                 })

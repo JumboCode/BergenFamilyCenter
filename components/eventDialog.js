@@ -71,7 +71,7 @@ export default function EventDialog({ open, setOpen, description, title, image, 
                 submitAges.push(values[`age${i + 1}`])
             }
             firebaseAppendPerson(user?.id, event, attendees, submitNames, submitAges, null).then(() => {
-                console.log(submitNames);
+                //console.log(submitNames);
                 // #TODO
                 handleClose();
             })
