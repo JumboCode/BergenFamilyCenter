@@ -25,7 +25,7 @@ import { makeStyles } from '@mui/styles';
 const useStyles = makeStyles(() => ({
     dialogPaper: {
         backgroundImage: "url(https://i.imgur.com/HeGEEbu.jpg)",
-        opacity: 0.1,
+        opacity: 1,
         color: "#000 !important"
     },
 }));
@@ -163,7 +163,8 @@ export default function EventDialog({ open, setOpen, description, title, image, 
         <Dialog open={open} onClose={handleClose}>
             <form onSubmit={formik.handleSubmit}>
                 <div>
-                    <DialogTitle >{title}</DialogTitle>
+                    <Box className={classes.dialogPaper} sx={{ height: "25ch" }} />
+                    <DialogTitle>{title}</DialogTitle>
                     <DialogContent sx={{ py: 0 }}>
                         <Typography sx={{ width: "50ch" }} variant="subtitle1">
                             Description: {description}

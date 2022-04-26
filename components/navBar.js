@@ -47,7 +47,7 @@ export default function NavBar({ page }) {
         <Box>
             <CssBaseline />
             <MuiAppBar
-                style={{ background: "#e9f7fe", boxShadow: 'none', textAlign: 'left', borderBottom: "1px solid rgb(216, 216, 216)" }}
+                style={{ background: "#fff", boxShadow: 'none', textAlign: 'left', borderBottom: "1px solid rgb(216, 216, 216)" }}
                 position="sticky"
                 sx={{ p: 1 }}
                 open={open}
@@ -61,7 +61,7 @@ export default function NavBar({ page }) {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Box sx={{ pl: 1, display: "block", position: "relative", height: 70, width: 250 }}>
+                    <Box sx={{ pl: 1, display: "block", position: "relative", height: 50, width: 250 }}>
                         <Image src="/weblogo.svg" layout="fill" objectFit="contain"
                         />
                     </Box>
