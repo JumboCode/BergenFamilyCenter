@@ -21,6 +21,8 @@ import ListItemText from '@mui/material/ListItemText';
 import Image from 'next/image';
 import { useRouter } from 'next/router'
 import LanguageSelector from "./languageSelector";
+import LogoutIcon from '@mui/icons-material/Logout';
+import userSignOut from '../src/firebaseSignOut';
 
 const drawerWidth = 240;
 
@@ -100,8 +102,24 @@ export default function NavBar({ page }) {
                             <ListItemText primary={text} />
                         </ListItem>
                     ))}
+                    < Divider />
+                    <Box sx={{ flex: "1 0" }}></Box>
+                    <ListItem onClick={async () => { await userSignOut(); router.push("/logIn") }} button >
+                        <ListItemIcon>
+                            <LogoutIcon />
+                        </ListItemIcon>
+                        {"Log Out"}
+                    </ListItem>
                 </List>
-                <Divider />
+                {/* <Divider /> */}
+                {/* <LoadingButton
+                    onClick={async () => { await userSignOut(); router.push("/logIn") }}
+                    variant="contained"
+                    type="submit"
+                    sx={{ mt: 3, mb: 2, marginRight: 2, marginLeft: 2, color: "#fafafa" }}
+                >
+                    {"Log Out"}
+                </LoadingButton> */}
             </Drawer>
         </Box >
     )
