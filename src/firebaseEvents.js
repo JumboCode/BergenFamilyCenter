@@ -160,7 +160,7 @@ const firebaseAppendPerson = async (
     attendees: arrayUnion(userToAdd),
   });
 
-  addUserEvent(userID, eventRef);
+  addUserEvent(userID, eventRef, attendeesRef);
 };
 
 const firebaseFilterEventsChronological = async (
@@ -209,6 +209,50 @@ const firebaseFilterEventsChronological = async (
   return filtered_events;
 };
 
+const firebaseFilterEventsChronologicalWeek = async (
+  startOfWeek,
+  endOfWeek,
+  divisions,
+  showEnrolled
+) => {
+  const events = collection(db, "events");
+  let filtered_events = [];
+
+  let q = query(
+    events,
+    where("division", "in", divisions),
+    orderBy("startTime"),
+    where("startTime", ">=", startOfWeek),
+    where("startTime", "<=", endOfWeek)
+  );
+
+  if (showEnrolled) {
+    try {
+      let user_id = getAuth().currentUser.uid;
+      q = query(
+        events,
+        where("division", "in", divisions),
+        where("attendees", "array-contains", user_id),
+        orderBy("startTime"),
+        where("startTime", ">=", last_midnight_timestamp)
+      );
+    } catch (error) {
+      console.log(`Error: You probably weren't signed in. Full error: ${error}`);
+    }
+  }
+
+  const querySnapshot = await getDocs(q);
+
+  querySnapshot.forEach((doc) => {
+    var timestamp = doc.data().startTime;
+    // if (timestamp.toDate().getMonth() == theMonth) {
+    filtered_events.push({ ...doc.data(), id: doc.id });
+    // }
+  });
+
+  return filtered_events;
+}
+
 const firebaseUserPreviousEvents = async (
   theTimestamp
 ) => {
@@ -218,9 +262,12 @@ const firebaseUserPreviousEvents = async (
   getDoc(userRef).then(value => {
     const user_events = value.data().events;
     user_events.map((doc_id) => {
+      console.log("ID", doc_id)
       getDoc(doc_id).then(value => {
-        if (value.data().startTime <= theTimestamp) {
-          event_ids.push({ ...value.data(), id: value.id });
+        if (value.data()?.startTime != undefined) {
+          if (value.data()?.startTime <= theTimestamp) {
+            event_ids.push({ ...value.data(), id: value.id });
+          }
         }
       })
     })
@@ -238,5 +285,6 @@ export {
   firebaseAppendPerson,
   firebaseFilterEventsChronological,
   firebaseFilterEventsPaginate,
+  firebaseFilterEventsChronologicalWeek,
   firebaseUserPreviousEvents,
 };

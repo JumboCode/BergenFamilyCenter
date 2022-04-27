@@ -1,14 +1,16 @@
-import { useEffect, useState } from 'react';
-import { firebaseGetEvent } from '../src/firebaseEvents';
-import Box from '@mui/material/Box';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
+import { useEffect, useState } from "react";
+import { firebaseGetEvent } from "../src/firebaseEvents";
+import Box from "@mui/material/Box";
+import CardContent from "@mui/material/CardContent";
+import CardActionArea from "@mui/material/CardActionArea";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
 import CalendarIcon from "../components/calendarIcon";
-import Grid from "@mui/material/Grid"
+import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
-import Paper from "@mui/material/Paper"
+import Paper from "@mui/material/Paper";
 import Card from "@mui/material/Card";
+import EventDialog from "./eventDialog";
 
 const CardContentNoPadding = styled(CardContent)(`
   padding: 0;
@@ -17,59 +19,142 @@ const CardContentNoPadding = styled(CardContent)(`
   }
 `);
 
-export default function UpcomingEvent({ eventID }) {
-  const monthNames = ["January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+export default function UpcomingEvent(props) {
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
+  const {
+    description,
+    name,
+    image,
+    className,
+    startTime,
+    endTime,
+    manager,
+    event,
+    attendees,
+    user,
+  } = props;
+  // console.log(props)
+  const [open, setOpen] = useState(false);
+  // const [eventName, updateEventName] = useState("");
+  // const [eventDescription, updateEventDesc] = useState("");
+  // const [timestamp, updateDate] = useState(null);
 
-  const [eventName, updateEventName] = useState("");
-  const [eventDescription, updateEventDesc] = useState("");
-  const [timestamp, updateDate] = useState(null);
-
-  useEffect(() => {
-    firebaseGetEvent(eventID).then(
-      value => {
-        updateEventName(value.name);
-        updateEventDesc(value.description);
-        updateDate(value.startTime);
-      });
-  }, [])
-
-  const date = timestamp?.toDate();
-
+  const date = startTime?.toDate();
   return (
-    <Paper style={{ display: 'table', margin: 20, borderRadius: 25 }} elevation={2}>
-      {timestamp == null ? null :
-        <Card style={{ width: "100%", display: 'flex', alignItems: 'center', flexDirection: 'row', borderRadius: 25 }}>
+    <div>
+      <Card
+        elevation={3}
+        style={{
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          flexDirection: "row",
+          borderRadius: 25,
+        }}
+      >
+        <CardActionArea
+          onClick={() => {
+            if (!open) {
+              setOpen(true);
+            }
+          }}
+          disableRipple={open}
+        >
+          <EventDialog
+            open={open}
+            setOpen={setOpen}
+            description={props.description}
+            title={props.name}
+            image={""}
+            className={""}
+            startTime={props.startTime}
+            endTime={props.endTime}
+            manager={props.manager}
+            event={props.id}
+            attendees={props.attendeesRef}
+            user={props.user}
+          />
           <Grid container>
             <Grid item xs={5}>
-              <div style={{ margin: 5, display: 'flex', flexDirection: 'row', alignItems: 'center', height: '100%' }}>
-                <CalendarIcon month={monthNames[date.getMonth()]} day={date.getDate()}></CalendarIcon>
+              <div
+                style={{
+                  margin: 5,
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  height: "100%",
+                }}
+              >
+                <CalendarIcon
+                  month={monthNames[date.getMonth()]}
+                  day={date.getDate()}
+                ></CalendarIcon>
               </div>
             </Grid>
             <Grid item xs={7}>
-              <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+              <Box
+                sx={{ display: "flex", flexDirection: "column", width: "100%" }}
+              >
                 <CardMedia
                   component="img"
-                  sx={{ maxHeight: 50 }}
+                  sx={{ maxHeight: 60 }}
                   image="https://source.unsplash.com/random"
                   alt="Live from space album cover"
                 />
-                <CardContentNoPadding sx={{ flex: '1 0 auto', padding: 0.5, whiteSpace: 'nowrap' }}>
+                <CardContentNoPadding
+                  sx={{
+                    flex: "1 0 auto",
+                    padding: 0.5,
+                    overflow: "hidden",
+                    display: "-webkit-box",
+                    WebkitLineClamp: "2",
+                    WebkitBoxOrient: "vertical",
+                    textOverflow: "ellipsis",
+                    WebkitBoxPack: "end",
+                    lineHeight: 2,
+                  }}
+                >
                   <div sx={{ paddingBottom: 4 }}>
-                    <Typography component="div" variant="h6" style={{ overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '200px', lineHeight: 1 }}>
-                      {eventName}
+                    <Typography
+                      component="div"
+                      variant="h6"
+                      style={{
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        maxWidth: "200px",
+                        lineHeight: 1,
+                      }}
+                    >
+                      {name}
                     </Typography>
-                    <Typography variant="subtitle2" color="text.secondary" component="div" style={{ maxWidth: '200px', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical', textOverflow: 'ellipsis', WebkitBoxPack: 'end', lineHeight: 1 }}>
-                      {eventDescription}
+                    <Typography
+                      variant="subtitle2"
+                      color="text.secondary"
+                      component="div"
+                      style={{ maxWidth: "200px" }}
+                    >
+                      {description}
                     </Typography>
                   </div>
                 </CardContentNoPadding>
               </Box>
             </Grid>
           </Grid>
-        </Card>
-      }
-    </Paper >
+        </CardActionArea>
+      </Card>
+    </div>
   );
 }

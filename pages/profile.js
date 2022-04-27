@@ -14,6 +14,21 @@ import { updateUser } from "../src/userFunctions";
 import { firebaseUserPreviousEvents } from "../src/firebaseEvents";
 import { doc, getDoc, Timestamp } from "firebase/firestore";
 import UpcomingEvent from "../components/upcomingEvent.js";
+import Alert from '@mui/material/Alert';
+import ListSubheader from '@mui/material/ListSubheader';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
+import EmailIcon from '@mui/icons-material/Email';
+import ListItemText from '@mui/material/ListItemText';
+import Collapse from '@mui/material/Collapse';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import Divider from '@mui/material/Divider';
+import Snackbar from '@mui/material/Snackbar';
 
 
 const validationSchema = yup.object({
@@ -32,6 +47,9 @@ export default function Profile() {
     const auth = getAuth();
     const uid = auth.currentUser?.uid;
 
+    const [user, setUser] = useState(null);
+    const [isManager, setIsManager] = useState(false)
+
     const [name, setName] = useState(auth.currentUser?.displayName ?? "you must be logged in");
     const [email, setEmail] = useState(auth.currentUser?.email ?? "you must be logged in");
     const [phoneNumber, setPhoneNumber] = useState("you must be logged in");
@@ -41,18 +59,53 @@ export default function Profile() {
     const [editing, setEditing] = useState(false);
 
     const [previousEvents, setPreviousEvents] = useState([]);
+    const [managerEvents, setManagerEvents] = useState([]);
 
+    const [copiedSingularVisible, setCopiedSingularVisible] = useState(false);
+    const [copiedAlertVisible, setCopiedAlertVisible] = useState(false);
+
+    // TODO CREATE USER TO PASS TO OTHER THING
     useEffect(() => {
         if (uid) {
             const userRef = doc(db, "users", uid);
             const currentTime = Timestamp.now()
 
             const userInfo = getDoc(userRef).then(value => {
+                setUser({ ...value.data(), id: uid });
+                setIsManager(value.data().isManager);
                 setName(value.data().name);
                 setEmail(value.data().email);
                 setPhoneNumber(value.data().phoneNumber);
                 setAddress(value.data().address);
                 firebaseUserPreviousEvents(currentTime).then(value => setPreviousEvents(value));
+
+                if (value.data().isManager) {
+
+                    const userRef = doc(db, "users", uid);
+
+                    getDoc(userRef).then(value => {
+                        const manager_events_run = value.data().eventsRun;
+                        const all_events = []
+                        manager_events_run.map((event) => {
+                            const parentChild = []
+                            getDoc(event.attendeesRef).then(attendeesDoc => { // gets attendees document
+                                attendeesDoc.data().attendees.map(attendees => { //maps through attendees corresponding to each parent
+                                    getDoc(attendees.parent).then(parent => { //grab that set of attendees' parent 
+                                        if (parent.data().consent) {
+                                            parentChild.push({ email: parent.data().email, children: attendees, consent: parent.data().consent.overallConsent })
+                                        }
+                                        else {
+                                            parentChild.push({ email: parent.data().email, children: attendees, consent: "no consent form filled out" })
+
+                                        }
+                                    })
+                                })
+                            });
+                            all_events.push({ name: event.name, eventAttendees: parentChild })
+                        });
+                        setManagerEvents(all_events)
+                    })
+                }
             });
         }
     }, []);
@@ -73,6 +126,103 @@ export default function Profile() {
             updateUser(uid, { address: values.address })
         },
     });
+
+
+
+    function NestedList() {
+        const [open, setOpen] = useState({});
+        const [emails, setEmails] = useState({});
+        useEffect(() => {
+            const listOpen = {}
+            const allEmails = {}
+            managerEvents.map((event) => {
+                const emailsForEvent = []
+                event.eventAttendees.map((attendees) => {
+                    emailsForEvent.push(attendees.email)
+                })
+                listOpen[event.name] = false
+                allEmails[event.name] = emailsForEvent
+            })
+            setOpen(listOpen)
+            setEmails(allEmails)
+
+        }, []);
+
+        const handleClickList = (event) => {
+            const tempListOpen = { ...open }
+            tempListOpen[event.name] = !tempListOpen[event.name]
+            setOpen(tempListOpen);
+            console.log("in handle click list")
+        };
+
+        const getEmails = (event) => {
+            navigator.clipboard.writeText(emails[event.name]);
+            setCopiedAlertVisible(true);
+        };
+
+        const getEmail = (attendees, event) => {
+            navigator.clipboard.writeText(attendees.email);
+            setCopiedSingularVisible(true);
+            const tempListOpen = { ...open }
+            console.log("open before overriding it", open)
+            tempListOpen[event.name] = false
+            console.log("temp list open", tempListOpen)
+            setOpen(tempListOpen);
+            console.log("open after overriding it", open)
+        }
+
+        return (
+            <List
+                sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+                component="nav"
+                aria-labelledby="nested-list-subheader"
+                subheader={
+                    <ListSubheader component="div" id="nested-list-subheader">
+                        Event Being Managed:
+                    </ListSubheader>
+                }
+            >
+                {managerEvents.map((event, index) => {
+                    return <List key={event} >
+                        <ListItem>
+                            <ListItemButton onClick={() => { handleClickList(event) }}>
+                                <ListItemText primary={event.name} />
+                                {open[event.name] ? <ExpandLess /> : <ExpandMore />}
+                            </ListItemButton>
+                            <IconButton edge="end" aria-label="email" onClick={() => { getEmails(event) }}>
+                                <EmailIcon />
+                            </IconButton>
+                        </ListItem>
+                        <Collapse in={open[event.name]} timeout="auto" unmountOnExit>
+                            <List component="div" disablePadding>
+                                {event.eventAttendees.map((attendees) => {
+                                    let text = ""
+                                    Object.entries(attendees.children.attendees).map((person) => {
+                                        { text += person[0] + "," + "\xa0" + person[1] + ";\xa0\xa0\xa0" }
+                                    })
+                                    return (
+                                        <ListItemButton key={attendees} sx={{ pl: 6 }}>
+                                            <ListItemText primary={text} secondary={"Photo Consent: " + attendees.consent} />
+                                            <ListItemSecondaryAction>
+                                                <IconButton edge="end" aria-label="email" onClick={e => { getEmail(attendees, event); e.stopPropagation(); }}>
+                                                    {console.log("open", open)}
+                                                    <EmailIcon />
+                                                </IconButton>
+                                            </ListItemSecondaryAction>
+                                        </ListItemButton>
+                                    )
+                                })
+                                }
+                            </List>
+                        </Collapse>
+                        {index < Object.keys(managerEvents).length - 1 &&
+                            <Divider />}
+                    </List>
+                })
+                }
+            </List>
+        );
+    }
 
     return (
         <div>
@@ -164,14 +314,31 @@ export default function Profile() {
                     {Object.keys(previousEvents).length >= 0 ?
                         previousEvents.sort((a, b) => (b.startTime - a.startTime)).map((event) => {
                             return (
-                                <Box key={event}>
-                                    <UpcomingEvent style={{ width: "100%", height: "100%" }} eventID={event.id} key={event}></UpcomingEvent>
+                                <Box key={event.id} sx={{ p: 2 }}>
+                                    <UpcomingEvent user={user} {...event}></UpcomingEvent>
                                 </Box>
                             );
                         }) :
                         null
                     }
                 </Box>
+                {isManager ?
+                    <Box style={{ width: "30%", margin: "2%" }}>
+                        < Typography component="h1" variant="h6" >
+                            {"Manager Functions:"}
+                        </Typography>
+
+                        <NestedList></NestedList>
+                        <Snackbar open={copiedAlertVisible} autoHideDuration={3000} onClose={() => { setCopiedAlertVisible(false) }}>
+                            <Alert severity="success" >
+                                Copied Emails!</Alert>
+                        </Snackbar>
+                        <Snackbar open={copiedSingularVisible} autoHideDuration={3000} onClose={() => { setCopiedSingularVisible(false) }}>
+                            <Alert severity="success" >
+                                Copied Email!</Alert>
+                        </Snackbar>
+                    </Box>
+                    : null}
             </Box >
         </div >
     )

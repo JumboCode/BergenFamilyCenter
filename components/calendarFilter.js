@@ -23,7 +23,7 @@ export default function CheckboxLabels({
               const temp = [...checked];
               temp[i] = !temp[i];
               setChecked(temp);
-              handleChange(divisionName, !checked[i]);
+              handleChange(divisionName, checked[i]);
             }}
             id={divisionName}
           ></Checkbox>

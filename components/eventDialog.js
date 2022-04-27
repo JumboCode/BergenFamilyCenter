@@ -20,11 +20,22 @@ import Link from "@mui/material/Link";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles(() => ({
+    dialogPaper: {
+        backgroundImage: "url(https://i.imgur.com/HeGEEbu.jpg)",
+        opacity: 0.1,
+        color: "#000 !important"
+    },
+}));
+
 
 export default function EventDialog({ open, setOpen, description, title, image, className, startTime, endTime, manager, event, attendees, user }) {
     const [numFields, setNumFields] = React.useState(1);
     const [names, setNames] = React.useState([]);
     const [ages, setAges] = React.useState([]);
+    const classes = useStyles();
     React.useEffect(() => {
         // assumes user is defined
         if (open) {
@@ -71,7 +82,7 @@ export default function EventDialog({ open, setOpen, description, title, image, 
                 submitAges.push(values[`age${i + 1}`])
             }
             firebaseAppendPerson(user?.id, event, attendees, submitNames, submitAges, null).then(() => {
-                console.log(submitNames);
+                //console.log(submitNames);
                 // #TODO
                 handleClose();
             })
@@ -90,7 +101,7 @@ export default function EventDialog({ open, setOpen, description, title, image, 
                             sx={{ my: 1, mx: 1 }}
                             InputLabelProps={{ shrink: true }}
                             autoFocus
-                            disabled={names[z]}
+                            disabled={names[z] != undefined}
                             margin="dense"
                             name={`name${z + 1}`}
                             id={`name${z + 1}`}
@@ -108,7 +119,7 @@ export default function EventDialog({ open, setOpen, description, title, image, 
                             sx={{ my: 1, mx: 2 }}
                             InputLabelProps={{ shrink: true }}
                             autoFocus
-                            disabled={ages[z]}
+                            disabled={ages[z] != undefined}
                             type="number"
                             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                             margin="dense"
@@ -151,23 +162,25 @@ export default function EventDialog({ open, setOpen, description, title, image, 
     return (
         <Dialog open={open} onClose={handleClose}>
             <form onSubmit={formik.handleSubmit}>
-                <DialogTitle>{title}</DialogTitle>
-                <DialogContent sx={{ py: 0 }}>
-                    <Typography sx={{ width: "50ch" }} variant="subtitle1">
-                        Description: {description}
-                    </Typography>
-                    {manager == "" || manager == null ? null :
-                        <Typography variant="subtitle2">
-                            Contact:&nbsp;
-                            <Link href={`mailto:${manager}`}>
-                                {manager}
-                            </Link>
+                <div>
+                    <DialogTitle >{title}</DialogTitle>
+                    <DialogContent sx={{ py: 0 }}>
+                        <Typography sx={{ width: "50ch" }} variant="subtitle1">
+                            Description: {description}
                         </Typography>
-                    }
-                    <Typography variant="subtitle2">
-                        Time: {startTime?.toLocaleDateString("en-US", optionsStart)} - {endTime?.toLocaleTimeString("en-US", optionsEnd)}
-                    </Typography>
-                </DialogContent>
+                        {manager == "" || manager == null ? null :
+                            <Typography variant="subtitle2">
+                                Contact:&nbsp;
+                                <Link href={`mailto:${manager}`}>
+                                    {manager}
+                                </Link>
+                            </Typography>
+                        }
+                        <Typography variant="subtitle2">
+                            Time: {startTime?.toDate().toLocaleDateString("en-US", optionsStart)} - {endTime?.toDate().toLocaleTimeString("en-US", optionsEnd)}
+                        </Typography>
+                    </DialogContent>
+                </div>
                 <DialogContent>
                     {formFields}
                 </DialogContent>

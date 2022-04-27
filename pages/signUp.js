@@ -16,7 +16,9 @@ import { getAuth } from "firebase/auth";
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import Divider from '@mui/material/Divider';
-
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+import LanguageSelector from "../components/languageSelector";
 
 const useStyles = makeStyles({
     heading: {
@@ -59,6 +61,12 @@ export default function SignUp() {
     const auth = getAuth();
     const router = useRouter();
     const [loading, setLoading] = React.useState(false);
+    const [open, setOpen] = React.useState(false);
+
+    const closeError = (event, reason) => {
+        if (reason === 'clickaway') { return; }
+        setOpen(false);
+    };
 
     const formik = useFormik({
         initialValues: {
@@ -69,7 +77,12 @@ export default function SignUp() {
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            userSignUp(values.email, values.password, 0, values.Firstname.trim() + " " + values.Lastname.trim());
+            userSignUp(values.email, values.password, 0, values.Firstname.trim() + " " + values.Lastname.trim()).then(() => {
+                setLoading(false);
+            }).catch(() => {
+                setOpen(true);
+                setLoading(false);
+            });
             setLoading(true);
         },
     });
@@ -80,138 +93,135 @@ export default function SignUp() {
         }
     });
 
-
     return (
         <Grid container component="main" sx={{ height: '100vh' }}>
             <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
                 <Box
-                    style={{ textAlign: "left" }}
+                    style={{ textAlign: "right" }}
                     sx={{
-                        my: 2,
-                        mx: 5,
+                        mt: 2,
+                        mx: 2,
                         alignItems: 'center',
                     }}
                 >
-                    <Image src="/Tree.png"
-                        alt="me"
-                        width="132"
-                        height="102"
-                        sx={{ m: 2 }} />
+                    <LanguageSelector />
                 </Box>
-                <form onSubmit={formik.handleSubmit}>
-
-                    <Box sx={{ my: 2, mx: 5 }}>
-
-                        <Typography variant="h3" component="div" gutterBottom
-                            className={classes.heading}>
-                            Sign Up
-                        </Typography>
-
-                        <Typography className={classes.hasAccount}>
-                            Already have an account?
-                        </Typography>
-                        <Link href="/logIn"
-                            variant="body2"
-                            sx={{ m: 0.5 }}
-                        >
-                            {"Sign In"}
-                        </Link>
-                    </Box>
-
-                    <div className="container">
-                        <TextField
-                            label="First Name"
-                            id="Firstname"
-                            onChange={formik.handleChange}
-                            error={formik.touched.Firstname && Boolean(formik.errors.Firstname)}
-                            helperText={formik.touched.Firstname && formik.errors.Firstname}
-                            variant="outlined"
-                            size="small"
-                            sx={{ my: 2, mx: 5, width: '30ch' }}
-                            className={classes.font}
-                        />
-                        <TextField
-                            label="Last Name"
-                            id="Lastname"
-                            onChange={formik.handleChange}
-                            error={formik.touched.Lastname && Boolean(formik.errors.Lastname)}
-                            helperText={formik.touched.Lastname && formik.errors.Lastname}
-                            variant="outlined"
-                            size="small"
-                            sx={{ my: 2, mx: -1, width: '30ch' }}
-                            className={classes.font}
-                        />
-                    </div>
-
-                    <div>
-                        <TextField
-                            label="Email"
-                            id="email"
-                            onChange={formik.handleChange}
-                            error={formik.touched.email && Boolean(formik.errors.email)}
-                            helperText={formik.touched.email && formik.errors.email}
-                            variant="outlined"
-                            size="small"
-                            sx={{ my: 2, mx: 5, width: '64ch' }}
-                            className={classes.font}
-                        />
-                    </div>
-
-                    <div>
-                        <TextField
-                            label="Password"
-                            type="password"
-                            id="password"
-                            onChange={formik.handleChange}
-                            error={formik.touched.password && Boolean(formik.errors.password)}
-                            helperText={formik.touched.password && formik.errors.password}
-                            variant="outlined"
-                            size="small"
-                            sx={{ my: 2, mx: 5, width: '64ch' }}
-                            className={classes.font}
-                        />
-                    </div>
-
-                    <div>
-                        <LoadingButton
-                            style={{
-                                minWidth: '435px',
-                                minHeight: '40px'
-                            }}
-                            variant="contained"
-                            type="submit"
-                            loading={loading}
-                            sx={{ my: 2, mx: 5, width: '66ch' }}
-                        >
-                            Sign Up
-                        </LoadingButton>
-                    </div>
-                </form>
-
-                <Divider>or</Divider>
-
-                <GoogleButton
-                    className={classes.Googlebutton}
-                    type="light"
-                    onClick={() => {
-                        signInWithGoogle()
+                <Box
+                    style={{ textAlign: "left" }}
+                    sx={{
+                        my: 4,
+                        mx: 4,
+                        alignItems: 'center',
                     }}
-                />
+                >
+                    <form onSubmit={formik.handleSubmit}>
+                        <Box style={{ textAlign: "left", width: "100%" }}>
+                            <Image src="/Tree.png" alt="me" width="132" height="102" />
+                            <Typography variant="h3" component="h1" >
+                                Sign Up
+                            </Typography>
+                            <Grid style={{ display: "flex", alignItems: "flex-end" }}>
+                                <Typography style={{ float: "left" }}>
+                                    Already have an account?
+                                    &nbsp;
+                                </Typography>
+                                <Link href="/logIn" underline="hover">
+                                    {"Sign In"}
+                                </Link>
+                            </Grid>
+                        </Box>
+                        <Grid container spacing={2}>
+                            <Grid item xs={6} sx={{ mt: 2 }}>
+                                <TextField
+                                    fullWidth
+                                    label="First Name"
+                                    id="Firstname"
+                                    onChange={formik.handleChange}
+                                    autoFocus
+                                    error={formik.touched.Firstname && Boolean(formik.errors.Firstname)}
+                                    helperText={formik.touched.Firstname && formik.errors.Firstname}
+                                />
+                            </Grid>
+                            <Grid item xs={6} sx={{ mt: 2 }}>
+                                <TextField
+                                    label="Last Name"
+                                    id="Lastname"
+                                    onChange={formik.handleChange}
+                                    error={formik.touched.Lastname && Boolean(formik.errors.Lastname)}
+                                    helperText={formik.touched.Lastname && formik.errors.Lastname}
+                                    autoFocus
+                                    fullWidth
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    label="Email"
+                                    id="email"
+                                    // margin="normal"
+                                    fullWidth
+                                    autoFocus
+                                    autoComplete='email'
+                                    onChange={formik.handleChange}
+                                    error={formik.touched.email && Boolean(formik.errors.email)}
+                                    helperText={formik.touched.email && formik.errors.email}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    label="Password"
+                                    type="password"
+                                    id="password"
+                                    // margin="normal"
+                                    fullWidth
+                                    autoFocus
+                                    autoComplete="current-password"
+                                    onChange={formik.handleChange}
+                                    error={formik.touched.password && Boolean(formik.errors.password)}
+                                    helperText={formik.touched.password && formik.errors.password}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <LoadingButton
+                                    fullWidth
+                                    variant="contained"
+                                    type="submit"
+                                    loading={loading}
+                                >
+                                    Sign Up
+                                </LoadingButton>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Divider>or</Divider>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <GoogleButton
+                                    style={{ width: "100% !important" }}
+                                    onClick={() => {
+                                        signInWithGoogle()
+                                    }}
+                                />
+                            </Grid>
+                        </Grid>
+                    </form>
+                </Box>
             </Grid>
             <Grid
                 item
                 xs={false}
                 sm={4}
                 md={7}
-                sx={{
-                    backgroundImage: 'url(https://source.unsplash.com/random)',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundColor: (t) =>
-                        t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                }}>
+            >
+                <div style={{ alignSelf: "center", position: 'relative', width: '100%', height: '100%' }}>
+                    <Image objectFit="cover" style={{ right: 100 }}
+                        src="/3-girls-outside-0518.jpg" alt="me" layout="fill" />
+                </div>
+
             </Grid>
-        </Grid>
+            <Snackbar open={open} autoHideDuration={3000} onClose={closeError}>
+                <Alert onClose={closeError} severity="error" sx={{ width: '100%' }}>
+                    An account with that email already exists
+                </Alert>
+            </Snackbar>
+        </Grid >
     )
 }

@@ -6,30 +6,12 @@ import { db } from "../firebase/firebase";
 import NavBar from "../components/navBar.js";
 import ScrollingCard from "../components/scrollingCards";
 import { firebaseGetDivisions } from "../src/firebaseDivisions"
-import { PrecisionManufacturingTwoTone } from '@mui/icons-material';
-
-// import { Grid, Typography, Box, Button } from '@mui/material';
-// import { useState, useEffect } from 'react';
-// import { doc, getDoc } from "firebase/firestore";
-// import { getAuth } from "firebase/auth";
-// import { db } from "../firebase/firebase";
-// import NavBar from "../components/navBar.js";
-// import ScrollingCard from "../components/scrollingCards";
-
 
 export default function Events() {
     const [divisions, setDivisions] = useState([]);
     const auth = getAuth();
     const uid = auth.currentUser?.uid;
     const [user, setUser] = useState(null);
-
-    // const divisionLabels = () => {
-    //     firebaseGetDivisions().then((divisions) => {
-    //         setDivisions(
-
-    //         );
-    //     });
-    // };
 
     useEffect(() => {
         if (uid) {

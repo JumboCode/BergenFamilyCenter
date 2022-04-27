@@ -3,13 +3,15 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { firebaseFilterEventsPaginate } from "../src/firebaseEvents";
 import { useState, useEffect } from "react";
+import { Typography } from "@mui/material";
 
 export default function ScrollingCard({ division, user }) {
   const [listCards, setListCards] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const makeCards = () => {
     firebaseFilterEventsPaginate(division, 200, 0).then((value) => {
-      console.log(value)
+      setLoading(false);
       setListCards(
         value.map((card) => {
           return (
@@ -18,8 +20,8 @@ export default function ScrollingCard({ division, user }) {
                 description={card.data().description}
                 title={card.data().name}
                 image={"/sunset.jpg"} /* STILL TO-DO:: images */
-                startTime={card.data().startTime?.toDate()}
-                endTime={card.data().endTime?.toDate()}
+                startTime={card.data().startTime}
+                endTime={card.data().endTime}
                 manager={card.data().manager}
                 attendees={card.data().attendeesRef}
                 event={card.id}
@@ -51,14 +53,17 @@ export default function ScrollingCard({ division, user }) {
 
   return (
     <div>
-      <Carousel
-        responsive={responsive}
-        shouldResetAutoplay={false}
-        autoPlay={false}
-        animation={"fade"}
-      >
-        {listCards}
-      </Carousel>
+      {loading ? null : listCards.length == 0 ?
+        <Typography variant="subtitle2">No Upcoming Events</Typography> :
+        <Carousel
+          responsive={responsive}
+          shouldResetAutoplay={false}
+          autoPlay={false}
+          animation={"fade"}
+        >
+          {listCards}
+        </Carousel>
+      }
     </div>
   );
 }

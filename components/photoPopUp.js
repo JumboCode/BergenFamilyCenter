@@ -32,7 +32,6 @@ const validationSchema = yup.object({
 
 export default function PhotoPopUp({ open, setOpen }) {
   const [consent, setConsent] = useState(null);
-  console.log(consent);
   const uid = "vIsvXv6bFFNHL6RQnYDGwPZYcdl2"; // auth.currentUser?.uid;
   useEffect(() => {
     if (uid) {
@@ -46,7 +45,7 @@ export default function PhotoPopUp({ open, setOpen }) {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      overallConsent: consent?.overallConsent,
+      overallConsent: consent ? consent.overallConsent : "Both",
       photoPurpose: consent?.photoPurpose,
       nameSocialMedia: consent?.nameSocialMedia,
       noCompensation: consent?.noCompensation,
@@ -54,9 +53,10 @@ export default function PhotoPopUp({ open, setOpen }) {
       confidentiality: consent?.confidentiality,
       ableWithdrawConset: consent?.ableWithdrawConset,
     },
-    validationSchema: validationSchema,
+    // validationSchema: validationSchema,
     onSubmit: (values) => {
-      updateUser("vIsvXv6bFFNHL6RQnYDGwPZYcdl2", { consent: values });
+      console.log(values)
+      // updateUser("vIsvXv6bFFNHL6RQnYDGwPZYcdl2", { consent: values });
       handleClose();
     },
   });
@@ -89,8 +89,8 @@ export default function PhotoPopUp({ open, setOpen }) {
                   photograph, make an audio, and/or visual recording{" "}
                 </FormLabel>
                 <RadioGroup
-                  // defaultValue={consent?.overallConsent}
-                  value={consent?.overallConsent}
+                  defaultValue={"Both"}
+                  // value={!consent ? "Both" : formik.overallConsent}
                   id="overallConsent"
                   onChange={formik.handleChange}
                 >
@@ -124,7 +124,7 @@ export default function PhotoPopUp({ open, setOpen }) {
                   control={
                     <Checkbox
                       required
-                      helperText={formik.touched.photoPurposes && formik.errors.photoPurposes}
+                      // helperText={formik.touched.photoPurposes && formik.errors.photoPurposes}
                       defaultChecked
                       onChange={formik.handleChange}
                       id="photoPurposes"
@@ -140,7 +140,7 @@ export default function PhotoPopUp({ open, setOpen }) {
                   control={
                     <Checkbox
                       required
-                      helperText={formik.touched.nameSocialMedia && formik.errors.nameSocialMedia}
+                      // helperText={formik.touched.nameSocialMedia && formik.errors.nameSocialMedia}
                       defaultChecked
                       onChange={formik.handleChange}
                       id="nameSocialMedia"
@@ -153,7 +153,7 @@ export default function PhotoPopUp({ open, setOpen }) {
                   control={
                     <Checkbox
                       required
-                      helperText={formik.touched.noCompensation && formik.errors.noCompensation}
+                      // helperText={formik.touched.noCompensation && formik.errors.noCompensation}
 
                       defaultChecked
                       onChange={formik.handleChange}
@@ -168,7 +168,7 @@ export default function PhotoPopUp({ open, setOpen }) {
                   control={
                     <Checkbox
                       required
-                      helperText={formik.touched.externalPermission && formik.errors.externalPermission}
+                      // helperText={formik.touched.externalPermission && formik.errors.externalPermission}
                       defaultChecked
                       onChange={formik.handleChange}
                       id="externalPermission"
@@ -181,7 +181,7 @@ export default function PhotoPopUp({ open, setOpen }) {
                   control={
                     <Checkbox
                       required
-                      helperText={formik.touched.confidentiality && formik.errors.confidentiality}
+                      // helperText={formik.touched.confidentiality && formik.errors.confidentiality}
 
                       defaultChecked
                       onChange={formik.handleChange}
@@ -195,7 +195,7 @@ export default function PhotoPopUp({ open, setOpen }) {
                   control={
                     <Checkbox
                       required
-                      helperText={formik.touched.ableWithdrawConsent && formik.errors.ableWithdrawConsent}
+                      // helperText={formik.touched.ableWithdrawConsent && formik.errors.ableWithdrawConsent}
 
                       defaultChecked
                       onChange={formik.handleChange}
