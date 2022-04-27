@@ -11,6 +11,8 @@ import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper"
 import Card from "@mui/material/Card";
 import EventDialog from "./eventDialog";
+import Image from 'next/image';
+import imageKitLoader from './imageKitLoader';
 
 const CardContentNoPadding = styled(CardContent)(`
   padding: 0;
@@ -55,7 +57,7 @@ export default function UpcomingEvent(props) {
             setOpen={setOpen}
             description={props.description}
             title={props.name}
-            image={""}
+            image={props.image}
             className={""}
             startTime={props.startTime}
             endTime={props.endTime}
@@ -72,12 +74,20 @@ export default function UpcomingEvent(props) {
             </Grid>
             <Grid item xs={7}>
               <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-                <CardMedia
+                {/* <CardMedia
                   component="img"
                   sx={{ maxHeight: 60 }}
                   image="https://source.unsplash.com/random"
                   alt="Live from space album cover"
-                />
+                /> */}
+                <div style={{ position: 'relative', height: '100px', maxHeight: '60px' }}>
+                  <Image
+                    loader={imageKitLoader}
+                    src={image}
+                    alt="Event image"
+                    layout='fill'
+                  />
+                </div>
                 <CardContentNoPadding sx={{ flex: '1 0 auto', padding: 0.5, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical', textOverflow: 'ellipsis', WebkitBoxPack: 'end', lineHeight: 2 }}>
                   <div sx={{ paddingBottom: 4 }}>
                     <Typography component="div" variant="h6" style={{ overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '200px', lineHeight: 1 }}>
