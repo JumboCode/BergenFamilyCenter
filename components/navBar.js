@@ -64,8 +64,9 @@ export default function NavBar({ page }) {
                         <MenuIcon />
                     </IconButton>
                     <Box sx={{ pl: 1, display: "block", position: "relative", height: 70, width: 250 }}>
-                        <Image src="/weblogo.svg" layout="fill" objectFit="contain"
-                        />
+                        <a href="https://bergenfamilycenter.org/">
+                            <Image src="/weblogo.svg" layout="fill" objectFit="contain" alt="" />
+                        </a>
                     </Box>
                     <Box sx={{ flexGrow: 1 }} />
                     {/* <Typography variant="h5" color="black" >
