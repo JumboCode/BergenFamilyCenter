@@ -4,7 +4,7 @@ export const theme = createTheme({
     typography: {
         // fontFamily: '',
         h5: {
-            fontFamily: 'Opens Sans',
+            // fontFamily: 'Open Sans',
             color: "#094d7e",
         },
         // overrides: {

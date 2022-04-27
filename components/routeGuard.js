@@ -12,7 +12,7 @@ function RouteGuard({ children }) {
 
     const authCheck = useCallback((url) => {
         // redirect to login page if accessing a private page and not logged in 
-        const publicPaths = ['/logIn', '/forgotPassword', '/signUp'];
+        const publicPaths = ['/login', '/forgotPassword', '/signUp'];
         const path = url.split('?')[0];
 
         const auth = getAuth();
@@ -22,7 +22,7 @@ function RouteGuard({ children }) {
             console.log("not logged in ")
             // No user is signed in.
             router.push({
-                pathname: '/logIn',
+                pathname: '/login',
                 query: { returnUrl: router.asPath }
             });
         } else {

@@ -125,7 +125,7 @@ export default function SignUp() {
                                     Already have an account?
                                     &nbsp;
                                 </Typography>
-                                <Link href="/logIn" underline="hover">
+                                <Link href="/login" underline="hover">
                                     {"Sign In"}
                                 </Link>
                             </Grid>

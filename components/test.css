@@ -179,10 +179,11 @@
     margin-bottom: 0;
     margin-right: 10em;
     margin-left: 0;
-    padding: .2em;
+    /* padding: .2em; */
     font-size: 14px;
     border-radius: 7px;
     overflow: hidden;
+    
     /* transition: z-index 250ms cubic-bezier(1, 0, 1, 0); */
 
     /* transition-delay: 1s; */
