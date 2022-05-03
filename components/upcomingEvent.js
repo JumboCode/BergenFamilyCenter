@@ -107,23 +107,19 @@ export default function UpcomingEvent(props) {
               </div>
             </Grid>
             <Grid item xs={7}>
-              {/* <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}> */}
               {/* <CardMedia
-              <Box
-                sx={{ display: "flex", flexDirection: "column", width: "100%" }}
-              >
-                <CardMedia
-                  component="img"
-                  sx={{ maxHeight: 60 }}
-                  image="https://source.unsplash.com/random"
-                  alt="Live from space album cover"
-                /> */}
-              <div style={{ position: 'relative', height: '100px', maxHeight: '60px' }}>
+                component="img"
+                sx={{ maxHeight: 20 }}
+                image="https://source.unsplash.com/random"
+                alt="Live from space album cover"
+              /> */}
+              <div style={{ position: 'relative', height: 100, width: 100, maxHeight: 20 }}>
                 <Image
                   loader={imageKitLoader}
                   src={image}
                   alt="Event image"
                   layout='fill'
+                // style={{ height: 50, width: 100, maxHeight: 20, objectFit: 'cover' }}
                 />
               </div>
               <CardContentNoPadding
