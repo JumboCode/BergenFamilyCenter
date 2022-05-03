@@ -2,15 +2,25 @@ import { getUpcomingUserEvents } from "../src/userFunctions";
 import { useState, useEffect } from "react";
 import { Typography, Grid, Box } from '@mui/material';
 import UpcomingEvent from "./upcomingEvent";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "../firebase/firebase";
 
 // Designed for use in a width-3 grid
 export default function MyUpcomingEvents({ user }) {
     const [upcomingEvents, setUpcomingEvents] = useState([]);
     const [loading, setLoading] = useState(true);
+
     useEffect(() => {
-        const upcomingUserEvents = getUpcomingUserEvents(user.id);
-        upcomingUserEvents.then((upcomingEvents) => { setUpcomingEvents(upcomingEvents); setLoading(false) });
-    }, []);
+        const newUpcoming = onSnapshot(doc(db, "users", user.id), (doc) => {
+            const upcomingUserEvents = getUpcomingUserEvents(user.id);
+            upcomingUserEvents.then((upcomingEvents) => { setUpcomingEvents(upcomingEvents); setLoading(false) });
+        });
+        return () => newUpcoming()
+    }, [])
+
+    useEffect(() => {
+    }, [upcomingEvents]);
+
 
     let upcomingEventsComponent = upcomingEvents.map(event => {
         return <Box key={event.id} sx={{ pb: 2 }}>
