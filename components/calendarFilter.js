@@ -2,6 +2,27 @@ import * as React from "react";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import Typography from "@mui/material/Typography";
+
+const colors = [
+  "#9FE4EDdd",
+  "#FFEAC2dd",
+  "#C9F2B3ff",
+  "#FFC5C3dd",
+  "#aab9ff",
+  "#DBC5EEdd",
+  "#DDE1E8dd",
+];
+
+const colorsBorder = [
+  "#45AFBC",
+  "#FEC150",
+  "#a7dc8b",
+  "#E6413E",
+  "#8196f3",
+  "#9E7FBA",
+  "#a6adb9",
+];
 
 export default function CheckboxLabels({
   divisions,
@@ -9,16 +30,29 @@ export default function CheckboxLabels({
   gtDivisions,
 }) {
   const initialState = [];
-  for (let i = 0; i < divisions.length; i++) {
-    initialState[i] = false;
+  for (let i = 0; i < gtDivisions.length; i++) {
+    initialState.push(false);
   }
+  for (let i = 0; i < divisions.length; i++) {
+    const index = gtDivisions.indexOf(divisions[i]);
+    initialState[index] = true;
+  }
+
   const [checked, setChecked] = React.useState(initialState);
-  console.log(divisions);
   const makeCheckboxes = gtDivisions.map((divisionName, i) => {
     return (
       <FormControlLabel
+        key={i}
+        sx={{ display: "flex", m: 0, width: `${100 / 2}%` }}
         control={
           <Checkbox
+            checked={checked[i]}
+            sx={{
+              color: colorsBorder[i],
+              '&.Mui-checked': {
+                color: colorsBorder[i],
+              },
+            }}
             onChange={() => {
               const temp = [...checked];
               temp[i] = !temp[i];
@@ -26,19 +60,16 @@ export default function CheckboxLabels({
               handleChange(divisionName, checked[i]);
             }}
             id={divisionName}
-          ></Checkbox>
+          />
         }
-        label={divisionName}
+        label={<Typography align="center" variant="body2">{divisionName}</Typography>}
       />
     );
   });
 
   const handleChange = (division, checked) => {
-    console.log(checked);
-    console.log(divisions);
     if (checked) {
       const index = divisions.indexOf(division);
-      console.log(index);
       const temp = [...divisions];
       if (index > -1) {
         temp.splice(index, 1);
@@ -49,109 +80,5 @@ export default function CheckboxLabels({
     }
   };
 
-  return <FormGroup>{makeCheckboxes}</FormGroup>;
+  return <FormGroup row>{makeCheckboxes}</FormGroup>;
 }
-
-// {
-//   /* <FormControlLabel
-//         control={
-//           <Checkbox
-//             onChange={() => {
-//               const temp = [...checked];
-//               temp[0] = !temp[0];
-//               setChecked(temp);
-//               handleChange("Family Success Center", checked[0]);
-//             }}
-//             id="FamilySuccessCenter"
-//           ></Checkbox>
-//         }
-//         label="Family Success Center"
-//       />
-//       <FormControlLabel
-//         control={
-//           <Checkbox
-//             onChange={() => {
-//               const temp = [...checked];
-//               temp[1] = !temp[1];
-//               setChecked(temp);
-//               handleChange("Early Learning Center/Home", checked[1]);
-//             }}
-//             id="EarlyLearningCenter/Home"
-//           ></Checkbox>
-//         }
-//         label="Early Learning Center/Home"
-//       />
-//       <FormControlLabel
-//         control={
-//           <Checkbox
-//             onChange={() => {
-//               const temp = [...checked];
-//               temp[2] = !temp[2];
-//               setChecked(temp);
-//               handleChange("HIV/Outreach Services", checked[2]);
-//             }}
-//             id="HIV/Outreach Services"
-//           ></Checkbox>
-//         }
-//         label="HIV/Outreach Services"
-//       />
-//       <FormControlLabel
-//         control={
-//           <Checkbox
-//             onChange={() => {
-//               const temp = [...checked];
-//               temp[3] = !temp[3];
-//               setChecked(temp);
-//               handleChange("Visiting Program", checked[3]);
-//             }}
-//             id="Visiting Program"
-//           ></Checkbox>
-//         }
-//         label="Visiting Program"
-//       />
-//       <FormControlLabel
-//         control={
-//           <Checkbox
-//             onChange={() => {
-//               const temp = [...checked];
-//               temp[4] = !temp[4];
-//               setChecked(temp);
-//               handleChange("Senior Services", checked[4]);
-//             }}
-//             id="Senior Services"
-//           ></Checkbox>
-//         }
-//         label="Senior Services"
-//       />
-//       <FormControlLabel
-//         control={
-//           <Checkbox
-//             onChange={() => {
-//               const temp = [...checked];
-//               temp[5] = !temp[5];
-//               setChecked(temp);
-//               handleChange("Adolescent Services", checked[5]);
-//             }}
-//             id="Adolescent Services"
-//           ></Checkbox>
-//         }
-//         label="Adolescent Services"
-//       />
-//       <FormControlLabel
-//         control={
-//           <Checkbox
-//             onChange={() => {
-//               const temp = [...checked];
-//               temp[6] = !temp[6];
-//               setChecked(temp);
-//               handleChange("Clinical Services", checked[6]);
-//             }}
-//             id="Clinical Services"
-//           ></Checkbox>
-//         }
-//         label="Clinical Services"
-//       />
-//     </FormGroup>
-//   );
-// } */
-// }

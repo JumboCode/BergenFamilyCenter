@@ -78,10 +78,10 @@ export default function PhotoPopUp({ open, setOpen }) {
             <DialogContent>
               <Stack spacing={2}>
                 <DialogContentText>
-                  With any questions, please contact Everlin at 201-568-0817
+                  With any questions, please contact Jhonatan Garcia at 201-568-0817
                   extension 126 or{" "}
-                  <Link href="mailto:ykim@bergenfamilycenter.org">
-                    ykim@bergenfamilycenter.org
+                  <Link href="mailto:jgarcia@bergenfamilycenter.org">
+                    jgarcia@bergenfamilycenter.org
                   </Link>
                 </DialogContentText>
                 <FormLabel>

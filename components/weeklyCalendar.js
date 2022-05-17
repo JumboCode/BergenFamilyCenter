@@ -1,10 +1,7 @@
-import Paper from "@mui/material/Paper";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { firebaseFilterEventsChronologicalWeek } from "../src/firebaseEvents";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import ButtonGroup from "@mui/material/ButtonGroup";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import IconButton from "@mui/material/IconButton";
@@ -13,6 +10,7 @@ import moment from "moment";
 import { makeStyles } from "@mui/styles";
 import clsx from "clsx";
 import EventDialog from "./eventDialog";
+import { LanguageContext } from '../src/languageContext';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,14 +26,18 @@ export default function WeeklyCalendar({
   user,
   setSelectedDay,
   divisions,
+  setDivisions,
+  gtDivisions,
 }) {
-  console.log(divisions);
   const [events, setEvents] = useState([]);
+  const [eventData, setEventData] = useState([]);
   const [open, setOpen] = useState(false);
   const classes = useStyles();
   const [selectedEvent, setSelectedEvent] = useState(null);
   const start = new Date();
   const options = { month: "long", day: "numeric" };
+  const { language, _ } = useContext(LanguageContext);
+  const inEnglish = language === "English";
 
   start.setDate(start.getDate() - start.getDay());
   start.setHours(0, 0, 0, 0);
@@ -75,16 +77,16 @@ export default function WeeklyCalendar({
   };
 
   const eventsOverlap = (e1, e2) => {
-    if (e1.startTime > e2.endTime) {
+    if (e1.startTime >= e2.endTime) {
       return false;
     }
-    if (e2.startTime > e1.endTime) {
+    if (e2.startTime >= e1.endTime) {
       return false;
     }
-    if (e2.endTime < e1.startTime) {
+    if (e2.endTime <= e1.startTime) {
       return false;
     }
-    if (e1.endTime < e2.startTime) {
+    if (e1.endTime <= e2.startTime) {
       return false;
     }
     return true;
@@ -94,93 +96,107 @@ export default function WeeklyCalendar({
     firebaseFilterEventsChronologicalWeek(
       startOfWeek,
       endOfWeek,
-      divisions
+      gtDivisions
     ).then((v) => {
-      const eventDays = [];
-      const overlaps = [];
-      for (let i = 0; i < 7; i++) {
-        eventDays.push([]);
-      }
+      setEventData(v);
+    });
+  }, [startOfWeek, endOfWeek]); // REMOVE DIVISOINS
 
-      v.forEach((e) => {
-        eventDays[e.startTime.toDate().getDay()].push(e);
-        overlaps.push(0);
-      });
+  useEffect(() => {
+    const v = eventData.filter(e => divisions.includes(e.division));
+    const eventDays = [];
+    const overlaps = [];
+    for (let i = 0; i < 7; i++) {
+      eventDays.push([]);
+    }
 
-      const eventComponents = v.map((event, i) => {
-        const className = `session track-all session-${i} track-${
-          divisions.indexOf(event.division) + 1
+    v.forEach((e) => {
+      eventDays[e.startTime.toDate().getDay()].push(e);
+      overlaps.push(0);
+    });
+
+    const eventComponents = v.map((event, i) => {
+      const className = `session track-all session-${i} track-${gtDivisions.indexOf(event.division) + 1
         }`;
-        const start = roundToNearest15(event.startTime.toDate());
-        const hourStart = start.getHours();
-        const minuteStart = start.getMinutes();
-        const day = start.getDay();
+      const start = roundToNearest15(event.startTime.toDate());
+      const hourStart = start.getHours();
+      const minuteStart = start.getMinutes();
+      const day = start.getDay();
 
-        const end = roundToNearest15(event.endTime.toDate());
-        const hourEnd = end.getHours();
-        const minuteEnd = end.getMinutes();
+      const end = roundToNearest15(event.endTime.toDate());
+      const hourEnd = end.getHours();
+      const minuteEnd = end.getMinutes();
 
-        const startString = mapTime(hourStart, minuteStart);
-        const endString = mapTime(hourEnd, minuteEnd);
-        const gridRow = `time-${startString} / time-${endString}`;
+      const startString = mapTime(hourStart, minuteStart);
+      const endString = mapTime(hourEnd, minuteEnd);
+      const gridRow = `time-${startString} / time-${endString}`;
 
-        let overlap = false;
-        let overlapAmount = 0;
-        const overlapBeta = 0.7;
-        const dayIndex = eventDays[day].indexOf(event);
-        eventDays[day].forEach((e, z) => {
-          if (e !== event) {
-            if (eventsOverlap(e, event) && dayIndex > z) {
-              if (
-                start.getTime() >
-                roundToNearest15(e.startTime.toDate()).getTime()
-              ) {
-                overlap = true;
-                overlapAmount += overlaps[i - 1] + 1;
-              } else if (
-                start.getTime() ===
-                  roundToNearest15(e.startTime.toDate()).getTime() &&
-                end.getTime() !==
-                  roundToNearest15(e.endTime.toDate()).getTime() &&
-                !overlap
-              ) {
-                overlapAmount += overlaps[i - 1] + 2;
-                overlap = true;
-              }
+      let overlap = false;
+      let overlapAmount = 0;
+      const overlapBeta = 1.5;
+      const dayIndex = eventDays[day].indexOf(event);
+      eventDays[day].forEach((e, z) => {
+        if (e !== event) {
+          if (eventsOverlap(e, event) && dayIndex > z) {
+            if (
+              start.getTime() >
+              roundToNearest15(e.startTime.toDate()).getTime()
+              && !overlap
+            ) {
+              overlap = true;
+              overlapAmount += overlaps[i - 1] + 1;
+            } else if (
+              start.getTime() ===
+              roundToNearest15(e.startTime.toDate()).getTime() &&
+              end.getTime() !==
+              roundToNearest15(e.endTime.toDate()).getTime() &&
+              !overlap
+            ) {
+              overlapAmount += overlaps[i - 1] + 2;
+              overlap = true;
+            } else if (
+              start.getTime() ===
+              roundToNearest15(e.startTime.toDate()).getTime() &&
+              end.getTime() ===
+              roundToNearest15(e.endTime.toDate()).getTime() &&
+              !overlap
+            ) {
+              overlapAmount += overlaps[i - 1] + 2;
+              overlap = true;
             }
           }
-        });
-        if (overlap) {
-          overlaps[i] = overlapAmount;
-        } else {
-          overlaps[i] = 0;
         }
-        return (
-          <Grid
-            onClick={() => {
-              setSelectedEvent(event);
-              setOpen(true);
-            }}
-            item
-            key={i}
-            className={className}
-            style={{
-              marginLeft: `${overlapAmount * overlapBeta}em`,
-              gridColumn: `track-${day + 1}`,
-              gridRow: gridRow,
-            }}
-          >
-            <Typography variant="body2">{event.name}</Typography>
-            {/* <Typography variant="subtitle2">{event.description}</Typography> */}
-            {/* <span className="session-time">{event.description}</span> */}
-            {/* <span className="session-track">Track: 1</span>
-                        <span className="session-presenter">Presenter</span> */}
-          </Grid>
-        );
       });
-      setEvents(eventComponents);
+      if (overlap) {
+        overlaps[i] = overlapAmount;
+      } else {
+        overlaps[i] = 0;
+      }
+      return (
+        <Grid
+          onClick={() => {
+            setSelectedEvent(event);
+            setOpen(true);
+          }}
+          item
+          key={i}
+          className={className}
+          style={{
+            marginLeft: `${overlapAmount * overlapBeta}em`,
+            gridColumn: `track-${day + 1}`,
+            gridRow: gridRow,
+          }}
+        >
+          <Typography variant="body2">{event.name}</Typography>
+          {/* <Typography variant="subtitle2">{event.description}</Typography> */}
+          {/* <span className="session-time">{event.description}</span> */}
+          {/* <span className="session-track">Track: 1</span>
+                      <span className="session-presenter">Presenter</span> */}
+        </Grid>
+      );
     });
-  }, [startOfWeek, endOfWeek, divisions]); // REMOVE DIVISOINS
+    setEvents(eventComponents);
+  }, [eventData, divisions])
 
   const times = [];
   let d = new Date(2022, 1, 1, 7);
@@ -200,6 +216,16 @@ export default function WeeklyCalendar({
           sx={{ height: "100%" }}
           alignItems="center"
         >
+          {/* <Grid item
+            xs={12}
+            display={{ xs: "block", sm: "block" }}
+          >
+            <CheckboxLabels
+              divisions={divisions}
+              gtDivisions={gtDivisions}
+              setDivisions={setDivisions}
+            />
+          </Grid> */}
           <Grid item>
             <IconButton
               onClick={() => {
@@ -236,8 +262,9 @@ export default function WeeklyCalendar({
           </Grid>
           <Grid item>
             <Typography styles={{ float: "right" }} variant="h6">
-              {startOfWeek.toLocaleDateString("en-US", options)} -{" "}
-              {endOfWeek.toLocaleDateString("en-US", options)}
+
+              {startOfWeek.toLocaleDateString(inEnglish ? "en-US" : "es-ES", options)} -{" "}
+              {endOfWeek.toLocaleDateString(inEnglish ? "en-US" : "es-ES", options)}
             </Typography>
           </Grid>
         </Grid>
@@ -253,7 +280,7 @@ export default function WeeklyCalendar({
             setOpen={setOpen}
             description={selectedEvent?.description}
             title={selectedEvent?.name}
-            image={""}
+            image={selectedEvent?.image}
             className={""}
             startTime={selectedEvent?.startTime}
             endTime={selectedEvent?.endTime}
@@ -261,6 +288,9 @@ export default function WeeklyCalendar({
             event={selectedEvent?.id}
             attendees={selectedEvent?.attendeesRef}
             user={user}
+            ageLow={selectedEvent?.ageLow}
+            ageHigh={selectedEvent?.ageHigh}
+            maxAttendees={selectedEvent?.maxAttendees}
           />
         )}
 
@@ -287,49 +317,49 @@ export default function WeeklyCalendar({
             aria-hidden="true"
             style={{ gridColumn: "track-1", gridRow: "tracks" }}
           >
-            Sun
+            {inEnglish ? "Sun" : "Dom"}
           </span>
           <span
             className="track-slot"
             aria-hidden="true"
             style={{ gridColumn: "track-2", gridRow: "tracks" }}
           >
-            Mon
+            {inEnglish ? "Mon" : "Lun"}
           </span>
           <span
             className="track-slot"
             aria-hidden="true"
             style={{ gridColumn: "track-3", gridRow: "tracks" }}
           >
-            Tue
+            {inEnglish ? "Tue" : "Mar"}
           </span>
           <span
             className="track-slot"
             aria-hidden="true"
             style={{ gridColumn: "track-4", gridRow: "tracks" }}
           >
-            Wed
+            {inEnglish ? "Wed" : "Mié"}
           </span>
           <span
             className="track-slot"
             aria-hidden="true"
             style={{ gridColumn: "track-5", gridRow: "tracks" }}
           >
-            Thu
+            {inEnglish ? "Thu" : "Jue"}
           </span>
           <span
             className="track-slot"
             aria-hidden="true"
             style={{ gridColumn: "track-6", gridRow: "tracks" }}
           >
-            Fri
+            {inEnglish ? "Fri" : "Vie"}
           </span>
           <span
             className="track-slot"
             aria-hidden="true"
             style={{ gridColumn: "track-7", gridRow: "tracks" }}
           >
-            Sat
+            {inEnglish ? "Sat" : "Sáb"}
           </span>
           {/* <span className="track-slot" aria-hidden="true" style={{ gridColumn: "track-8", gridRow: "tracks" }} ></span> */}
 

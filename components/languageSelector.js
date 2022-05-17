@@ -17,17 +17,21 @@ export default function LanguageSelector() { // TODO: Fix number of rerenders?
     const [languageState, setLanguageState] = useState('');
     const { language, setLanguage } = useContext(LanguageContext);
     useEffect(() => {
+        console.log(localStorage.getItem('language'))
         setLanguageState(localStorage.getItem('language') ?? 'English');
         setLanguage(localStorage.getItem('language') ?? 'English');
     }, [])
     useEffect(() => {
-        if (!localStorage.getItem('language')) {
+        console.log(localStorage.getItem('language'));
+        if (localStorage.getItem('language') == undefined) {
             localStorage.setItem('language', 'English');
             setLanguage('English');
             // setLanguageState('English');
         } else {
-            localStorage.setItem('language', languageState);
-            setLanguage(languageState);
+            if (languageState !== '') {
+                localStorage.setItem('language', languageState);
+                setLanguage(languageState);
+            }
             // setLanguageState(languageState);
         }
     }, [languageState])
@@ -46,7 +50,9 @@ export default function LanguageSelector() { // TODO: Fix number of rerenders?
     const open = Boolean(anchorEl);
 
     return (
-        <Button id="test" onClick={handleOpen} size='small' sx={{ color: "#0f4d81" }} classes={{ label: classes.iconButtonLabel }}>
+        <Button id="test" onClick={handleOpen} size='small' sx={{
+            color: "#0f4d81",
+        }} classes={{ label: classes.iconButtonLabel }}>
             <LanguageIcon />
             {languageState}
             <Menu

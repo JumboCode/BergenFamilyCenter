@@ -63,7 +63,7 @@ export default function NavBar({ page }) {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Box sx={{ pl: 1, display: "block", position: "relative", height: 50, width: 250 }}>
+                    <Box sx={{ pl: 2, display: "block", position: "relative", height: 60, width: 250 }}>
                         <Image src="/weblogo.svg" layout="fill" objectFit="contain"
                         />
                     </Box>
@@ -104,7 +104,7 @@ export default function NavBar({ page }) {
                     ))}
                     < Divider />
                     <Box sx={{ flex: "1 0" }}></Box>
-                    <ListItem onClick={async () => { await userSignOut(); router.push("/logIn") }} button >
+                    <ListItem onClick={async () => { await userSignOut(); router.push("/login") }} button >
                         <ListItemIcon>
                             <LogoutIcon />
                         </ListItemIcon>

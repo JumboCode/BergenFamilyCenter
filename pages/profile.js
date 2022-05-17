@@ -3,6 +3,7 @@ import NavBar from "../components/navBar.js";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import { useFormik } from 'formik';
 import Typography from '@mui/material/Typography';
@@ -11,7 +12,7 @@ import { db } from "../firebase/firebase";
 import * as yup from 'yup';
 import PhotoPopUp from "../components/photoPopUp";
 import { updateUser } from "../src/userFunctions";
-import { firebaseUserPreviousEvents } from "../src/firebaseEvents";
+import { firebaseUserPreviousEvents, generateQuery } from "../src/firebaseEvents";
 import { doc, getDoc, Timestamp } from "firebase/firestore";
 import UpcomingEvent from "../components/upcomingEvent.js";
 import Alert from '@mui/material/Alert';
@@ -29,7 +30,7 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Divider from '@mui/material/Divider';
 import Snackbar from '@mui/material/Snackbar';
-
+import LinkIcon from '@mui/icons-material/Link';
 
 const validationSchema = yup.object({
     name: yup
@@ -52,10 +53,12 @@ export default function Profile() {
 
     const [name, setName] = useState(auth.currentUser?.displayName ?? "you must be logged in");
     const [email, setEmail] = useState(auth.currentUser?.email ?? "you must be logged in");
-    const [phoneNumber, setPhoneNumber] = useState("you must be logged in");
-    const [address, setAddress] = useState("you must be logged in");
+    // const [name, setName] = useState(auth.currentUser?.displayName ?? "you must be logged in");
+    // const [email, setEmail] = useState(auth.currentUser?.email ?? "you must be logged in");
+    const [phoneNumber, setPhoneNumber] = useState("Enter Phone Number");
+    const [address, setAddress] = useState("Enter Address");
 
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
     const [editing, setEditing] = useState(false);
 
     const [previousEvents, setPreviousEvents] = useState([]);
@@ -63,6 +66,7 @@ export default function Profile() {
 
     const [copiedSingularVisible, setCopiedSingularVisible] = useState(false);
     const [copiedAlertVisible, setCopiedAlertVisible] = useState(false);
+    const [copiedLinkAlertVisible, setCopiedLinkAlertVisible] = useState(false);
 
     // TODO CREATE USER TO PASS TO OTHER THING
     useEffect(() => {
@@ -70,6 +74,7 @@ export default function Profile() {
             const userRef = doc(db, "users", uid);
             const currentTime = Timestamp.now()
 
+            firebaseUserPreviousEvents(currentTime).then(value => { console.log("GOT IT"); setPreviousEvents(value) });
             const userInfo = getDoc(userRef).then(value => {
                 setUser({ ...value.data(), id: uid });
                 setIsManager(value.data().isManager);
@@ -77,38 +82,40 @@ export default function Profile() {
                 setEmail(value.data().email);
                 setPhoneNumber(value.data().phoneNumber);
                 setAddress(value.data().address);
-                firebaseUserPreviousEvents(currentTime).then(value => setPreviousEvents(value));
 
                 if (value.data().isManager) {
+                    // const userRef = doc(db, "users", uid);
+                    // getDoc(userRef).then(value => {
+                    const manager_events_run = value.data().eventsRun;
+                    const all_events = []
+                    manager_events_run.map((event) => {
+                        const parentChild = []
+                        getDoc(event.attendeesRef).then(attendeesDoc => { // gets attendees document
+                            attendeesDoc.data().attendees.map(attendees => { //maps through attendees corresponding to each parent
+                                getDoc(attendees.parent).then(parent => { //grab that set of attendees' parent 
+                                    if (parent.data().consent) {
+                                        parentChild.push({ email: parent.data().email, children: attendees, consent: parent.data().consent.overallConsent })
+                                    }
+                                    else {
+                                        parentChild.push({ email: parent.data().email, children: attendees, consent: "no consent form filled out" })
 
-                    const userRef = doc(db, "users", uid);
-
-                    getDoc(userRef).then(value => {
-                        const manager_events_run = value.data().eventsRun;
-                        const all_events = []
-                        manager_events_run.map((event) => {
-                            const parentChild = []
-                            getDoc(event.attendeesRef).then(attendeesDoc => { // gets attendees document
-                                attendeesDoc.data().attendees.map(attendees => { //maps through attendees corresponding to each parent
-                                    getDoc(attendees.parent).then(parent => { //grab that set of attendees' parent 
-                                        if (parent.data().consent) {
-                                            parentChild.push({ email: parent.data().email, children: attendees, consent: parent.data().consent.overallConsent })
-                                        }
-                                        else {
-                                            parentChild.push({ email: parent.data().email, children: attendees, consent: "no consent form filled out" })
-
-                                        }
-                                    })
+                                    }
                                 })
-                            });
-                            all_events.push({ name: event.name, eventAttendees: parentChild })
+                            })
                         });
-                        setManagerEvents(all_events)
-                    })
+                        console.log(event.attendeesRef)
+                        generateQuery(event.attendeesRef).then(v => {
+                            all_events.push({ name: event.name, eventAttendees: parentChild, id: v })
+                        })
+                    });
+                    setManagerEvents(all_events)
+                    // })
                 }
             });
         }
+
     }, []);
+    console.log(managerEvents)
 
     const formik = useFormik({
         enableReinitialize: true,
@@ -152,7 +159,6 @@ export default function Profile() {
             const tempListOpen = { ...open }
             tempListOpen[event.name] = !tempListOpen[event.name]
             setOpen(tempListOpen);
-            console.log("in handle click list")
         };
 
         const getEmails = (event) => {
@@ -164,11 +170,8 @@ export default function Profile() {
             navigator.clipboard.writeText(attendees.email);
             setCopiedSingularVisible(true);
             const tempListOpen = { ...open }
-            console.log("open before overriding it", open)
             tempListOpen[event.name] = false
-            console.log("temp list open", tempListOpen)
             setOpen(tempListOpen);
-            console.log("open after overriding it", open)
         }
 
         return (
@@ -178,12 +181,12 @@ export default function Profile() {
                 aria-labelledby="nested-list-subheader"
                 subheader={
                     <ListSubheader component="div" id="nested-list-subheader">
-                        Event Being Managed:
+                        Events Managing
                     </ListSubheader>
                 }
             >
                 {managerEvents.map((event, index) => {
-                    return <List key={event} >
+                    return <List key={index} >
                         <ListItem>
                             <ListItemButton onClick={() => { handleClickList(event) }}>
                                 <ListItemText primary={event.name} />
@@ -191,6 +194,12 @@ export default function Profile() {
                             </ListItemButton>
                             <IconButton edge="end" aria-label="email" onClick={() => { getEmails(event) }}>
                                 <EmailIcon />
+                            </IconButton>
+                            <IconButton edge="end" aria-label="Link" onClick={() => {
+                                navigator.clipboard.writeText(window.location.href.replace('profile', 'calendar') + "?" + event.id);
+                                setCopiedLinkAlertVisible(true);
+                            }}>
+                                <LinkIcon />
                             </IconButton>
                         </ListItem>
                         <Collapse in={open[event.name]} timeout="auto" unmountOnExit>
@@ -205,7 +214,6 @@ export default function Profile() {
                                             <ListItemText primary={text} secondary={"Photo Consent: " + attendees.consent} />
                                             <ListItemSecondaryAction>
                                                 <IconButton edge="end" aria-label="email" onClick={e => { getEmail(attendees, event); e.stopPropagation(); }}>
-                                                    {console.log("open", open)}
                                                     <EmailIcon />
                                                 </IconButton>
                                             </ListItemSecondaryAction>
@@ -229,116 +237,136 @@ export default function Profile() {
             <NavBar page={"profile"}></NavBar>
             <PhotoPopUp open={open} setOpen={setOpen} />
             <Box style={{ display: "flex", alignItems: "left", flexDirection: "row" }}>
-                <Box style={{ width: "30%", margin: "2%" }}>
-                    <Typography component="h1" variant="h6">
-                        {"Information:"}
-                    </Typography>
-                    <form style={{ display: "flex", alignItems: "left", flexDirection: "column" }} onSubmit={formik.handleSubmit}>
-                        <TextField
-                            style={{ width: "100%" }}
-                            disabled={!editing}
-                            margin="normal"
-                            id="name"
-                            label="Name: "
-                            autoFocus
-                            value={formik.values.name}
-                            onChange={formik.handleChange}
-                            error={formik.touched.name && Boolean(formik.errors.name)}
-                        />
-                        <TextField
-                            style={{ width: "100%" }}
-                            disabled={!editing}
-                            margin="normal"
-                            id="email"
-                            label="Email: "
-                            autoFocus
-                            value={formik.values.email}
-                            onChange={formik.handleChange}
-                            error={formik.touched.email && Boolean(formik.errors.email)}
-                        />
-                        <TextField
-                            style={{ width: "100%" }}
-                            disabled={!editing}
-                            margin="normal"
-                            id="phoneNumber"
-                            label="Phone Number: "
-                            autoFocus
-                            value={formik.values.phoneNumber}
-                            onChange={formik.handleChange}
-                            error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
-                        />
-                        <TextField
-                            style={{ width: "100%" }}
-                            disabled={!editing}
-                            margin="normal"
-                            id="address"
-                            label="Address: "
-                            autoFocus
-                            value={formik.values.address}
-                            onChange={formik.handleChange}
-                            error={formik.touched.address && Boolean(formik.errors.address)}
-                        />
-                        <div hidden={editing}>
-                            <Button onClick={() => { setEditing(!editing) }}> Edit </Button>
-                        </div>
-                        <div hidden={!editing}>
-                            <Box style={{ display: "flex", alignItems: "left", flexDirection: "row" }}>
-                                <Button
-                                    style={{ width: "100%", margin: "1%" }}
-                                    type="submit"
-                                    color="primary"
-                                    fullWidth
-                                    variant="contained"
-                                    sx={{ mt: 3, mb: 2 }}
-                                    onClick={() => { setEditing(!editing) }}
-                                >
-                                    Save
-                                </Button>
-                                <Button
-                                    hidden
-                                    style={{ width: "100%", margin: "1%" }}
-                                    variant="outlined"
-                                    sx={{ mt: 3, mb: 2 }}
-                                    onClick={() => { setEditing(!editing) }}
-                                >
-                                    Cancel
-                                </Button>
-                            </Box>
-                        </div>
-                    </form>
-                </Box >
-                <Box component="div" sx={{ overflow: 'auto', width: "20%", margin: "2%", height: "80vh" }}>
-                    < Typography component="h1" variant="h6" >
-                        {"Past Events:"}
-                    </Typography>
-                    {Object.keys(previousEvents).length >= 0 ?
-                        previousEvents.sort((a, b) => (b.startTime - a.startTime)).map((event) => {
-                            return (
-                                <Box key={event.id} sx={{ p: 2 }}>
-                                    <UpcomingEvent user={user} {...event}></UpcomingEvent>
-                                </Box>
-                            );
-                        }) :
-                        null
-                    }
-                </Box>
-                {isManager ?
-                    <Box style={{ width: "30%", margin: "2%" }}>
-                        < Typography component="h1" variant="h6" >
-                            {"Manager Functions:"}
-                        </Typography>
+                <Grid container spacing={2} sx={{ m: 2 }}>
+                    <Grid item xs={4}>
+                        <Box style={{ width: "100%" }}>
+                            <Typography component="h1" variant="h6">
+                                {"Information:"}
+                            </Typography>
+                            <form style={{ display: "flex", alignItems: "left", flexDirection: "column" }} onSubmit={formik.handleSubmit}>
+                                <TextField
+                                    style={{ width: "100%" }}
+                                    disabled={!editing}
+                                    margin="normal"
+                                    id="name"
+                                    label="Name: "
+                                    autoFocus
+                                    value={formik.values.name}
+                                    onChange={formik.handleChange}
+                                    error={formik.touched.name && Boolean(formik.errors.name)}
+                                />
+                                <TextField
+                                    style={{ width: "100%" }}
+                                    disabled={!editing}
+                                    margin="normal"
+                                    id="email"
+                                    label="Email: "
+                                    autoFocus
+                                    value={formik.values.email}
+                                    onChange={formik.handleChange}
+                                    error={formik.touched.email && Boolean(formik.errors.email)}
+                                />
+                                <TextField
+                                    style={{ width: "100%" }}
+                                    disabled={!editing}
+                                    margin="normal"
+                                    id="phoneNumber"
+                                    label="Phone Number: "
+                                    autoFocus
+                                    value={formik.values.phoneNumber}
+                                    onChange={formik.handleChange}
+                                    error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
+                                />
+                                <TextField
+                                    style={{ width: "100%" }}
+                                    disabled={!editing}
+                                    margin="normal"
+                                    id="address"
+                                    label="Address: "
+                                    autoFocus
+                                    value={formik.values.address}
+                                    onChange={formik.handleChange}
+                                    error={formik.touched.address && Boolean(formik.errors.address)}
+                                />
+                                <div hidden={editing}>
+                                    <Button onClick={() => { setEditing(!editing) }}> Edit </Button>
+                                </div>
+                                <div hidden={!editing}>
+                                    <Box style={{ display: "flex", alignItems: "left", flexDirection: "row" }}>
+                                        <Button
+                                            style={{ width: "100%", margin: "1%" }}
+                                            type="submit"
+                                            color="primary"
+                                            fullWidth
+                                            variant="contained"
+                                            sx={{ mt: 3, mb: 2 }}
+                                            onClick={() => { setEditing(!editing) }}
+                                        >
+                                            Save
+                                        </Button>
+                                        <Button
+                                            hidden
+                                            style={{ width: "100%", margin: "1%" }}
+                                            variant="outlined"
+                                            sx={{ mt: 3, mb: 2 }}
+                                            onClick={() => { setEditing(!editing) }}
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </Box>
+                                </div>
+                                <div>
+                                    <Button onClick={() => setOpen(true)}>Edit Photo Consent</Button>
+                                </div>
+                            </form>
+                        </Box >
+                    </Grid>
+                    <Grid item xs={isManager ? 5 : 8}>
+                        <Box component="div" sx={{ overflow: 'auto', width: "100%", height: "80vh" }}>
+                            < Typography component="h1" variant="h6" >
+                                {"Past Events:"}
+                            </Typography>
+                            <Grid container spacing={2} sx={{ p: 1 }} alignItems="center"
+                                justifyContent="center"
+                            >
+                                {Object.keys(previousEvents).length >= 0 ?
+                                    previousEvents.sort((a, b) => (b.startTime - a.startTime)).map((event) => {
+                                        return (
+                                            <Grid key={event.id} item xs={isManager ? 6 : 4}>
+                                                <UpcomingEvent user={user} {...event}></UpcomingEvent>
+                                            </Grid>
+                                        );
+                                    }) :
+                                    null
+                                }
+                            </Grid>
+                        </Box>
+                    </Grid>
 
-                        <NestedList></NestedList>
-                        <Snackbar open={copiedAlertVisible} autoHideDuration={3000} onClose={() => { setCopiedAlertVisible(false) }}>
-                            <Alert severity="success" >
-                                Copied Emails!</Alert>
-                        </Snackbar>
-                        <Snackbar open={copiedSingularVisible} autoHideDuration={3000} onClose={() => { setCopiedSingularVisible(false) }}>
-                            <Alert severity="success" >
-                                Copied Email!</Alert>
-                        </Snackbar>
-                    </Box>
-                    : null}
+                    {isManager ?
+                        <Grid item xs={3}>
+                            <Box style={{ width: "100%" }}>
+                                < Typography component="h1" variant="h6" >
+                                    {"Manager Information:"}
+                                </Typography>
+
+                                <NestedList></NestedList>
+                                <Snackbar open={copiedAlertVisible} autoHideDuration={3000} onClose={() => { setCopiedAlertVisible(false) }}>
+                                    <Alert severity="success" >
+                                        Copied Emails!</Alert>
+                                </Snackbar>
+                                <Snackbar open={copiedSingularVisible} autoHideDuration={3000} onClose={() => { setCopiedSingularVisible(false) }}>
+                                    <Alert severity="success" >
+                                        Copied Email!</Alert>
+                                </Snackbar>
+                                <Snackbar open={copiedLinkAlertVisible} autoHideDuration={3000} onClose={() => { setCopiedLinkAlertVisible(false) }}>
+                                    <Alert severity="success" >
+                                        Copied Link!</Alert>
+                                </Snackbar>
+                            </Box>
+                        </Grid>
+                        : null}
+                </Grid>
             </Box >
         </div >
     )

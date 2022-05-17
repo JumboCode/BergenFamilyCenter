@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import * as React from 'react';
+import { useState, useContext } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { makeStyles } from '@mui/styles';
@@ -19,6 +19,7 @@ import Divider from '@mui/material/Divider';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import LanguageSelector from "../components/languageSelector";
+import { LanguageContext } from '../src/languageContext';
 
 const useStyles = makeStyles({
     heading: {
@@ -52,16 +53,25 @@ const validationSchema = yup.object({
         .string('Enter your first name')
         .required('First name is required'),
     Lastname: yup
-        .string('Enter your first name')
+        .string('Enter your last name')
         .required('Last name is required'),
+    changepassword: yup.string().when("password", {
+        is: val => (val && val.length > 0 ? true : false),
+        then: yup.string().oneOf(
+            [yup.ref("password")],
+            "Both password need to be the same"
+        )
+    })
 });
 
 export default function SignUp() {
     const classes = useStyles();
     const auth = getAuth();
     const router = useRouter();
-    const [loading, setLoading] = React.useState(false);
-    const [open, setOpen] = React.useState(false);
+    const [loading, setLoading] = useState(false);
+    const [open, setOpen] = useState(false);
+    const { language, _ } = useContext(LanguageContext);
+    const inEnglish = language === "English";
 
     const closeError = (event, reason) => {
         if (reason === 'clickaway') { return; }
@@ -74,6 +84,7 @@ export default function SignUp() {
             Lastname: '',
             email: '',
             password: '',
+            changepassword: '',
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
@@ -102,6 +113,7 @@ export default function SignUp() {
                         mt: 2,
                         mx: 2,
                         alignItems: 'center',
+                        float: 'right'
                     }}
                 >
                     <LanguageSelector />
@@ -118,15 +130,18 @@ export default function SignUp() {
                         <Box style={{ textAlign: "left", width: "100%" }}>
                             <Image src="/Tree.png" alt="me" width="132" height="102" />
                             <Typography variant="h3" component="h1" >
-                                Sign Up
+                                {inEnglish ? "Sign Up" : "Registrarse"}
                             </Typography>
-                            <Grid style={{ display: "flex", alignItems: "flex-end" }}>
+                            <Grid style={{
+                                display: "flex",
+
+                            }}>
                                 <Typography style={{ float: "left" }}>
-                                    Already have an account?
+                                    {inEnglish ? "Already have an account?" : "¿Ya tiene una cuenta?"}
                                     &nbsp;
                                 </Typography>
                                 <Link href="/login" underline="hover">
-                                    {"Sign In"}
+                                    {inEnglish ? "Sign In" : "Iniciar Sesión"}
                                 </Link>
                             </Grid>
                         </Box>
@@ -134,7 +149,7 @@ export default function SignUp() {
                             <Grid item xs={6} sx={{ mt: 2 }}>
                                 <TextField
                                     fullWidth
-                                    label="First Name"
+                                    label={inEnglish ? "First Name" : "Nombre"}
                                     id="Firstname"
                                     onChange={formik.handleChange}
                                     autoFocus
@@ -144,7 +159,7 @@ export default function SignUp() {
                             </Grid>
                             <Grid item xs={6} sx={{ mt: 2 }}>
                                 <TextField
-                                    label="Last Name"
+                                    label={inEnglish ? "Last Name" : "Apellido"}
                                     id="Lastname"
                                     onChange={formik.handleChange}
                                     error={formik.touched.Lastname && Boolean(formik.errors.Lastname)}
@@ -155,9 +170,8 @@ export default function SignUp() {
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
-                                    label="Email"
+                                    label={inEnglish ? "Email" : "Correo Electrónico"}
                                     id="email"
-                                    // margin="normal"
                                     fullWidth
                                     autoFocus
                                     autoComplete='email'
@@ -168,10 +182,9 @@ export default function SignUp() {
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
-                                    label="Password"
+                                    label={inEnglish ? "Password" : "Contraseña"}
                                     type="password"
                                     id="password"
-                                    // margin="normal"
                                     fullWidth
                                     autoFocus
                                     autoComplete="current-password"
@@ -181,17 +194,30 @@ export default function SignUp() {
                                 />
                             </Grid>
                             <Grid item xs={12}>
+                                <TextField
+                                    label={inEnglish ? "Confirm Password" : "Confirmar Contraseña"}
+                                    type="password"
+                                    id="changepassword"
+                                    fullWidth
+                                    autoFocus
+                                    autoComplete="current-password"
+                                    onChange={formik.handleChange}
+                                    error={formik.touched.changepassword && Boolean(formik.errors.changepassword)}
+                                    helperText={formik.touched.changepassword && formik.errors.changepassword}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
                                 <LoadingButton
                                     fullWidth
                                     variant="contained"
                                     type="submit"
                                     loading={loading}
                                 >
-                                    Sign Up
+                                    {inEnglish ? "Sign Up" : "Registrarse"}
                                 </LoadingButton>
                             </Grid>
                             <Grid item xs={12}>
-                                <Divider>or</Divider>
+                                <Divider>{inEnglish ? "or" : "o"} </Divider>
                             </Grid>
                             <Grid item xs={12}>
                                 <GoogleButton

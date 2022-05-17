@@ -6,7 +6,6 @@ export { RouteGuard };
 
 function RouteGuard({ children }) {
 
-    console.log("calling route guard");
     const router = useRouter();
     const [authorized, setAuthorized] = useState(false);
 

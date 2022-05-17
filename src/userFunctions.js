@@ -55,8 +55,6 @@ export const addUserEvent = async (uid, eventRef, attendeesRef) => {
   const oldEvents = userSnap.data().events;
   const es = querySnapshot.docs.map(d => doc(db, "events", d.id))
   oldEvents.push(...es);
-  console.log(oldEvents);
-  console.log("Events", es);
   try {
     await updateDoc(userRef, {
       events: oldEvents,

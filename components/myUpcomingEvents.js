@@ -20,20 +20,24 @@ export default function MyUpcomingEvents({ user }) {
 
     return (
         <div>
-            {loading ? null : (
-                upcomingEvents.length == 0 ?
-                    <Typography variant="h5">
-                        You have no upcoming events
-                    </Typography> : (
-                        <div>
-                            <Typography sx={{ pb: 1 }} variant="h5">
-                                My Upcoming Events
-                            </Typography>
-                            <Box sx={{ p: 2, maxHeight: "30vh", overflow: "auto" }}>
-                                {upcomingEventsComponent}
-                            </Box>
-                        </div>
-                    ))}
+            {loading ?
+                null
+                : (
+                    upcomingEvents.length == 0 ?
+                        <Typography variant="h5">
+                            You have no upcoming events
+                        </Typography> : (
+                            <div>
+                                <Typography sx={{ pb: 1 }} variant="h5">
+                                    My Upcoming Events
+                                </Typography>
+                                <Box sx={{
+                                    p: 2, maxHeight: "30vh", overflow: "auto", '&::-webkit-scrollbar': { display: "none" }
+                                }}>
+                                    {upcomingEventsComponent}
+                                </Box>
+                            </div>
+                        ))}
         </div>
     );
     ;

@@ -16,6 +16,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { useFormik } from 'formik';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { useSearchParams } from "react-router-dom";
 import { useContext, useState, useEffect } from 'react';
 import GoogleButton from 'react-google-button';
 import * as yup from 'yup';
@@ -40,7 +41,7 @@ export default function SignIn() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
-
+    let [searchParams, setSearchParams] = useSearchParams();
     const closeError = (event, reason) => {
         if (reason === 'clickaway') { return; }
         setOpen(false);
@@ -64,13 +65,27 @@ export default function SignIn() {
     });
     const { language, _ } = useContext(LanguageContext);
     useEffect(() => {
-        console.log(language)
-    }, [language]);
+        // console.log(language)
+        console.log(localStorage.getItem('language'));
+    }, []);
     const inEnglish = language === "English";
 
     auth.onAuthStateChanged((user) => {
         if (user) {
-            router.push('/calendar');
+            const retURL = searchParams.get("returnUrl");
+            if (retURL !== undefined && retURL !== null && !retURL.includes("login") && !retURL.includes("signUp")) {
+                if (retURL === '/calendar' || retURL.startsWith('/calendar?') ||
+                    retURL === '/events' || retURL.startsWith('/events?') ||
+                    retURL === '/profile' || retURL.startsWith('/profile?')) {
+                    router.push(retURL);
+                } else {
+                    router.push('/calendar');
+                }
+            }
+            else {
+                router.push('/calendar');
+            }
+
         }
     });
 
@@ -84,6 +99,7 @@ export default function SignIn() {
                         mt: 2,
                         mx: 2,
                         alignItems: 'center',
+                        float: 'right'
                     }}
                 >
                     <LanguageSelector />
@@ -111,7 +127,6 @@ export default function SignIn() {
                                     {inEnglish ? "Sign up" : "Registrarse"}
                                 </Link>
                             </Grid>
-
                         </Box>
                         <TextField
                             margin="normal"
@@ -142,7 +157,7 @@ export default function SignIn() {
                         <Box style={{ display: "flex", alignItems: "center" }}>
                             <FormControlLabel
                                 control={<Checkbox value="remember" color="primary" />}
-                                label={inEnglish ? "Remember me" : "Recuédame"}
+                                label={inEnglish ? "Remember me" : "Recuérdame"}
                             />
                             <Link
                                 href="/forgotPassword"

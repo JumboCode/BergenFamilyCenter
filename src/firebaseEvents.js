@@ -11,6 +11,7 @@ import {
   where,
   orderBy,
   startAt,
+  limit,
 } from "firebase/firestore";
 import { db, firebase } from "../firebase/firebase.js";
 import { Timestamp } from "@firebase/firestore";
@@ -92,6 +93,26 @@ const firebaseFilterEvents = async (theMonth, divisions, showEnrolled) => {
   return filtered_events;
 };
 
+// TODO GLITCH WITH UPCOMING EVENT
+const generateQuery = async (attendeesRef) => {
+  const events = collection(db, "events");
+  let now = new Date();
+  now = new Date(now.setHours(0, 0, 0, 0));
+  const last_midnight_timestamp = Timestamp.fromDate(now);
+  const q = query(
+    events,
+    where("attendeesRef", "==", attendeesRef),
+    where("startTime", ">=", last_midnight_timestamp),
+    orderBy("startTime"),
+    limit(1)
+  );
+
+  const querySnapshot = await getDocs(q);
+
+
+  return ("event=" + querySnapshot.docs[0]?.id)
+}
+
 const firebaseFilterEventsPaginate = async (
   divisions,
   pageSize,
@@ -171,7 +192,7 @@ const firebaseFilterEventsChronological = async (
   const events = collection(db, "events");
   let filtered_events = [];
 
-  let now = new Date(2022, 3, 4);
+  let now = new Date(2022, 3, 4); // TODO
   now = new Date(now.setHours(0, 0, 0, 0));
   const last_midnight_timestamp = Timestamp.fromDate(now);
 
@@ -234,7 +255,8 @@ const firebaseFilterEventsChronologicalWeek = async (
         where("division", "in", divisions),
         where("attendees", "array-contains", user_id),
         orderBy("startTime"),
-        where("startTime", ">=", last_midnight_timestamp)
+        where("startTime", ">=", startOfWeek),
+        where("startTime", "<=", endOfWeek)
       );
     } catch (error) {
       console.log(`Error: You probably weren't signed in. Full error: ${error}`);
@@ -262,7 +284,6 @@ const firebaseUserPreviousEvents = async (
   getDoc(userRef).then(value => {
     const user_events = value.data().events;
     user_events.map((doc_id) => {
-      console.log("ID", doc_id)
       getDoc(doc_id).then(value => {
         if (value.data()?.startTime != undefined) {
           if (value.data()?.startTime <= theTimestamp) {
@@ -286,5 +307,6 @@ export {
   firebaseFilterEventsChronological,
   firebaseFilterEventsPaginate,
   firebaseFilterEventsChronologicalWeek,
+  generateQuery,
   firebaseUserPreviousEvents,
 };

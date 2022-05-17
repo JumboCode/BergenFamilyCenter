@@ -6,6 +6,8 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import IconButton from '@mui/material/IconButton';
 import RemoveIcon from '@mui/icons-material/Remove';
 import Tooltip from '@mui/material/Tooltip';
@@ -21,27 +23,53 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import { makeStyles } from '@mui/styles';
+import imageKitLoader from './imageKitLoader';
+
 
 const useStyles = makeStyles(() => ({
     dialogPaper: {
-        backgroundImage: "url(https://i.imgur.com/HeGEEbu.jpg)",
+        // backgroundImage: "url(https://i.imgur.com/HeGEEbu.jpg)",
         opacity: 1,
         color: "#000 !important"
     },
 }));
 
 
-export default function EventDialog({ open, setOpen, description, title, image, className, startTime, endTime, manager, event, attendees, user }) {
+export default function EventDialog({ open, setOpen, description, title, image, className, startTime, endTime, manager, event, attendees, user, ageLow, ageHigh, maxAttendees }) {
     const [numFields, setNumFields] = React.useState(1);
     const [names, setNames] = React.useState([]);
     const [ages, setAges] = React.useState([]);
+    const [numAttending, setNumAttending] = React.useState(0);
     const classes = useStyles();
+    const [openTooMany, setOpenTooMany] = React.useState(false);
+    const handleCloseTooMany = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+    };
+    const [ageError, setAgeError] = React.useState(false);
+    const handleCloseAgeError = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setAgeError(false);
+    };
+
     React.useEffect(() => {
         // assumes user is defined
         if (open) {
             if (user.events.map(e => e.id).includes(event)) {
                 getDoc(attendees).then(v => {
-                    const attendingMap = v.data().attendees.find(a => a.parent.id === user.id);
+                    const att = v.data().attendees;
+                    let n = 0;
+                    for (let i = 0; i < att.length; i++) {
+                        n += Object.keys(att[i].attendees).length;
+                    }
+                    const attendingMap = att.find(a => a.parent.id === user.id);
+                    setNumAttending(n);
                     setNames(Object.keys(attendingMap.attendees));
                     setAges(Object.values(attendingMap.attendees));
                     setNumFields(Object.values(attendingMap.attendees).length)
@@ -81,11 +109,37 @@ export default function EventDialog({ open, setOpen, description, title, image, 
                 submitNames.push(values[`name${i + 1}`])
                 submitAges.push(values[`age${i + 1}`])
             }
-            firebaseAppendPerson(user?.id, event, attendees, submitNames, submitAges, null).then(() => {
-                //console.log(submitNames);
-                // #TODO
-                handleClose();
-            })
+            if (maxAttendees !== "" && submitNames.length + numAttending > maxAttendees) {
+                setOpenTooMany(true);
+            } else {
+                let ageError = false;
+                for (let i = 0; i < submitAges.length; i++) {
+                    if (ageLow === "" && ageHigh === "") {
+
+                    } else if (ageLow === "") {
+                        if (parseInt(submitAges[i]) > ageHigh) {
+                            ageError = true;
+                        }
+                    } else if (ageHigh === "") {
+                        if (parseInt(submitAges[i]) < ageLow) {
+                            ageError = true;
+                        }
+                    }
+                    else {
+                        if (parseInt(submitAges[i]) < ageLow || parseInt(submitAges[i]) > ageHigh) {
+                            ageError = true;
+                        }
+                    }
+                    if (ageError) {
+                        setAgeError(ageError);
+                    } else {
+                        firebaseAppendPerson(user?.id, event, attendees, submitNames, submitAges, null).then(() => {
+                            // TODO
+                            handleClose();
+                        })
+                    }
+                }
+            }
         },
     });
 
@@ -158,16 +212,33 @@ export default function EventDialog({ open, setOpen, description, title, image, 
     const handleClose = () => {
         setOpen(false);
     };
+    console.log("THE IMAGE IS", image)
 
     return (
         <Dialog open={open} onClose={handleClose}>
             <form onSubmit={formik.handleSubmit}>
                 <div>
-                    <Box className={classes.dialogPaper} sx={{ height: "25ch" }} />
+                    {image !== "" && image !== undefined && image?.length != 0 && image !== {} ?
+                        <div style={{ position: 'relative', height: "25ch", width: "100%", maxHeight: "25ch" }}>
+                            <Image
+                                loader={imageKitLoader}
+                                src={image}
+                                alt="Event image"
+                                objectFit='cover'
+                                layout='fill'
+                            // style={{ height: 50, width: 100, maxHeight: 20, objectFit: 'cover' }}
+                            />
+                        </div> :
+                        null
+                    }
+                    {/* <Box className={classes.dialogPaper} sx={{ height: "25ch" }} /> */}
                     <DialogTitle>{title}</DialogTitle>
                     <DialogContent sx={{ py: 0 }}>
-                        <Typography sx={{ width: "50ch" }} variant="subtitle1">
+                        <Typography sx={{ width: "50ch" }} variant="subtitle2">
                             Description: {description}
+                        </Typography>
+                        <Typography variant="subtitle2">
+                            Time: {startTime?.toDate().toLocaleDateString("en-US", optionsStart)} - {endTime?.toDate().toLocaleTimeString("en-US", optionsEnd)}
                         </Typography>
                         {manager == "" || manager == null ? null :
                             <Typography variant="subtitle2">
@@ -177,9 +248,28 @@ export default function EventDialog({ open, setOpen, description, title, image, 
                                 </Link>
                             </Typography>
                         }
-                        <Typography variant="subtitle2">
-                            Time: {startTime?.toDate().toLocaleDateString("en-US", optionsStart)} - {endTime?.toDate().toLocaleTimeString("en-US", optionsEnd)}
-                        </Typography>
+                        {ageLow === "" && ageHigh === "" ? null :
+                            ageLow === "" ?
+                                <Typography variant="subtitle2">
+                                    Max Age: {ageHigh}
+                                </Typography> :
+                                ageHigh === "" ?
+                                    <Typography variant="subtitle2">
+                                        Minimum Age: {ageLow}
+                                    </Typography> :
+                                    <Typography variant="subtitle2">
+                                        Age Range: {ageLow} - {ageHigh}
+                                    </Typography>
+                        }
+                        {maxAttendees === "" ?
+                            <Typography variant="subtitle2">
+                                People Registered: {numAttending}
+                            </Typography>
+                            :
+                            <Typography variant="subtitle2">
+                                People Registered: {numAttending} / {maxAttendees}
+                            </Typography>
+                        }
                     </DialogContent>
                 </div>
                 <DialogContent>
@@ -190,7 +280,7 @@ export default function EventDialog({ open, setOpen, description, title, image, 
                         <IconButton
                             color="primary"
                             onClick={() => {
-                                if (numFields < 10) {
+                                if (numFields < 6) {
                                     setNumFields(numFields + 1)
                                 }
                             }}>
@@ -201,7 +291,7 @@ export default function EventDialog({ open, setOpen, description, title, image, 
                         <IconButton
                             color="primary"
                             onClick={() => {
-                                if (numFields > ages.length) {
+                                if (numFields > ages.length && numFields > 1) {
                                     setNumFields(numFields - 1)
                                 }
                             }}>
@@ -212,6 +302,25 @@ export default function EventDialog({ open, setOpen, description, title, image, 
                     <Button onClick={handleClose}>Cancel</Button>
                     <Button type="submit" >Submit</Button>
                 </DialogActions>
+                <Snackbar open={openTooMany} autoHideDuration={3000} anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center"
+                }}
+                    onClose={handleCloseTooMany}>
+                    <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+                        Event full
+                    </Alert>
+                </Snackbar>
+                {/* I don't think they will want this */}
+                <Snackbar open={ageError} autoHideDuration={3000} anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center"
+                }}
+                    onClose={handleCloseAgeError}>
+                    <Alert onClose={handleCloseAgeError} severity="error" sx={{ width: '100%' }}>
+                        Attendee must be in age range
+                    </Alert>
+                </Snackbar>
             </form>
         </Dialog>
     );

@@ -7,7 +7,7 @@ import { LanguageContext } from "../src/languageContext";
 import { RouteGuard } from '../components/routeGuard';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from '../public/theme';
-
+import { BrowserRouter } from "react-router-dom";
 
 function MyApp({ Component, pageProps }) {
   const [language, setLanguage] = useState('English')
@@ -34,7 +34,9 @@ function MyApp({ Component, pageProps }) {
     <ThemeProvider theme={theme}>
       <LanguageContext.Provider value={value}>
         <RouteGuard>
-          <Component {...pageProps} />
+          <BrowserRouter>
+            <Component {...pageProps} />
+          </BrowserRouter>
         </RouteGuard>
       </LanguageContext.Provider>
     </ThemeProvider>

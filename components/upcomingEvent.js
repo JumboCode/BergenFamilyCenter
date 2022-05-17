@@ -11,6 +11,39 @@ import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Card from "@mui/material/Card";
 import EventDialog from "./eventDialog";
+import Image from 'next/image';
+import imageKitLoader from './imageKitLoader';
+
+const colors = [
+  "#9FE4EDdd",
+  "#FFEAC2dd",
+  "#C9F2B3ff",
+  "#FFC5C3dd",
+  "#aab9ff",
+  "#DBC5EEdd",
+  "#DDE1E8dd",
+];
+
+const colorsBorder = [
+  "#45AFBC",
+  "#FEC150",
+  "#a7dc8b",
+  "#E6413E",
+  "#8196f3",
+  "#9E7FBA",
+  "#a6adb9",
+];
+
+const gtDivisions = [
+  "Early Learning Center/Home",
+  "Family Success Center",
+  "HIV/Outreach Services",
+  "Visiting Program",
+  "Senior Services",
+  "Adolescent Services",
+  "Clinical Services",
+];
+
 
 const CardContentNoPadding = styled(CardContent)(`
   padding: 0;
@@ -45,12 +78,13 @@ export default function UpcomingEvent(props) {
     event,
     attendees,
     user,
+    division,
   } = props;
-  // console.log(props)
   const [open, setOpen] = useState(false);
   // const [eventName, updateEventName] = useState("");
   // const [eventDescription, updateEventDesc] = useState("");
   // const [timestamp, updateDate] = useState(null);
+  const isImage = image !== "" && image !== undefined && image?.length != 0 && image !== {};
 
   const date = startTime?.toDate();
   return (
@@ -73,20 +107,24 @@ export default function UpcomingEvent(props) {
           }}
           disableRipple={open}
         >
-          <EventDialog
-            open={open}
-            setOpen={setOpen}
-            description={props.description}
-            title={props.name}
-            image={""}
-            className={""}
-            startTime={props.startTime}
-            endTime={props.endTime}
-            manager={props.manager}
-            event={props.id}
-            attendees={props.attendeesRef}
-            user={props.user}
-          />
+          {open ?
+            <EventDialog
+              open={open}
+              setOpen={setOpen}
+              description={props.description}
+              title={props.name}
+              image={props.image}
+              className={""}
+              startTime={props.startTime}
+              endTime={props.endTime}
+              manager={props.manager}
+              event={props.id}
+              attendees={props.attendeesRef}
+              user={props.user}
+              ageLow={props.ageLow}
+              ageHigh={props.ageHigh}
+              maxAttendees={props.maxAttendees}
+            /> : null}
           <Grid container>
             <Grid item xs={5}>
               <div
@@ -108,12 +146,27 @@ export default function UpcomingEvent(props) {
               <Box
                 sx={{ display: "flex", flexDirection: "column", width: "100%" }}
               >
-                <CardMedia
-                  component="img"
-                  sx={{ maxHeight: 60 }}
-                  image="https://source.unsplash.com/random"
-                  alt="Live from space album cover"
-                />
+                {isImage ?
+                  <div style={{ position: 'relative', height: 60, width: "100%", maxHeight: 60 }}>
+                    <Image
+                      loader={imageKitLoader}
+                      src={image}
+                      alt="Event image"
+                      objectFit='cover'
+                      layout='fill'
+                    // style={{ height: 50, width: 100, maxHeight: 20, objectFit: 'cover' }}
+                    />
+                  </div> :
+                  <div style={{ backgroundColor: colors[gtDivisions.indexOf(division)], position: 'relative', height: 60, width: "100%", maxHeight: 60 }}>
+                    {/* null */}
+                  </div>
+                  // <CardMedia
+                  //   component="img"
+                  //   sx={{ maxHeight: 60 }}
+                  //   image="https://source.unsplash.com/random"
+                  //   alt="Live from space album cover"
+                  // />
+                }
                 <CardContentNoPadding
                   sx={{
                     flex: "1 0 auto",

@@ -179,7 +179,7 @@
     margin-bottom: 0;
     margin-right: 10em;
     margin-left: 0;
-    /* padding: .2em; */
+    padding: .2em;
     font-size: 14px;
     border-radius: 7px;
     overflow: hidden;
@@ -280,7 +280,7 @@
   .track-3 {
     background-color: #C9F2B3ff;
     color: rgb(0, 0, 0);
-    border: 1px solid rgb(167, 220, 139);
+    border: 1px solid #a7dc8b;
     margin-right: .3em;
   }
 
@@ -301,7 +301,7 @@
 
   
   .track-5 {
-    background-color: rgb(170, 185, 255);
+    background-color: #aab9ff;
     color: rgb(0, 0, 0);
     border: 1px solid rgb(129, 150, 243);
     margin-right: .3em;

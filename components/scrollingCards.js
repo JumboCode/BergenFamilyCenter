@@ -19,12 +19,16 @@ export default function ScrollingCard({ division, user }) {
               <MediaCard
                 description={card.data().description}
                 title={card.data().name}
-                image={"/sunset.jpg"} /* STILL TO-DO:: images */
+                image={card.data().image} /* STILL TO-DO:: images */
                 startTime={card.data().startTime}
                 endTime={card.data().endTime}
                 manager={card.data().manager}
                 attendees={card.data().attendeesRef}
+                ageLow={card.data().ageLow}
+                ageHigh={card.data().ageHigh}
+                maxAttendees={card.data().maxAttendees}
                 event={card.id}
+                division={card.data().division}
                 user={user}
               />
             </div>
