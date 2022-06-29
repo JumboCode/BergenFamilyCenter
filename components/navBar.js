@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useContext } from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -23,6 +23,8 @@ import { useRouter } from 'next/router'
 import LanguageSelector from "./languageSelector";
 import LogoutIcon from '@mui/icons-material/Logout';
 import userSignOut from '../src/firebaseSignOut';
+import { LanguageContext } from '../src/languageContext';
+
 
 const drawerWidth = 240;
 
@@ -34,8 +36,10 @@ const DrawerHeader = styled('div')(() => ({
 }));
 
 export default function NavBar({ page }) {
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const router = useRouter();
+    const { language, _ } = useContext(LanguageContext);
+    const inEnglish = language === "English";
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -99,7 +103,7 @@ export default function NavBar({ page }) {
                             <ListItemIcon>
                                 {index % 3 === 0 ? <CalendarMonthIcon /> : (index % 3 == 1 ? <CalendarViewDayIcon /> : <AccountBoxIcon />)}
                             </ListItemIcon>
-                            <ListItemText primary={text} />
+                            <ListItemText primary={inEnglish ? text : ['Calendario', 'Eventos', 'Perfil'][index]} />
                         </ListItem>
                     ))}
                     < Divider />
@@ -108,18 +112,9 @@ export default function NavBar({ page }) {
                         <ListItemIcon>
                             <LogoutIcon />
                         </ListItemIcon>
-                        {"Log Out"}
+                        {inEnglish ? "Log Out" : "Cerrar Sesión"}
                     </ListItem>
                 </List>
-                {/* <Divider /> */}
-                {/* <LoadingButton
-                    onClick={async () => { await userSignOut(); router.push("/logIn") }}
-                    variant="contained"
-                    type="submit"
-                    sx={{ mt: 3, mb: 2, marginRight: 2, marginLeft: 2, color: "#fafafa" }}
-                >
-                    {"Log Out"}
-                </LoadingButton> */}
             </Drawer>
         </Box >
     )

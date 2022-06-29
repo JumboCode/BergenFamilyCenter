@@ -2,12 +2,15 @@ import MediaCard from "./event";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { firebaseFilterEventsPaginate } from "../src/firebaseEvents";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { LanguageContext } from '../src/languageContext';
 import { Typography } from "@mui/material";
 
 export default function ScrollingCard({ division, user }) {
   const [listCards, setListCards] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { language, _ } = useContext(LanguageContext);
+  const inEnglish = language === "English";
 
   const makeCards = () => {
     firebaseFilterEventsPaginate(division, 200, 0).then((value) => {
@@ -50,15 +53,15 @@ export default function ScrollingCard({ division, user }) {
     },
     mobile: {
       breakpoint: { max: 464, min: 0 },
-      items: 3,
-      slidesToSlide: 3,
+      items: 2,
+      slidesToSlide: 2,
     },
   };
 
   return (
     <div>
       {loading ? null : listCards.length == 0 ?
-        <Typography variant="subtitle2">No Upcoming Events</Typography> :
+        <Typography variant="subtitle2">{inEnglish ? "No Upcoming Events" : "No hay próximas eventos"}</Typography> :
         <Carousel
           responsive={responsive}
           shouldResetAutoplay={false}

@@ -88,7 +88,7 @@ export default function SignUp() {
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            userSignUp(values.email, values.password, 0, values.Firstname.trim() + " " + values.Lastname.trim()).then(() => {
+            userSignUp(values.email, values.password, "", values.Firstname.trim() + " " + values.Lastname.trim()).then(() => {
                 setLoading(false);
             }).catch(() => {
                 setOpen(true);

@@ -1,5 +1,6 @@
 import { getUpcomingUserEvents } from "../src/userFunctions";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { LanguageContext } from '../src/languageContext';
 import { Typography, Grid, Box } from '@mui/material';
 import UpcomingEvent from "./upcomingEvent";
 
@@ -7,6 +8,9 @@ import UpcomingEvent from "./upcomingEvent";
 export default function MyUpcomingEvents({ user }) {
     const [upcomingEvents, setUpcomingEvents] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { language, _ } = useContext(LanguageContext);
+    const inEnglish = language === "English";
+
     useEffect(() => {
         const upcomingUserEvents = getUpcomingUserEvents(user.id);
         upcomingUserEvents.then((upcomingEvents) => { setUpcomingEvents(upcomingEvents); setLoading(false) });
@@ -25,11 +29,11 @@ export default function MyUpcomingEvents({ user }) {
                 : (
                     upcomingEvents.length == 0 ?
                         <Typography variant="h5">
-                            You have no upcoming events
+                            {inEnglish ? "You have no upcoming events" : "No hay próximas eventos"}
                         </Typography> : (
                             <div>
                                 <Typography sx={{ pb: 1 }} variant="h5">
-                                    My Upcoming Events
+                                    {inEnglish ? "My Upcoming Events" : "Mis Próximos Eventos"}
                                 </Typography>
                                 <Box sx={{
                                     p: 2, maxHeight: "30vh", overflow: "auto", '&::-webkit-scrollbar': { display: "none" }

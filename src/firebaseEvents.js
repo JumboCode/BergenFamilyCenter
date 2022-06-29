@@ -280,20 +280,17 @@ const firebaseUserPreviousEvents = async (
 ) => {
   let user_id = getAuth().currentUser.uid;
   const userRef = doc(db, "users", user_id);
-  let event_ids = [];
-  getDoc(userRef).then(value => {
+  return getDoc(userRef).then(value => {
     const user_events = value.data().events;
-    user_events.map((doc_id) => {
+    return user_events.map((doc_id) =>
       getDoc(doc_id).then(value => {
         if (value.data()?.startTime != undefined) {
           if (value.data()?.startTime <= theTimestamp) {
-            event_ids.push({ ...value.data(), id: value.id });
+            return { ...value.data(), id: value.id };
           }
         }
-      })
-    })
+      }))
   });
-  return event_ids;
 };
 
 export {

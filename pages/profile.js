@@ -1,7 +1,6 @@
-import * as React from "react";
+import { useState, useEffect, useContext } from "react";
 import NavBar from "../components/navBar.js";
 import { getAuth } from "firebase/auth";
-import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
@@ -31,18 +30,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import Divider from '@mui/material/Divider';
 import Snackbar from '@mui/material/Snackbar';
 import LinkIcon from '@mui/icons-material/Link';
+import { LanguageContext } from '../src/languageContext';
 
-const validationSchema = yup.object({
-    name: yup
-        .string('Enter your name'),
-    email: yup
-        .string('Enter your email')
-        .email('Enter a valid email'),
-    phoneNumber: yup
-        .string('Enter your phone number'),
-    address: yup
-        .string('Enter your address')
-});
 
 export default function Profile() {
     const auth = getAuth();
@@ -68,13 +57,31 @@ export default function Profile() {
     const [copiedAlertVisible, setCopiedAlertVisible] = useState(false);
     const [copiedLinkAlertVisible, setCopiedLinkAlertVisible] = useState(false);
 
+    const { language, _ } = useContext(LanguageContext);
+    const inEnglish = language === "English";
+
+    const validationSchema = yup.object({
+        name: yup
+            .string('Enter your name'),
+        email: yup
+            .string('Enter your email')
+            .email(inEnglish ? 'Enter a valid email' : "Entrar un correo"),
+        phoneNumber: yup
+            .string('Enter your phone number'),
+        address: yup
+            .string('Enter your address')
+    });
+
     // TODO CREATE USER TO PASS TO OTHER THING
     useEffect(() => {
         if (uid) {
             const userRef = doc(db, "users", uid);
             const currentTime = Timestamp.now()
 
-            firebaseUserPreviousEvents(currentTime).then(value => { console.log("GOT IT"); setPreviousEvents(value) });
+            firebaseUserPreviousEvents(currentTime).then(v => Promise.all(v).then(v => { console.log(v); setPreviousEvents(v.filter(e => e !== undefined)) }))
+
+
+            // value => { console.log("GOT IT"); setPreviousEvents(value) });
             const userInfo = getDoc(userRef).then(value => {
                 setUser({ ...value.data(), id: uid });
                 setIsManager(value.data().isManager);
@@ -181,7 +188,7 @@ export default function Profile() {
                 aria-labelledby="nested-list-subheader"
                 subheader={
                     <ListSubheader component="div" id="nested-list-subheader">
-                        Events Managing
+                        {inEnglish ? "Events Managing" : "Eventos"}
                     </ListSubheader>
                 }
             >
@@ -241,7 +248,7 @@ export default function Profile() {
                     <Grid item xs={4}>
                         <Box style={{ width: "100%" }}>
                             <Typography component="h1" variant="h6">
-                                {"Information:"}
+                                {inEnglish ? "Information:" : "Información:"}
                             </Typography>
                             <form style={{ display: "flex", alignItems: "left", flexDirection: "column" }} onSubmit={formik.handleSubmit}>
                                 <TextField
@@ -249,7 +256,7 @@ export default function Profile() {
                                     disabled={!editing}
                                     margin="normal"
                                     id="name"
-                                    label="Name: "
+                                    label={inEnglish ? "Name: " : "Nombre: "}
                                     autoFocus
                                     value={formik.values.name}
                                     onChange={formik.handleChange}
@@ -260,7 +267,7 @@ export default function Profile() {
                                     disabled={!editing}
                                     margin="normal"
                                     id="email"
-                                    label="Email: "
+                                    label={inEnglish ? "Email: " : "Correo: "}
                                     autoFocus
                                     value={formik.values.email}
                                     onChange={formik.handleChange}
@@ -271,7 +278,7 @@ export default function Profile() {
                                     disabled={!editing}
                                     margin="normal"
                                     id="phoneNumber"
-                                    label="Phone Number: "
+                                    label={inEnglish ? "Phone Number: " : "Número de Teléfono "}
                                     autoFocus
                                     value={formik.values.phoneNumber}
                                     onChange={formik.handleChange}
@@ -282,14 +289,14 @@ export default function Profile() {
                                     disabled={!editing}
                                     margin="normal"
                                     id="address"
-                                    label="Address: "
+                                    label={inEnglish ? "Address: " : "Dirección: "}
                                     autoFocus
                                     value={formik.values.address}
                                     onChange={formik.handleChange}
                                     error={formik.touched.address && Boolean(formik.errors.address)}
                                 />
                                 <div hidden={editing}>
-                                    <Button onClick={() => { setEditing(!editing) }}> Edit </Button>
+                                    <Button onClick={() => { setEditing(!editing) }}> {inEnglish ? "Edit" : "Editar"} </Button>
                                 </div>
                                 <div hidden={!editing}>
                                     <Box style={{ display: "flex", alignItems: "left", flexDirection: "row" }}>
@@ -302,7 +309,7 @@ export default function Profile() {
                                             sx={{ mt: 3, mb: 2 }}
                                             onClick={() => { setEditing(!editing) }}
                                         >
-                                            Save
+                                            {inEnglish ? "Save" : "Guardar"}
                                         </Button>
                                         <Button
                                             hidden
@@ -311,12 +318,12 @@ export default function Profile() {
                                             sx={{ mt: 3, mb: 2 }}
                                             onClick={() => { setEditing(!editing) }}
                                         >
-                                            Cancel
+                                            {inEnglish ? "Cancel" : "Cancelar"}
                                         </Button>
                                     </Box>
                                 </div>
                                 <div>
-                                    <Button onClick={() => setOpen(true)}>Edit Photo Consent</Button>
+                                    <Button onClick={() => setOpen(true)}>{(inEnglish ? "Edit" : "Editar") + " 'Photo Consent'"}</Button>
                                 </div>
                             </form>
                         </Box >
@@ -324,7 +331,7 @@ export default function Profile() {
                     <Grid item xs={isManager ? 5 : 8}>
                         <Box component="div" sx={{ overflow: 'auto', width: "100%", height: "80vh" }}>
                             < Typography component="h1" variant="h6" >
-                                {"Past Events:"}
+                                {inEnglish ? "Past Events:" : "Eventos Pasados:"}
                             </Typography>
                             <Grid container spacing={2} sx={{ p: 1 }} alignItems="center"
                                 justifyContent="center"
@@ -347,7 +354,7 @@ export default function Profile() {
                         <Grid item xs={3}>
                             <Box style={{ width: "100%" }}>
                                 < Typography component="h1" variant="h6" >
-                                    {"Manager Information:"}
+                                    {inEnglish ? "Manager Information:" : "Información para el Gerente:"}
                                 </Typography>
 
                                 <NestedList></NestedList>

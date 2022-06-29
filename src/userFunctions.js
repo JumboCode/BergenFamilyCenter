@@ -23,6 +23,7 @@ export const addUser = async (id, email, phoneNumber, name) => {
     phoneNumber: phoneNumber,
     events: [],
     isManager: false,
+    address: "",
     name: name,
     consent: {},
   });

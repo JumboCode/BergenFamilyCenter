@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useEffect, useContext } from "react";
 import Typography from '@mui/material/Typography';
 import Image from 'next/image';
 import TextField from '@mui/material/TextField';
@@ -18,12 +18,15 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useFormik } from 'formik';
 import { firebaseAppendPerson } from '../src/firebaseEvents';
+import { updateUser } from '../src/userFunctions';
 import Link from "@mui/material/Link";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import { makeStyles } from '@mui/styles';
 import imageKitLoader from './imageKitLoader';
+import { LanguageContext } from '../src/languageContext';
+
 
 
 const useStyles = makeStyles(() => ({
@@ -36,12 +39,15 @@ const useStyles = makeStyles(() => ({
 
 
 export default function EventDialog({ open, setOpen, description, title, image, className, startTime, endTime, manager, event, attendees, user, ageLow, ageHigh, maxAttendees }) {
-    const [numFields, setNumFields] = React.useState(1);
-    const [names, setNames] = React.useState([]);
-    const [ages, setAges] = React.useState([]);
-    const [numAttending, setNumAttending] = React.useState(0);
+    const [numFields, setNumFields] = useState(1);
+    const [names, setNames] = useState([]);
+    const [ages, setAges] = useState([]);
+    const [numAttending, setNumAttending] = useState(0);
     const classes = useStyles();
-    const [openTooMany, setOpenTooMany] = React.useState(false);
+    const [openTooMany, setOpenTooMany] = useState(false);
+    const { language, _ } = useContext(LanguageContext);
+    const inEnglish = language === "English";
+
     const handleCloseTooMany = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -49,7 +55,7 @@ export default function EventDialog({ open, setOpen, description, title, image, 
 
         setOpen(false);
     };
-    const [ageError, setAgeError] = React.useState(false);
+    const [ageError, setAgeError] = useState(false);
     const handleCloseAgeError = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -58,9 +64,10 @@ export default function EventDialog({ open, setOpen, description, title, image, 
         setAgeError(false);
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         // assumes user is defined
         if (open) {
+            console.log(user);
             if (user.events.map(e => e.id).includes(event)) {
                 getDoc(attendees).then(v => {
                     const att = v.data().attendees;
@@ -84,19 +91,23 @@ export default function EventDialog({ open, setOpen, description, title, image, 
 
     const optionsStart = { weekday: 'short', month: 'long', day: 'numeric', hour: 'numeric', minute: "numeric" };
     const optionsEnd = { hour: 'numeric', minute: "numeric" };
-    let schema = {}
+    let schema = {
+        phone: yup.string('Enter phone number').required(inEnglish ? 'Phone number is required' : "Entrar un número de teléfono"),
+        address: yup.string('Enter address').required(inEnglish ? 'Address is required' : "Entrar una dirección")
+    }
 
     for (let i = 0; i < numFields; i++) {
-        schema[`name${i + 1}`] = yup.string('Enter name').required('Name is required');
-        schema[`age${i + 1}`] = yup.number('Enter age').required('Age is required');
+        schema[`name${i + 1}`] = yup.string('Enter name').required(inEnglish ? 'Name is required' : "Entrar un nombre");
+        schema[`age${i + 1}`] = yup.number('Enter age').required(inEnglish ? 'Age is required' : 'Entrar un edad');
     }
 
     const validationSchema = yup.object(schema);
-    const initialValues = {}
+    const initialValues = { phone: user.phoneNumber, address: user.address }
     for (let i = 0; i < 10; i++) {
         initialValues[`name${i + 1}`] = names[i] ?? '';
         initialValues[`age${i + 1}`] = ages[i] ?? '';
     }
+    console.log(initialValues)
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: initialValues,
@@ -133,6 +144,11 @@ export default function EventDialog({ open, setOpen, description, title, image, 
                     if (ageError) {
                         setAgeError(ageError);
                     } else {
+                        // phone number stuff
+                        console.log(user.id, values.phone, values.address)
+                        updateUser(user.id, { phoneNumber: values.phone })
+                        updateUser(user.id, { address: values.address })
+
                         firebaseAppendPerson(user?.id, event, attendees, submitNames, submitAges, null).then(() => {
                             // TODO
                             handleClose();
@@ -159,7 +175,7 @@ export default function EventDialog({ open, setOpen, description, title, image, 
                             margin="dense"
                             name={`name${z + 1}`}
                             id={`name${z + 1}`}
-                            label="Name"
+                            label={inEnglish ? "Name" : "Nombre"}
                             variant="standard"
                             value={formik.values[`name${z + 1}`]}
                             onChange={formik.handleChange}
@@ -179,7 +195,7 @@ export default function EventDialog({ open, setOpen, description, title, image, 
                             margin="dense"
                             name={`age${z + 1}`}
                             id={`age${z + 1}`}
-                            label="Age"
+                            label={inEnglish ? "Age" : "Edad"}
                             value={formik.values[`age${z + 1}`]}
                             onChange={formik.handleChange}
                             error={formik.touched[`age${z + 1}`] && Boolean(formik.errors[`age${z + 1}`])}
@@ -235,14 +251,14 @@ export default function EventDialog({ open, setOpen, description, title, image, 
                     <DialogTitle>{title}</DialogTitle>
                     <DialogContent sx={{ py: 0 }}>
                         <Typography sx={{ width: "50ch" }} variant="subtitle2">
-                            Description: {description}
+                            {inEnglish ? "Description" : "Detalles"}: {description}
                         </Typography>
                         <Typography variant="subtitle2">
-                            Time: {startTime?.toDate().toLocaleDateString("en-US", optionsStart)} - {endTime?.toDate().toLocaleTimeString("en-US", optionsEnd)}
+                            {inEnglish ? "Time" : "Hora"}: {startTime?.toDate().toLocaleDateString(inEnglish ? "en-US" : "es-ES", optionsStart)} - {endTime?.toDate().toLocaleTimeString(inEnglish ? "en-US" : "es-ES", optionsEnd)}
                         </Typography>
                         {manager == "" || manager == null ? null :
                             <Typography variant="subtitle2">
-                                Contact:&nbsp;
+                                {inEnglish ? "Contact" : "Contacto"}:&nbsp;
                                 <Link href={`mailto:${manager}`}>
                                     {manager}
                                 </Link>
@@ -251,32 +267,63 @@ export default function EventDialog({ open, setOpen, description, title, image, 
                         {ageLow === "" && ageHigh === "" ? null :
                             ageLow === "" ?
                                 <Typography variant="subtitle2">
-                                    Max Age: {ageHigh}
+                                    {inEnglish ? "Max Age" : "Edad Máxima"}: {ageHigh}
                                 </Typography> :
                                 ageHigh === "" ?
                                     <Typography variant="subtitle2">
-                                        Minimum Age: {ageLow}
+                                        {inEnglish ? "Minimum Age" : "Edad Mínima"}: {ageLow}
                                     </Typography> :
                                     <Typography variant="subtitle2">
-                                        Age Range: {ageLow} - {ageHigh}
+                                        {inEnglish ? "Age Range" : "Rango de Edades"}: {ageLow} - {ageHigh}
                                     </Typography>
                         }
                         {maxAttendees === "" ?
                             <Typography variant="subtitle2">
-                                People Registered: {numAttending}
+                                {inEnglish ? "People Registered" : "Personas Registradas"}: {numAttending}
                             </Typography>
                             :
                             <Typography variant="subtitle2">
-                                People Registered: {numAttending} / {maxAttendees}
+                                {inEnglish ? "People Registered" : "Personas Registradas"}: {numAttending} / {maxAttendees}
                             </Typography>
                         }
                     </DialogContent>
                 </div>
                 <DialogContent>
+                    <TextField
+                        sx={{ px: 2 }}
+                        fullWidth
+                        autoFocus
+                        InputLabelProps={{ sx: { px: 2 } }}
+                        // margin="dense"
+                        name="address"
+                        id="address"
+                        label={inEnglish ? "Address" : "Dirección"}
+                        value={formik.values.address}
+                        onChange={formik.handleChange}
+                        error={formik.touched.address && Boolean(formik.errors.address)}
+                        helperText={formik.touched.address && formik.errors.address}
+                        variant="standard"
+                    />
+                    <TextField
+                        sx={{ px: 2 }}
+                        fullWidth
+                        autoFocus
+                        InputLabelProps={{ sx: { px: 2 } }}
+                        margin="dense"
+                        name="phone"
+                        id="phone"
+                        label={inEnglish ? "Phone Number" : "Número de Teléfono"}
+                        value={formik.values.phone}
+                        initialValues={formik.values.phone}
+                        onChange={formik.handleChange}
+                        error={formik.touched.phone && Boolean(formik.errors.phone)}
+                        helperText={formik.touched.phone && formik.errors.phone}
+                        variant="standard"
+                    />
                     {formFields}
                 </DialogContent>
                 <DialogActions sx={{ px: 3 }}>
-                    <Tooltip title="Add Attendee">
+                    <Tooltip title={inEnglish ? "Add Attendee" : "Agregar Persona"}>
                         <IconButton
                             color="primary"
                             onClick={() => {
@@ -287,7 +334,7 @@ export default function EventDialog({ open, setOpen, description, title, image, 
                             <AddIcon />
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="Remove Attendee">
+                    <Tooltip title={inEnglish ? "Remove Attendee" : "Eliminar Persona"}>
                         <IconButton
                             color="primary"
                             onClick={() => {
@@ -299,8 +346,8 @@ export default function EventDialog({ open, setOpen, description, title, image, 
                         </IconButton>
                     </Tooltip>
                     <Box sx={{ flex: "1 0" }}></Box>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button type="submit" >Submit</Button>
+                    <Button onClick={handleClose}>{inEnglish ? "Cancel" : "Cancelar"}</Button>
+                    <Button type="submit" >{inEnglish ? "Submit" : "Enviar"}</Button>
                 </DialogActions>
                 <Snackbar open={openTooMany} autoHideDuration={3000} anchorOrigin={{
                     vertical: "bottom",
