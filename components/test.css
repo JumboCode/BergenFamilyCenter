@@ -334,6 +334,17 @@
     background-color: #c4cbd5dd;
   }
 
+  .track-8 {
+    background-color: #c1e1c1ff;
+    border: 1px solid #65a865;
+    color: rgb(0, 0, 0);
+    margin-right: .3em;
+  }
+
+  .track-8:hover {
+    background-color: #9bd09bdd;
+  }
+
   .track-all:hover {
     cursor: pointer;
     transition-delay: 400ms;

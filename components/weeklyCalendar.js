@@ -93,14 +93,16 @@ export default function WeeklyCalendar({
   };
 
   useEffect(() => {
-    firebaseFilterEventsChronologicalWeek(
-      startOfWeek,
-      endOfWeek,
-      gtDivisions
-    ).then((v) => {
-      setEventData(v);
-    });
-  }, [startOfWeek, endOfWeek]); // REMOVE DIVISOINS
+    if (gtDivisions.length !== 0) {
+      firebaseFilterEventsChronologicalWeek(
+        startOfWeek,
+        endOfWeek,
+        gtDivisions
+      ).then((v) => {
+        setEventData(v);
+      });
+    }
+  }, [startOfWeek, endOfWeek, gtDivisions]); // REMOVE DIVISOINS
 
   useEffect(() => {
     const v = eventData.filter(e => divisions.includes(e.division));

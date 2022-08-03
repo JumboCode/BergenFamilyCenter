@@ -5,7 +5,7 @@ import { Typography, Grid, Box } from '@mui/material';
 import UpcomingEvent from "./upcomingEvent";
 
 // Designed for use in a width-3 grid
-export default function MyUpcomingEvents({ user }) {
+export default function MyUpcomingEvents({ user, gtDivisions }) {
     const [upcomingEvents, setUpcomingEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const { language, _ } = useContext(LanguageContext);
@@ -18,7 +18,7 @@ export default function MyUpcomingEvents({ user }) {
 
     let upcomingEventsComponent = upcomingEvents.map(event => {
         return <Box key={event.id} sx={{ pb: 2 }}>
-            <UpcomingEvent user={user} {...event}></UpcomingEvent>
+            <UpcomingEvent user={user} gtDivisions={gtDivisions} {...event}></UpcomingEvent>
         </Box>;
     });
 

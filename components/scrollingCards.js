@@ -6,7 +6,7 @@ import { useState, useEffect, useContext } from "react";
 import { LanguageContext } from '../src/languageContext';
 import { Typography } from "@mui/material";
 
-export default function ScrollingCard({ division, user }) {
+export default function ScrollingCard({ division, user, gtDivisions }) {
   const [listCards, setListCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const { language, _ } = useContext(LanguageContext);
@@ -33,6 +33,7 @@ export default function ScrollingCard({ division, user }) {
                 event={card.id}
                 division={card.data().division}
                 user={user}
+                gtDivisions={gtDivisions}
               />
             </div>
           );

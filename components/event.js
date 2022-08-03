@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Skeleton from '@mui/material/Skeleton';
@@ -8,44 +8,19 @@ import Typography from '@mui/material/Typography';
 import Image from 'next/image';
 import EventDialog from "./eventDialog";
 import imageKitLoader from './imageKitLoader';
+import { colors } from '../public/colors.js'
 
-const colors = [
-    "#9FE4EDdd",
-    "#FFEAC2dd",
-    "#C9F2B3ff",
-    "#FFC5C3dd",
-    "#aab9ff",
-    "#DBC5EEdd",
-    "#DDE1E8dd",
-];
-
-const colorsBorder = [
-    "#45AFBC",
-    "#FEC150",
-    "#a7dc8b",
-    "#E6413E",
-    "#8196f3",
-    "#9E7FBA",
-    "#a6adb9",
-];
-
-const gtDivisions = [
-    "Early Learning Center/Home",
-    "Family Success Center",
-    "HIV/Outreach Services",
-    "Visiting Program",
-    "Senior Services",
-    "Adolescent Services",
-    "Clinical Services",
-];
+// TODO
 
 export default function MediaCard(props) {
-    const { description, title, image, className, startTime, endTime, manager, event, attendees, user, division } = props;
-    const [loading, setLoading] = React.useState(image !== "" && image !== undefined && image?.length != 0 && image !== {});
+    const { description, title, image, className, startTime, endTime, manager, event, attendees, user, division, gtDivisions } = props;
+    const [loading, setLoading] = useState(image !== "" && image !== undefined && image?.length != 0 && image !== {});
     const optionsStart = { weekday: 'short', month: 'long', day: 'numeric', hour: 'numeric', minute: "numeric" };
     const optionsEnd = { hour: 'numeric', minute: "numeric" };
-    const [open, setOpen] = React.useState(false);
-
+    const [open, setOpen] = useState(false);
+    console.log(gtDivisions, division)
+    console.log(colors)
+    console.log(colors[gtDivisions.indexOf(division)])
     const handleClickOpen = () => {
         if (!open) {
             setOpen(true);

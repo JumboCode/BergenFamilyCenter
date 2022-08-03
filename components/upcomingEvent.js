@@ -13,37 +13,9 @@ import Card from "@mui/material/Card";
 import EventDialog from "./eventDialog";
 import Image from 'next/image';
 import imageKitLoader from './imageKitLoader';
+import { colors, colorsBorder } from '../public/colors.js'
 
-const colors = [
-  "#9FE4EDdd",
-  "#FFEAC2dd",
-  "#C9F2B3ff",
-  "#FFC5C3dd",
-  "#aab9ff",
-  "#DBC5EEdd",
-  "#DDE1E8dd",
-];
-
-const colorsBorder = [
-  "#45AFBC",
-  "#FEC150",
-  "#a7dc8b",
-  "#E6413E",
-  "#8196f3",
-  "#9E7FBA",
-  "#a6adb9",
-];
-
-const gtDivisions = [
-  "Early Learning Center/Home",
-  "Family Success Center",
-  "HIV/Outreach Services",
-  "Visiting Program",
-  "Senior Services",
-  "Adolescent Services",
-  "Clinical Services",
-];
-
+// TODO
 
 const CardContentNoPadding = styled(CardContent)(`
   padding: 0;
@@ -79,6 +51,7 @@ export default function UpcomingEvent(props) {
     attendees,
     user,
     division,
+    gtDivisions,
   } = props;
   const [open, setOpen] = useState(false);
   // const [eventName, updateEventName] = useState("");

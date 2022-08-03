@@ -101,7 +101,6 @@ export default function Profile() {
                             attendeesDoc.data().attendees.map(attendees => { //maps through attendees corresponding to each parent
                                 getDoc(attendees.parent).then(parent => { //grab that set of attendees' parent 
                                     if (attendees) {
-
                                         if (parent.data().consent) {
                                             parentChild.push({ email: parent.data().email, children: attendees, consent: parent.data().consent.overallConsent })
                                         }
@@ -109,6 +108,8 @@ export default function Profile() {
                                             parentChild.push({ email: parent.data().email, children: attendees, consent: "no consent form filled out" })
 
                                         }
+                                    } else {
+                                        
                                     }
                                 })
                             })

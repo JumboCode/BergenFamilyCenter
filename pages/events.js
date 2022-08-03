@@ -32,7 +32,7 @@ export default function Events() {
                         <Box sx={{ pb: 2 }} key={division.name}>
                             <Typography variant="h5">{division.name}</Typography>
                             {user ?
-                                <ScrollingCard user={user} division={[division.name]}></ScrollingCard> :
+                                <ScrollingCard user={user} division={[division.name]} gtDivisions={divisions.map(d => d.name)}></ScrollingCard> :
                                 null
                             }
                         </Box>

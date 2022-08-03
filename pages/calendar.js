@@ -14,6 +14,7 @@ import Divider from "@mui/material/Divider";
 import CheckboxLabels from "../components/calendarFilter";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { useSearchParams } from "react-router-dom";
+import { firebaseGetDivisions } from "../src/firebaseDivisions"
 
 const useStyles = makeStyles(() => ({
   events: {
@@ -32,12 +33,13 @@ export default function Calendar() {
   const classes = useStyles();
   const [searchParams, _] = useSearchParams();
   const [divisions, setDivisions] = useState([]);
+  const [gtDivisions, setGTDivisions] = useState([]);
 
   const [openEvent, setOpenEvent] = useState(false);
   const [eventDoc, setEventDoc] = useState({});
 
   const myEvents = (
-    <div>{user ? <MyUpcomingEvent user={user}></MyUpcomingEvent> : null}</div>
+    <div>{user ? <MyUpcomingEvent user={user} gtDivisions={gtDivisions}></MyUpcomingEvent> : null}</div>
   );
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -69,18 +71,11 @@ export default function Calendar() {
           }
         })
       }
+      firebaseGetDivisions().then(divisions => setGTDivisions(divisions.map(d => d.name)))
     }
   }, []);
 
-  const gtDivisions = [
-    "Early Learning Center/Home",
-    "Family Success Center",
-    "HIV/Outreach Services",
-    "Visiting Program",
-    "Senior Services",
-    "Adolescent Services",
-    "Clinical Services",
-  ];
+  // TODO
 
   return (
     <Box>
@@ -176,7 +171,7 @@ export default function Calendar() {
           </Box>
           <WeeklyCalendar
             user={user}
-            divisions={divisions.length == 0 ? gtDivisions : divisions}
+            divisions={divisions.length === 0 ? gtDivisions : divisions}
             setDivisions={setDivisions}
             selectedDay={selectedDay}
             setSelectedDay={setSelectedDay}
