@@ -134,6 +134,16 @@ const firebaseFilterEventsPaginate = async (
     orderBy("startTime"),
     where("startTime", ">=", last_midnight_timestamp)
   );
+
+  const auth = getAuth();
+  const uid = auth.currentUser?.uid;
+  const programs = {};
+  getDocs(collection(db, "programs")).then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      programs[doc.data().name] = doc.data().users;
+    });
+  });
+
   const querySnapshot = await getDocs(q);
 
   for (var i = 0; i < pageSize; i++) {
@@ -141,6 +151,9 @@ const firebaseFilterEventsPaginate = async (
       toReturn[i] = querySnapshot.docs[i + startAtNum];
     }
   }
+
+  // Filter by program
+  toReturn = toReturn.filter(doc => doc.data().program === "" || programs[doc.data().program].some(u => u.id === uid))
 
   // Removes double events
   const dict = new Object();
@@ -263,13 +276,29 @@ const firebaseFilterEventsChronologicalWeek = async (
     }
   }
 
-  const querySnapshot = await getDocs(q);
-
-  querySnapshot.forEach((doc) => {
-    var timestamp = doc.data().startTime;
-    // if (timestamp.toDate().getMonth() == theMonth) {
-    filtered_events.push({ ...doc.data(), id: doc.id });
-    // }
+  const auth = getAuth();
+  const uid = auth.currentUser?.uid;
+  const programs = {};
+  getDocs(collection(db, "programs")).then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      programs[doc.data().name] = doc.data().users;
+    });
+  });
+  const querySnapshotEvents = await getDocs(q);
+  querySnapshotEvents.forEach((doc) => {
+    let found = false;
+    if (doc.data().program === "") {
+      found = true;
+    } else {
+      programs[doc.data().program].forEach(u => {
+        if (u.id == uid) {
+          found = true;
+        }
+      })
+    }
+    if (found) {
+      filtered_events.push({ ...doc.data(), id: doc.id });
+    }
   });
 
   return filtered_events;

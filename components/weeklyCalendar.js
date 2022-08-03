@@ -303,7 +303,7 @@ export default function WeeklyCalendar({
               aria-hidden="true"
               style={{
                 gridColumn: `track-${new Date().getDay() + 1}`,
-                gridRow: "tracks / time-1930",
+                gridRow: "tracks / time-7000",
               }}
             ></span>
           ) : null}

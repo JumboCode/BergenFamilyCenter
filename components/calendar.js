@@ -1,10 +1,8 @@
 import React, { useState, useContext } from 'react';
 import Calendar from 'react-calendar';
-import Paper from '@mui/material/Paper';
 import 'react-calendar/dist/Calendar.css';
-import { makeStyles, withStyles } from '@mui/styles';
+import { withStyles } from '@mui/styles';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import { esES } from '@mui/material/locale';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import StaticDatePicker from '@mui/lab/StaticDatePicker';
 import { LanguageContext } from '../src/languageContext';

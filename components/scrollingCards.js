@@ -49,8 +49,8 @@ export default function ScrollingCard({ division, user, gtDivisions }) {
   const responsive = {
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
-      items: 6,
-      slidesToSlide: 6,
+      items: 5,
+      slidesToSlide: 5,
     },
     mobile: {
       breakpoint: { max: 464, min: 0 },

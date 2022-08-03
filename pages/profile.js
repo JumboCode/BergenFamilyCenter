@@ -31,6 +31,7 @@ import Divider from '@mui/material/Divider';
 import Snackbar from '@mui/material/Snackbar';
 import LinkIcon from '@mui/icons-material/Link';
 import { LanguageContext } from '../src/languageContext';
+import { firebaseGetDivisions } from "../src/firebaseDivisions"
 
 
 export default function Profile() {
@@ -77,7 +78,7 @@ export default function Profile() {
         if (uid) {
             const userRef = doc(db, "users", uid);
             const currentTime = Timestamp.now()
-
+            firebaseGetDivisions().then(divisions => setGTDivisions(divisions.map(d => d.name)))
             firebaseUserPreviousEvents(currentTime).then(v => Promise.all(v).then(v => { console.log(v); setPreviousEvents(v.filter(e => e !== undefined)) }))
 
 
@@ -98,6 +99,7 @@ export default function Profile() {
                     manager_events_run.map((event) => {
                         const parentChild = []
                         getDoc(event.attendeesRef).then(attendeesDoc => { // gets attendees document
+                            console.log(event)
                             attendeesDoc.data().attendees.map(attendees => { //maps through attendees corresponding to each parent
                                 getDoc(attendees.parent).then(parent => { //grab that set of attendees' parent 
                                     if (attendees) {
@@ -125,7 +127,7 @@ export default function Profile() {
         }
 
     }, []);
-    console.log(managerEvents)
+    const [gtDivisions, setGTDivisions] = useState([]);
 
     const formik = useFormik({
         enableReinitialize: true,
@@ -343,7 +345,7 @@ export default function Profile() {
                                     previousEvents.sort((a, b) => (b.startTime - a.startTime)).map((event) => {
                                         return (
                                             <Grid key={event.id} item xs={isManager ? 6 : 4}>
-                                                <UpcomingEvent user={user} {...event}></UpcomingEvent>
+                                                <UpcomingEvent gtDivisions={gtDivisions} user={user} {...event}></UpcomingEvent>
                                             </Grid>
                                         );
                                     }) :

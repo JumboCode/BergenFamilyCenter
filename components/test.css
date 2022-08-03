@@ -344,6 +344,26 @@
   .track-8:hover {
     background-color: #9bd09bdd;
   }
+  .track-9 {
+    background-color: #f2c293ff;
+    border: 1px solid #edb074;
+    color: rgb(0, 0, 0);
+    margin-right: .3em;
+  }
+
+  .track-9:hover {
+    background-color: #f4bf8add;
+  }
+  .track-10 {
+    background-color: #f7c8faff;
+    border: 1px solid #eea2f4;
+    color: rgb(0, 0, 0);
+    margin-right: .3em;
+  }
+
+  .track-10:hover {
+    background-color: #f7bcfbdd;
+  }
 
   .track-all:hover {
     cursor: pointer;
