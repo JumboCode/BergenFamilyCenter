@@ -27,7 +27,7 @@ JumboCode 2021-2022 project
 5. run `npm install` to install all packages
 
 ### Running the frontend on local machine:
-1. `cd <PATH TO 'DiscusInstitute' DIRECTORY>`
+1. `cd <PATH TO 'BergenFamilyCenter' DIRECTORY>`
 2. run `npm run dev`
 3. Open a browser and go to http://localhost:3000
 
