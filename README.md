@@ -21,7 +21,7 @@ JumboCode 2021-2022 project
 * If you don't have VScode, download VsCode [here](https://code.visualstudio.com/download) and follow [this](https://linuxpip.org/vscode-format-on-save/) tutorial to set up auto-format
 
 1. `cd <PATH TO DIRECTORY YOU WANT YOUR CODE TO BE IN>` in your terminal
-2. `git clone https://github.com/adamgpeters/BergenFamilyCenter.git` --> creates a 'Bergen Family Center' directory
+2. `git clone https://github.com/JumboCode/BergenFamilyCenter.git` --> creates a 'Bergen Family Center' directory
 3. `cd BergenFamilyCenter`
 4. (optional) type `code .` in terminal to open VScode (*Note: you may need to set up the path, which you can find a tutorial for [here](https://code.visualstudio.com/docs/setup/windows#:~:text=Download%20the%20Visual%20Studio%20Code,%5CPrograms%5CMicrosoft%20VS%20Code%20)*)
 5. run `npm install` to install all packages
