@@ -118,8 +118,7 @@ export default function WeeklyCalendar({
     });
 
     const eventComponents = v.map((event, i) => {
-      const className = `session track-all session-${i} track-${gtDivisions.indexOf(event.division) + 1
-        }`;
+      const className = `session track-all session-${i} track-${gtDivisions.indexOf(event.division) + 1}`;
       const start = roundToNearest15(event.startTime.toDate());
       const hourStart = start.getHours();
       const minuteStart = start.getMinutes();
@@ -190,10 +189,6 @@ export default function WeeklyCalendar({
           }}
         >
           <Typography variant="body2">{event.name}</Typography>
-          {/* <Typography variant="subtitle2">{event.description}</Typography> */}
-          {/* <span className="session-time">{event.description}</span> */}
-          {/* <span className="session-track">Track: 1</span>
-                      <span className="session-presenter">Presenter</span> */}
         </Grid>
       );
     });
@@ -206,7 +201,6 @@ export default function WeeklyCalendar({
   let i = 0;
   while (d < endDate) {
     times.push([d.getHours(), d.getMinutes()]);
-    // times.push((d.getHours() % 12) + ':' + d.getMinutes() + (i++ % 2 != 0 ? "" : "0") + (d.getHours() > 12 ? " pm" : " am"));
     d = moment(d).add(30, "m").toDate();
   }
   return (
@@ -218,16 +212,6 @@ export default function WeeklyCalendar({
           sx={{ height: "100%" }}
           alignItems="center"
         >
-          {/* <Grid item
-            xs={12}
-            display={{ xs: "block", sm: "block" }}
-          >
-            <CheckboxLabels
-              divisions={divisions}
-              gtDivisions={gtDivisions}
-              setDivisions={setDivisions}
-            />
-          </Grid> */}
           <Grid item>
             <IconButton
               onClick={() => {
@@ -363,7 +347,6 @@ export default function WeeklyCalendar({
           >
             {inEnglish ? "Sat" : "Sáb"}
           </span>
-          {/* <span className="track-slot" aria-hidden="true" style={{ gridColumn: "track-8", gridRow: "tracks" }} ></span> */}
 
           {/* Day Breaks */}
           <span
@@ -399,8 +382,6 @@ export default function WeeklyCalendar({
             style={{ gridColumn: "track-7-int", gridRow: "tracks / time-7000" }}
           ></span>
 
-          {/* <span className="time-int" style={{ gridColumn: "times / track-8", gridRow: "time-int" }} ></span> */}
-          {/* <span className="time-int" style={{ gridColumn: "times / track-8", gridRow: "time-1-int" }}></span> */}
           <span
             className="time-int"
             style={{ gridColumn: "times / track-8", gridRow: "time-2-int" }}
@@ -453,8 +434,6 @@ export default function WeeklyCalendar({
             className="time-int"
             style={{ gridColumn: "times / track-8", gridRow: "time-14-int" }}
           ></span>
-          {/* ${t[0] > 12 ? "pm" : "am"} */}
-          {/* :${t[1] == 0 ? "00" : t[1]} */}
           {events.map((e) => e)}
           {times.map((t, i) => (
             <Typography

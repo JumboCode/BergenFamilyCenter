@@ -4,7 +4,6 @@
  @media screen and (min-width:0px) {
     .schedule {
       display: grid;
-      /* grid-gap: 0.2em; */
       grid-template-rows:
         [tracks] auto
         [time-int] 0em
@@ -79,14 +78,6 @@
         [time-1915] 1.0em
         [time-1930] 1.0em
         [time-1945] 1.0em;
-        /* Note 1:
-        [time-15-int] 0fr
-        Use 24hr time for gridline names for simplicity
-  
-        Note 2: Use "auto" instead of "1fr" for a more compact schedule where height of a slot is not proportional to the session length. Implementing a "compact" shortcode attribute might make sense for this!
-        Try 0.5fr for more compact equal rows. I don't quite understand how that works :)
-        */
-        /* grid-template-columns: min-content auto; */
 
       grid-template-columns:
         [times] 2em
@@ -137,8 +128,6 @@
         color: rgb(77, 77, 77);
         background-color: rgba(255, 255, 255, 1);
         border-bottom: 1px solid rgb(216, 216, 216);
-        /* border-right: 1px solid rgb(216, 216, 216); */
-        
       }
     }
   }
@@ -153,12 +142,9 @@
     scrollbar-width: none;  /* Firefox */
   }
   
-  
   /* Small-screen & fallback styles */
   .session {
     margin-bottom:  1em;
-    /* margin-left: 10px; */
-    /* height: 5em; */
   }
   
   @supports( display:grid ) {
@@ -183,14 +169,6 @@
     font-size: 14px;
     border-radius: 7px;
     overflow: hidden;
-    
-    /* transition: z-index 250ms cubic-bezier(1, 0, 1, 0); */
-
-    /* transition-delay: 1s; */
-    /* transition-property: z-index; */
-    /* box-shadow:
-      rgba(255,255,255,.6) 1px 1px 0,
-      rgba(0,0,0,.3) 4px 4px 0; */
   }
   
   .session-title,
@@ -207,15 +185,7 @@
   
   .session-title a {
     color: rgb(112, 112, 112);
-    text-decoration-style: dotted;
-    
-    /* &:hover {
-      font-style: italic;
-    }
-    
-    &:focus {
-      outline: 2px dotted rgba(255,255,255,.8);
-    } */
+    text-decoration-style: dotted; 
   }
   
 .current-day {
@@ -224,7 +194,6 @@
   
   /* .track-slot, */
   .time-slot {
-    /* font-weight: ; */
     color: rgb(77, 77, 77);
     background-color: #fff;
     font-size:1em;
@@ -233,37 +202,26 @@
     text-align: right;
     margin-right: 0.8em;
     padding-right: 0.5em;
-    /* text-align: center; */
   }
   
   .track-1 {
     background-color: #9FE4EDdd;
-    border: 1px solid #45AFBC
-    /* #6FBE44
-    #E6413E
-    #9E7FBA
-    #45AFBC */
-    ;
+    border: 1px solid #45AFBC;
     color: rgb(0, 0, 0);
     margin-right: .3em;
   }
 
   .track-1:hover {
     background-color: #87d9e4dd;
-    /* transition: 1s; */
-    /* transition: background-color 0.3s ease; */
-    /* opacity: 0; */
   }
 
   .track-int {
     border-right: 1px solid rgb(216, 216, 216);
     padding-right: 0px;
   }
-  /* bpygr */
 
   .time-int {
     border-bottom: 1px solid rgb(216, 216, 216);
-    /* vertical-align: ; */
   }
   
   .track-2 {
@@ -276,7 +234,6 @@
     background-color: #fde1aedd;
   }
 
-  
   .track-3 {
     background-color: #C9F2B3ff;
     color: rgb(0, 0, 0);
@@ -299,7 +256,6 @@
     background-color: #f0a2a0dd;
   }
 
-  
   .track-5 {
     background-color: #aab9ff;
     color: rgb(0, 0, 0);
@@ -319,8 +275,6 @@
 
   .track-6:hover {
     background-color: #ceb6e3dd;
-    /* transition-delay: 500ms; */
-    /* z-index: 10000; */
   }
 
   .track-7 {
@@ -379,12 +333,8 @@
 
   .track-all {
     z-index: 0;
-    /* transition-delay: 500ms; */
     transition: background-color 0.2s ease;
-    /* transition-delay: 0s; */
-    /* transition-property: background-color; */
   }
-
   
   .text {
     max-width: 750px;

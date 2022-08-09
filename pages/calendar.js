@@ -9,28 +9,18 @@ import { getAuth } from "firebase/auth";
 import { db } from "../firebase/firebase";
 import MyUpcomingEvent from "../components/myUpcomingEvents";
 import EventDialog from "../components/eventDialog";
-import { makeStyles } from "@mui/styles";
 import Divider from "@mui/material/Divider";
 import CheckboxLabels from "../components/calendarFilter";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { useSearchParams } from "react-router-dom";
 import { firebaseGetDivisions } from "../src/firebaseDivisions"
 
-const useStyles = makeStyles(() => ({
-  events: {
-    // overflow: "hidden",
-    // '&:hover': {
-    //     overflowY: "scroll",
-    // }
-  },
-}));
-
 export default function Calendar() {
   const [selectedDay, setSelectedDay] = useState(new Date());
   const auth = getAuth();
   const uid = auth.currentUser?.uid;
   const [user, setUser] = useState(null);
-  const classes = useStyles();
+
   const [searchParams, _] = useSearchParams();
   const [divisions, setDivisions] = useState([]);
   const [gtDivisions, setGTDivisions] = useState([]);
@@ -58,7 +48,7 @@ export default function Calendar() {
   useEffect(() => {
     if (uid) {
       const userRef = doc(db, "users", uid);
-      const userInfo = getDoc(userRef).then((value) => {
+      getDoc(userRef).then((value) => {
         setUser({ ...value.data(), id: uid });
       });
       const eid = searchParams.get("event");
@@ -75,8 +65,6 @@ export default function Calendar() {
     }
   }, []);
 
-  // TODO
-
   return (
     <Box>
       <NavBar page={"calendar"}></NavBar>
@@ -84,25 +72,11 @@ export default function Calendar() {
         openEvent ?
           <EventDialog open={openEvent} setOpen={setOpenEvent} {...eventDoc} user={user} /> : null
       }
-      {/* <Grid
-        sx={{ p: 2, display: "flex" }}
-        container
-        spacing={2}
-        alignItems="stretch"
-      >
-        <Grid
-          sx={{ display: "flex", flexDirection: "column", minWidth: 320 }}
-          item
-          xs={false}
-          sm={3}
-          md={3}
-        > */}
       <Box sx={{
         display: 'flex',
         mx: 1,
         mt: 1,
         height: "calc(100vh - 90px)",
-        // overflowY: 'hidden'
       }}
       >
         <Box display={{
@@ -129,19 +103,6 @@ export default function Calendar() {
           <MonthCalendar date={selectedDay} onChangeDate={setSelectedDay} />
 
         </Box>
-        {/* </Grid> */}
-        {/* <Grid
-        // item
-        // sx={{ display: "flex", flexDirection: "column" }}
-        // xs={12}
-        // sm={9}
-        // md={9}
-        > */}
-        {/* </Grid> */}
-        {/* <Grid item display={{ xs: "block", sm: "none" }}> */}
-        {/* {myEvents} */}
-        {/* </Grid> */}
-        {/* </Grid> */}
         <Box sx={{ width: "100%", flex: "1 0" }}>
           <Box display={{ xs: "block", sm: "none" }}>
             <IconButton
@@ -182,8 +143,6 @@ export default function Calendar() {
             {myEvents}
           </Box>
         </Box>
-        {/* <Box display={{ display: "flex", xs: "none", sm: "block", width: 300 }}>
-        </Box> */}
       </Box>
     </Box >
   );

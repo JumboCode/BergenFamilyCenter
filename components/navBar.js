@@ -6,7 +6,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -72,9 +71,6 @@ export default function NavBar({ page }) {
                         />
                     </Box>
                     <Box sx={{ flexGrow: 1 }} />
-                    {/* <Typography variant="h5" color="black" >
-                        {page.charAt(0).toUpperCase() + page.slice(1)}
-                    </Typography> */}
                     <LanguageSelector />
                 </Toolbar>
             </MuiAppBar>

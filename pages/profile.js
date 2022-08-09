@@ -73,16 +73,13 @@ export default function Profile() {
             .string('Enter your address')
     });
 
-    // TODO CREATE USER TO PASS TO OTHER THING
     useEffect(() => {
         if (uid) {
             const userRef = doc(db, "users", uid);
             const currentTime = Timestamp.now()
             firebaseGetDivisions().then(divisions => setGTDivisions(divisions.map(d => d.name)))
-            firebaseUserPreviousEvents(currentTime).then(v => Promise.all(v).then(v => { console.log(v); setPreviousEvents(v.filter(e => e !== undefined)) }))
+            firebaseUserPreviousEvents(currentTime).then(v => Promise.all(v).then(v => { setPreviousEvents(v.filter(e => e !== undefined)) }))
 
-
-            // value => { console.log("GOT IT"); setPreviousEvents(value) });
             const userInfo = getDoc(userRef).then(value => {
                 setUser({ ...value.data(), id: uid });
                 setIsManager(value.data().isManager);
@@ -92,8 +89,6 @@ export default function Profile() {
                 setAddress(value.data().address);
 
                 if (value.data().isManager) {
-                    // const userRef = doc(db, "users", uid);
-                    // getDoc(userRef).then(value => {
                     const manager_events_run = value.data().eventsRun;
                     const all_events = []
                     manager_events_run.map((event) => {
@@ -121,7 +116,6 @@ export default function Profile() {
                         })
                     });
                     setManagerEvents(all_events)
-                    // })
                 }
             });
         }
@@ -145,8 +139,6 @@ export default function Profile() {
             updateUser(uid, { address: values.address })
         },
     });
-
-
 
     function NestedList() {
         const [open, setOpen] = useState({});

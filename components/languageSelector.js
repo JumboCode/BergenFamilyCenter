@@ -5,6 +5,7 @@ import { makeStyles } from '@mui/styles';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import { LanguageContext } from '../src/languageContext';
+
 const useStyles = makeStyles(() => ({
     iconButtonLabel: {
         display: 'flex',
@@ -12,29 +13,28 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export default function LanguageSelector() { // TODO: Fix number of rerenders?
+export default function LanguageSelector() {
     const classes = useStyles();
     const [languageState, setLanguageState] = useState('');
     const { language, setLanguage } = useContext(LanguageContext);
+
     useEffect(() => {
-        console.log(localStorage.getItem('language'))
         setLanguageState(localStorage.getItem('language') ?? 'English');
         setLanguage(localStorage.getItem('language') ?? 'English');
     }, [])
+
     useEffect(() => {
-        console.log(localStorage.getItem('language'));
         if (localStorage.getItem('language') == undefined) {
             localStorage.setItem('language', 'English');
             setLanguage('English');
-            // setLanguageState('English');
         } else {
             if (languageState !== '') {
                 localStorage.setItem('language', languageState);
                 setLanguage(languageState);
             }
-            // setLanguageState(languageState);
         }
     }, [languageState])
+
     const [anchorEl, setAnchorEl] = useState(null);
 
     const handleClose = () => {

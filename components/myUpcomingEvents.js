@@ -1,10 +1,9 @@
 import { getUpcomingUserEvents } from "../src/userFunctions";
 import { useState, useEffect, useContext } from "react";
 import { LanguageContext } from '../src/languageContext';
-import { Typography, Grid, Box } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 import UpcomingEvent from "./upcomingEvent";
 
-// Designed for use in a width-3 grid
 export default function MyUpcomingEvents({ user, gtDivisions }) {
     const [upcomingEvents, setUpcomingEvents] = useState([]);
     const [loading, setLoading] = useState(true);

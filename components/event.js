@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Skeleton from '@mui/material/Skeleton';
@@ -10,7 +10,6 @@ import EventDialog from "./eventDialog";
 import imageKitLoader from './imageKitLoader';
 import { colors } from '../public/colors.js'
 
-// TODO
 
 export default function MediaCard(props) {
     const { description, title, image, className, startTime, endTime, manager, event, attendees, user, division, gtDivisions } = props;
@@ -18,9 +17,7 @@ export default function MediaCard(props) {
     const optionsStart = { weekday: 'short', month: 'long', day: 'numeric', hour: 'numeric', minute: "numeric" };
     const optionsEnd = { hour: 'numeric', minute: "numeric" };
     const [open, setOpen] = useState(false);
-    console.log(gtDivisions, division)
-    console.log(colors)
-    console.log(colors[gtDivisions.indexOf(division)])
+
     const handleClickOpen = () => {
         if (!open) {
             setOpen(true);

@@ -1,21 +1,17 @@
-import { useEffect, useState } from "react";
-import { firebaseGetEvent } from "../src/firebaseEvents";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import CardContent from "@mui/material/CardContent";
 import CardActionArea from "@mui/material/CardActionArea";
-import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import CalendarIcon from "../components/calendarIcon";
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
 import Card from "@mui/material/Card";
 import EventDialog from "./eventDialog";
 import Image from 'next/image';
 import imageKitLoader from './imageKitLoader';
-import { colors, colorsBorder } from '../public/colors.js'
+import { colors } from '../public/colors.js'
 
-// TODO
 
 const CardContentNoPadding = styled(CardContent)(`
   padding: 0;
@@ -54,9 +50,6 @@ export default function UpcomingEvent(props) {
     gtDivisions,
   } = props;
   const [open, setOpen] = useState(false);
-  // const [eventName, updateEventName] = useState("");
-  // const [eventDescription, updateEventDesc] = useState("");
-  // const [timestamp, updateDate] = useState(null);
   const isImage = image !== "" && image !== undefined && image?.length != 0 && image !== {};
 
   const date = startTime?.toDate();
@@ -127,18 +120,10 @@ export default function UpcomingEvent(props) {
                       alt="Event image"
                       objectFit='cover'
                       layout='fill'
-                    // style={{ height: 50, width: 100, maxHeight: 20, objectFit: 'cover' }}
                     />
                   </div> :
                   <div style={{ backgroundColor: colors[gtDivisions.indexOf(division)], position: 'relative', height: 60, width: "100%", maxHeight: 60 }}>
-                    {/* null */}
                   </div>
-                  // <CardMedia
-                  //   component="img"
-                  //   sx={{ maxHeight: 60 }}
-                  //   image="https://source.unsplash.com/random"
-                  //   alt="Live from space album cover"
-                  // />
                 }
                 <CardContentNoPadding
                   sx={{

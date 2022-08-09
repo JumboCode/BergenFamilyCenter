@@ -18,14 +18,12 @@ function RouteGuard({ children }) {
         const user = auth.currentUser;
 
         if (user == null && !publicPaths.includes(path)) {
-            console.log("not logged in ")
             // No user is signed in.
             router.push({
                 pathname: '/login',
                 query: { returnUrl: router.asPath }
             });
         } else {
-            console.log("authorized!")
             setAuthorized(true);
         }
     }, [router])

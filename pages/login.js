@@ -42,7 +42,7 @@ export default function SignIn() {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     let [searchParams, setSearchParams] = useSearchParams();
-    const closeError = (event, reason) => {
+    const closeError = (_, reason) => {
         if (reason === 'clickaway') { return; }
         setOpen(false);
     };
@@ -55,7 +55,6 @@ export default function SignIn() {
         validationSchema: validationSchema,
         onSubmit: (values) => {
             userSignIn(values.email, values.password).then(() => {
-                // 
             }).catch(() => {
                 setOpen(true);
                 setLoading(false);
@@ -64,10 +63,6 @@ export default function SignIn() {
         },
     });
     const { language, _ } = useContext(LanguageContext);
-    useEffect(() => {
-        // console.log(language)
-        console.log(localStorage.getItem('language'));
-    }, []);
     const inEnglish = language === "English";
 
     auth.onAuthStateChanged((user) => {

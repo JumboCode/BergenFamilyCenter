@@ -14,6 +14,7 @@ export default function CheckboxLabels({
   for (let i = 0; i < gtDivisions.length; i++) {
     initialState.push(false);
   }
+
   for (let i = 0; i < divisions.length; i++) {
     const index = gtDivisions.indexOf(divisions[i]);
     initialState[index] = true;

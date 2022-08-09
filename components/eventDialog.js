@@ -21,29 +21,24 @@ import { firebaseAppendPerson } from '../src/firebaseEvents';
 import { updateUser } from '../src/userFunctions';
 import Link from "@mui/material/Link";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../firebase/firebase";
+import { getDoc } from "firebase/firestore";
 import { makeStyles } from '@mui/styles';
 import imageKitLoader from './imageKitLoader';
 import { LanguageContext } from '../src/languageContext';
 
 
-
 const useStyles = makeStyles(() => ({
     dialogPaper: {
-        // backgroundImage: "url(https://i.imgur.com/HeGEEbu.jpg)",
         opacity: 1,
         color: "#000 !important"
     },
 }));
-
 
 export default function EventDialog({ open, setOpen, description, title, image, className, startTime, endTime, manager, event, attendees, user, ageLow, ageHigh, maxAttendees }) {
     const [numFields, setNumFields] = useState(1);
     const [names, setNames] = useState([]);
     const [ages, setAges] = useState([]);
     const [numAttending, setNumAttending] = useState(0);
-    const classes = useStyles();
     const [openTooMany, setOpenTooMany] = useState(false);
     const { language, _ } = useContext(LanguageContext);
     const inEnglish = language === "English";
@@ -67,7 +62,6 @@ export default function EventDialog({ open, setOpen, description, title, image, 
     useEffect(() => {
         // assumes user is defined
         if (open) {
-            console.log(user);
             if (user.events.map(e => e.id).includes(event)) {
                 getDoc(attendees).then(v => {
                     const att = v.data().attendees;
@@ -107,13 +101,12 @@ export default function EventDialog({ open, setOpen, description, title, image, 
         initialValues[`name${i + 1}`] = names[i] ?? '';
         initialValues[`age${i + 1}`] = ages[i] ?? '';
     }
-    console.log(initialValues)
+
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: initialValues,
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            // Does not submit all users
             let submitNames = []
             let submitAges = []
             for (let i = 0; i < numFields; i++) {
@@ -145,12 +138,10 @@ export default function EventDialog({ open, setOpen, description, title, image, 
                         setAgeError(ageError);
                     } else {
                         // phone number stuff
-                        console.log(user.id, values.phone, values.address)
                         updateUser(user.id, { phoneNumber: values.phone })
                         updateUser(user.id, { address: values.address })
 
                         firebaseAppendPerson(user?.id, event, attendees, submitNames, submitAges, null).then(() => {
-                            // TODO
                             handleClose();
                         })
                     }
@@ -211,7 +202,6 @@ export default function EventDialog({ open, setOpen, description, title, image, 
                                 const newAges = [...ages];
                                 newAges.splice(z, 1);
 
-                                // add dialog
                                 setNames(newNames);
                                 setAges(newAges);
                                 setNumFields(numFields - 1);
@@ -228,7 +218,6 @@ export default function EventDialog({ open, setOpen, description, title, image, 
     const handleClose = () => {
         setOpen(false);
     };
-    console.log("THE IMAGE IS", image)
 
     return (
         <Dialog open={open} onClose={handleClose}>
@@ -242,12 +231,10 @@ export default function EventDialog({ open, setOpen, description, title, image, 
                                 alt="Event image"
                                 objectFit='cover'
                                 layout='fill'
-                            // style={{ height: 50, width: 100, maxHeight: 20, objectFit: 'cover' }}
                             />
                         </div> :
                         null
                     }
-                    {/* <Box className={classes.dialogPaper} sx={{ height: "25ch" }} /> */}
                     <DialogTitle>{title}</DialogTitle>
                     <DialogContent sx={{ py: 0 }}>
                         <Typography sx={{ width: "50ch" }} variant="subtitle2">
@@ -294,7 +281,6 @@ export default function EventDialog({ open, setOpen, description, title, image, 
                         fullWidth
                         autoFocus
                         InputLabelProps={{ sx: { px: 2 } }}
-                        // margin="dense"
                         name="address"
                         id="address"
                         label={inEnglish ? "Address" : "Dirección"}
